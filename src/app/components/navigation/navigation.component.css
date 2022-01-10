@@ -1,0 +1,15 @@
+.toolbar{
+  position:fixed;
+  bottom:0px;
+  background-color:pink;
+  width:100%;}
+
+.tabs-div{
+
+  padding: 0%;
+}
+
+.span-text{
+
+  transform: scale(4);
+}

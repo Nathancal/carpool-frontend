@@ -1,0 +1,27 @@
+<mat-toolbar class="toolbar">
+  <div>
+    <a routerLink="/" mat-icon-button>
+      <mat-icon>home</mat-icon>
+    </a>
+  </div>
+  <div fxHide.lt-sm fxFlex fxLayout fxLayoutAlign="flex-end">
+    <a mat-icon-button routerLink="/coins">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <span><mat-icon>monetization_on</mat-icon></span>
+      </div>
+    </a>
+
+    <a mat-icon-button routerLink="/trade" class="span-txt">
+      <div fxLayout="column" fxLayoutAlign="start" class="span-txt">
+        <span class="span-txt"><mat-icon class="span-txt">currency_exchange</mat-icon></span>
+      </div>
+    </a>
+  </div>
+  <div fxHide.gt-xs fxFlex fxLayout fxLayoutAlign="flex-end">
+    <button mat-icon-button (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+
+  <div></div>
+</mat-toolbar>
