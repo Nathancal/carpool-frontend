@@ -10,6 +10,10 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './pages/home/home.component';
 import { UserdashboardComponent } from './pages/userdashboard/userdashboard.component';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { PickupdetailsComponent } from './components/pickupdetails/pickupdetails.component';
+
 
 @NgModule({
   declarations: [
@@ -18,12 +22,15 @@ import { UserdashboardComponent } from './pages/userdashboard/userdashboard.comp
     LoginComponent,
     NavigationComponent,
     HomeComponent,
-    UserdashboardComponent
+    UserdashboardComponent,
+    PickupdetailsComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     FlexLayoutModule,
+    FormsModule,
     BrowserAnimationsModule,
     MaterialModule
   ],

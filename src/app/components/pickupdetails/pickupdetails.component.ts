@@ -2,17 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { NgForm } from '@angular/forms';
 
-
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-pickupdetails',
+  templateUrl: './pickupdetails.component.html',
+  styleUrls: ['./pickupdetails.component.css']
 })
-export class LoginComponent implements OnInit {
+export class PickupdetailsComponent implements OnInit {
 
   constructor() { }
 
-  model: any
+  model!: User;
 
   ngOnInit(): void {
   }

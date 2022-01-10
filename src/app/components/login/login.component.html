@@ -1,1 +1,79 @@
-<p>login works!</p>
+<mat-card class="card-container">
+  <mat-card-title class="signup-modal-title">
+    Create an account and discover 10X trading growth today.
+  </mat-card-title>
+</mat-card>
+
+<mat-card class="card-container">
+  <form
+    class="form-custom"
+    #signupform="ngForm"
+    (ngSubmit)="onSubmit(signupform)"
+  >
+    <mat-form-field class="form-field-custom" hintLabel="">
+      <mat-label>Email address..</mat-label>
+      <input
+        type="email"
+        matInput
+        placeholder="Your Email.."
+        required
+        [(ngModel)]="model.email"
+        name="email"
+      />
+    </mat-form-field>
+    <mat-form-field class="form-field-custom">
+      <mat-label>Password</mat-label>
+      <input
+        type="password"
+        matInput
+        placeholder="Password please.."
+        [(ngModel)]="model.password"
+        name="password"
+        minlength="8"
+        required
+        #passInput="ngModel"
+      />
+
+      <mat-hint align="end">{{ passInput.value?.length }}</mat-hint>
+    </mat-form-field>
+    <mat-form-field class="form-field-custom">
+      <mat-label>Forename</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="your first name here.."
+        [(ngModel)]="model.firstName"
+        name="firstName"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field class="form-field-custom">
+      <mat-label>Surname</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="surname here.."
+        [(ngModel)]="model.lastName"
+        name="lastName"
+        required
+      />
+    </mat-form-field>
+    <div
+      mat-dialog-actions
+      fxLayout
+      fxLayoutAlign="center"
+      class="btn-container"
+    >
+      <!-- <div class="spinner-container" *ngIf="isLoading | async">
+          <mat-spinner
+            class="spinner-obj"
+            diameter="30"
+            [mode]="'indeterminate'"
+          ></mat-spinner>
+        </div> -->
+      <button type="submit" mat-raised-button class="submit-btn">
+        Register
+      </button>
+    </div>
+  </form>
+</mat-card>

@@ -1,7 +1,8 @@
 .toolbar{
   position:fixed;
   bottom:0px;
-  background-color:pink;
+  background-color: #00c853;
+  height: 15vh;
   width:100%;}
 
 .tabs-div{

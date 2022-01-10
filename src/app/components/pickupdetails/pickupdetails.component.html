@@ -1,0 +1,33 @@
+<div class="card-container" fxFlex>
+  <mat-card class="card-container">
+    <mat-card-title class="signup-modal-title">
+      Start a new carpool
+    </mat-card-title>
+  </mat-card>
+
+  <mat-card class="card-container">
+    <form
+      class="form-custom"
+      #signupform="ngForm"
+      (ngSubmit)="onSubmit(signupform)"
+    >
+      <div fxLayout="row" fxLayoutAlign="space-around center">
+        <mat-form-field class="form-field-custom">
+          <mat-label>Journey Direction</mat-label>
+          <mat-select></mat-select>
+        </mat-form-field>
+        <mat-form-field class="form-field-custom">
+          <mat-label>Forename</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="your first name here.."
+            [(ngModel)]="model.firstName"
+            name="firstName"
+            required
+          />
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card>
+</div>
