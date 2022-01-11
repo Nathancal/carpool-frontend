@@ -13,6 +13,7 @@ import { UserdashboardComponent } from './pages/userdashboard/userdashboard.comp
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PickupdetailsComponent } from './components/pickupdetails/pickupdetails.component';
+import { SearchbarComponent } from './components/searchbar/searchbar.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { PickupdetailsComponent } from './components/pickupdetails/pickupdetails
     NavigationComponent,
     HomeComponent,
     UserdashboardComponent,
-    PickupdetailsComponent
+    PickupdetailsComponent,
+    SearchbarComponent
   ],
   imports: [
     BrowserModule,
