@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { NgForm } from '@angular/forms';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-pickupdetails',
@@ -9,11 +10,14 @@ import { NgForm } from '@angular/forms';
 })
 export class PickupdetailsComponent implements OnInit {
 
-  constructor() { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
 
   model!: User;
 
   ngOnInit(): void {
+
+    console.log("data output")
+    console.log(this.data.lat)
   }
 
   onSubmit(form: NgForm) {

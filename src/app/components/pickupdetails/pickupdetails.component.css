@@ -1,5 +1,21 @@
-.card-container::before{
+.card-container{
   margin: 0%;
   padding: 0%;
-  opacity: 0.5;
+  max-width: 100%;
 }
+
+.form-field-custom {
+  width: 100%;
+  border-radius: 0%;
+}
+
+.pickup-item-col{
+  font-size: 80%;
+  padding: 1%;
+  max-width: 50%;
+}
+
+.md-datepicker-calender-pane{
+  z-index: 1200;
+}
+

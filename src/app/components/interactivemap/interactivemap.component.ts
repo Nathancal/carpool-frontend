@@ -31,7 +31,7 @@ export class InteractivemapComponent implements OnInit {
 
     this.map.on('click', (e) => {
       console.log(e.lngLat);
-      this.PickupDetailsModal();
+      this.PickupDetailsModal(e);
       this.dialog.afterAllClosed.subscribe((res) =>{
         this.createPickupMarker(e.lngLat);
       })
@@ -46,13 +46,17 @@ export class InteractivemapComponent implements OnInit {
       .addTo(this.map);
   }
 
-  PickupDetailsModal() {
+  PickupDetailsModal(e: any) {
     const configDialog = new MatDialogConfig();
 
     configDialog.id = 'pickupdetailsmodal';
     configDialog.height = "400px";
-    configDialog.width = "90%";
+    configDialog.width = "100%";
     configDialog.panelClass = "pickup-modal-container";
+    configDialog.data = {
+      lat: e.lngLat.lat,
+      lng: e.lngLat.lng
+    }
 
     const modal = this.dialog.open(PickupdetailsComponent, configDialog);
   }
