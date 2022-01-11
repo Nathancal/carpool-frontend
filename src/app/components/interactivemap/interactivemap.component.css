@@ -1,8 +1,29 @@
 @import "@tomtom-international/web-sdk-maps";
 
+
+
+.map-container{
+  position: relative;
+}
+
 #map {
   height: 85vh;
   width: 100vw;
+  position: absolute;
+}
+
+.search-bar{
+  font-size: 150%;
+  position: absolute;
+  width: 75%;
+  margin-left: 1%;
+  margin-top: 1%;
+  background: rgba(51, 170, 51, 0.4);
+  border-radius: 5px 5px;
+}
+
+.search-bar-form-field{
+  width: 100%;
 }
 
 #pickup-marker {
@@ -16,3 +37,6 @@
 .pickup-modal-container{
   padding: 0%;
 }
+
+
+

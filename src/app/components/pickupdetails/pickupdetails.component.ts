@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { NgForm } from '@angular/forms';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MapsService } from 'src/app/services/maps.service';
 
 @Component({
   selector: 'app-pickupdetails',
@@ -10,23 +11,20 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 })
 export class PickupdetailsComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public mapService: MapsService) { }
 
-  model!: User;
+  locationAddress: any;
 
   ngOnInit(): void {
-
-    console.log("data output")
-    console.log(this.data.lat)
+    this.reverseGeocode()
   }
 
-  onSubmit(form: NgForm) {
-    this.model = new User(
-      form.form.value.email,
-      form.form.value.password,
-      form.form.value.firstName,
-      form.form.value.lastName
-    );
+  reverseGeocode(){
+    this.mapService.getAddress(this.data.lat, this.data.lng).subscribe((res:any)=>{
+      this.locationAddress = res.addresses[0].address.freeformAddress;
+      console.log(this.locationAddress);
+    })
+
   }
 
 }

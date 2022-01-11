@@ -65,15 +65,26 @@
       </div>
     </div>
     <div fxLayout="row">
-      <div
-        mat-dialog-actions
-        fxLayout
-        fxLayoutAlign="center"
-        class="btn-container"
-      >
+      <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="locationAddress">
+        <p>Selected Address</p>
+        <p>{{locationAddress}}</p>
+
+      </div>
+
+
+    </div>
+    <div fxLayout="row">
+      <div fxLayout="column" fxLayoutAlign="space-around center">
         <button type="submit" mat-raised-button class="submit-btn">
-         <mat-icon>done</mat-icon> Create Pickup
+          <mat-icon>cancel</mat-icon> close
         </button>
+
+      </div>
+      <div fxLayout="column" fxLayoutAlign="space-around center">
+        <button type="submit" mat-raised-button class="submit-btn">
+          <mat-icon>done</mat-icon> create pickup
+        </button>
+
       </div>
     </div>
   </mat-card>

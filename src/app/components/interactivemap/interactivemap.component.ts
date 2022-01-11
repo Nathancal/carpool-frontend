@@ -17,7 +17,7 @@ export class InteractivemapComponent implements OnInit {
   map!: tt.Map;
   marker: any;
 
-  constructor(private httpclient: HttpClient, private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.map = tt.map({
