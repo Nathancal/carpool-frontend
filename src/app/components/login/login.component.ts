@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user.model';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+
 
 
 @Component({
@@ -12,18 +13,26 @@ export class LoginComponent implements OnInit {
 
   constructor() { }
 
-  model: any
-
   ngOnInit(): void {
   }
 
-  onSubmit(form: NgForm) {
-    this.model = new User(
-      form.form.value.email,
-      form.form.value.password,
-      form.form.value.firstName,
-      form.form.value.lastName
-    );
+  registerForm = new FormGroup({
+    email: new FormControl('', [
+      Validators.required
+    ]),
+    password: new FormControl('', [
+      Validators.required
+    ]),
+    forename: new FormControl('', [
+      Validators.required
+    ]),
+    surname: new FormControl('', [
+      Validators.required
+    ])
+  })
+
+  registerAccount(){
+
   }
 
 }

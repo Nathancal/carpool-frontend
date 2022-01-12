@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PickupdetailsComponent } from './components/pickupdetails/pickupdetails.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { SearchbarComponent } from './components/searchbar/searchbar.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     FlexLayoutModule,
     FormsModule,

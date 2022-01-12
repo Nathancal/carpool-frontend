@@ -7,8 +7,8 @@
 <mat-card class="card-container">
   <form
     class="form-custom"
-    #signupform="ngForm"
-    (ngSubmit)="onSubmit(signupform)"
+    [formGroup]="registerForm"
+    (ngSubmit)="registerAccount()"
   >
     <mat-form-field class="form-field-custom" hintLabel="">
       <mat-label>Email address..</mat-label>
@@ -17,7 +17,7 @@
         matInput
         placeholder="Your Email.."
         required
-        [(ngModel)]="model.email"
+        formControlName="email"
         name="email"
       />
     </mat-form-field>
@@ -27,14 +27,11 @@
         type="password"
         matInput
         placeholder="Password please.."
-        [(ngModel)]="model.password"
+        formControlName="password"
         name="password"
         minlength="8"
         required
-        #passInput="ngModel"
       />
-
-      <mat-hint align="end">{{ passInput.value?.length }}</mat-hint>
     </mat-form-field>
     <mat-form-field class="form-field-custom">
       <mat-label>Forename</mat-label>
@@ -42,7 +39,7 @@
         type="text"
         matInput
         placeholder="your first name here.."
-        [(ngModel)]="model.firstName"
+        formControlName="forename"
         name="firstName"
         required
       />
@@ -53,7 +50,7 @@
         type="text"
         matInput
         placeholder="surname here.."
-        [(ngModel)]="model.lastName"
+        formControlName="surname"
         name="lastName"
         required
       />

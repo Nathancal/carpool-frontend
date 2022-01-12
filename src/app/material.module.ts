@@ -9,12 +9,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
 @NgModule({
-  imports: [MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
-  exports: [MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
+  imports: [MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
+  exports: [MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
   ],
 })
 export class MaterialModule {}
