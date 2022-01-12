@@ -10,6 +10,16 @@ export class PickupService {
 
   constructor(public http: HttpClient) { }
 
+  getUserPickups(userId: any){
+
+    const header = {
+      'userId': userId
+    }
+
+    return this.http.get('http://127.0.0.1:5000/api/v1/pickup/userhostedpickups', {headers:header})
+
+  }
+
   createPickup(pickupData: any){
 
     const header = {

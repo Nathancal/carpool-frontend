@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MapsService } from 'src/app/services/maps.service';
 import { PickupService } from 'src/app/services/pickup.service';
 
@@ -11,7 +11,7 @@ import { PickupService } from 'src/app/services/pickup.service';
 })
 export class PickupdetailsComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public mapService: MapsService, public pickupService: PickupService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public mapService: MapsService, public pickupService: PickupService, private dialogRef: MatDialogRef<PickupdetailsComponent>) { }
 
   locationAddress: any;
   loading = false;
@@ -51,7 +51,7 @@ export class PickupdetailsComponent implements OnInit {
     console.log(this.pickupForm.value.date)
 
     let pickupData  = {
-        'hostId': 'hostidstringtest',
+        'hostId': sessionStorage["userID"],
         'lat': this.data.lat,
         'lng': this.data.lng,
         'date': this.pickupForm.value.date,
@@ -60,8 +60,11 @@ export class PickupdetailsComponent implements OnInit {
     }
 
     this.pickupService.createPickup(pickupData).subscribe((res)=>{
-      console.log(res);
       this.loading = false;
+      this.dialogRef.close({createSuccessful: true, pickup: pickupData })
+    }, (err)=>{
+      this.loading = false;
+      this.dialogRef.close({createSuccessful: false})
     })
 
   }

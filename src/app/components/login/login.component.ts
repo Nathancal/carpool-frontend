@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user.model';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 
@@ -11,7 +12,9 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(public authService: AuthService, private router: Router) { }
+
+  loading = false;
 
   ngOnInit(): void {
   }
@@ -26,12 +29,55 @@ export class LoginComponent implements OnInit {
     forename: new FormControl('', [
       Validators.required
     ]),
-    surname: new FormControl('', [
+    lastName: new FormControl('', [
+      Validators.required
+    ])
+  })
+
+  loginForm = new FormGroup({
+    email: new FormControl('',[
+      Validators.required
+    ]),
+    password: new FormControl('', [
       Validators.required
     ])
   })
 
   registerAccount(){
+
+    this.loading = true;
+
+    let accountData = {
+      'email': this.registerForm.value.email,
+      'password': this.registerForm.value.password,
+      'firstName': this.registerForm.value.forename,
+      'lastName': this.registerForm.value.lastName
+    }
+
+    this.authService.registerAccount(accountData).subscribe((res)=>{
+      console.log(res);
+      this.loading = false;
+    })
+  }
+
+  loginAccount(){
+    this.loading = true;
+
+    let accountData = {
+      'email': this.loginForm.value.email,
+      'password': this.loginForm.value.password
+    }
+
+    this.authService.loginAccount(accountData).subscribe((res: any)=>{
+      console.log(res);
+      console.log(res.userId);
+      sessionStorage["userID"] = res.userId;
+
+      console.log(sessionStorage["userID"])
+      sessionStorage["token"] =res.token;
+      this.loading = false;
+      this.router.navigateByUrl('/userdashboard');
+    })
 
   }
 

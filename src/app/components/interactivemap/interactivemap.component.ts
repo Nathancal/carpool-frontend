@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/interfaces/user';
-import { HttpClient } from '@angular/common/http';
 import tt from '@tomtom-international/web-sdk-maps';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PickupdetailsComponent } from '../pickupdetails/pickupdetails.component';
+import { PickupService } from 'src/app/services/pickup.service';
 
 @Component({
   selector: 'app-interactivemap',
@@ -14,12 +14,18 @@ import { PickupdetailsComponent } from '../pickupdetails/pickupdetails.component
 export class InteractivemapComponent implements OnInit {
   title = 'test-app';
   userData!: User[];
+  userHostData: any;
   map!: tt.Map;
   marker: any;
+  currLat: any;
+  currLng: any;
+  center = [];
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, public pickupService: PickupService) {}
+
 
   ngOnInit(): void {
+
     this.map = tt.map({
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
       container: 'map',
@@ -29,21 +35,39 @@ export class InteractivemapComponent implements OnInit {
 
     this.map.addControl(new tt.NavigationControl(), 'bottom-right');
 
-    this.map.on('click', (e) => {
+    this.pickupService.getUserPickups(sessionStorage["userID"]).subscribe((res:any) =>{
+      this.userHostData = res.data;
+      this.userHostData.forEach((pickup:any) => {
+
+        let latlng = {
+          'lat': pickup.lat,
+          'lng': pickup.lng
+        }
+
+        this.createPickupMarker(latlng, pickup)
+
+      });
+      console.log(res.data);
+    })
+
+
+
+    this.map.on('dblclick', (e) => {
       console.log(e.lngLat);
       this.PickupDetailsModal(e);
-      this.dialog.afterAllClosed.subscribe((res) =>{
-        this.createPickupMarker(e.lngLat);
-      })
+
     });
   }
 
-  createPickupMarker(latlng: any) {
+  createPickupMarker(latlng: any, pickup: any) {
     let element = document.createElement('div');
     element.id = 'pickup-marker';
+    var popupDiv = window.document.createElement('div');
+    popupDiv.innerHTML = pickup.address;
+    let popup = new tt.Popup().setDOMContent(popupDiv);
     let marker = new tt.Marker({ element: element })
       .setLngLat(latlng)
-      .addTo(this.map);
+      .addTo(this.map).setPopup(popup);
   }
 
   PickupDetailsModal(e: any) {
@@ -55,9 +79,18 @@ export class InteractivemapComponent implements OnInit {
     configDialog.panelClass = "pickup-modal-container";
     configDialog.data = {
       lat: e.lngLat.lat,
-      lng: e.lngLat.lng
+      lng: e.lngLat.lng,
+      createSuccessful: false,
+      pickup: {}
     }
 
     const modal = this.dialog.open(PickupdetailsComponent, configDialog);
+
+    modal.afterClosed().subscribe((res: any) =>{
+      console.log(res);
+      if(res.createSuccessful == true){
+        this.createPickupMarker(e.lngLat, res.pickup);
+      }
+    })
   }
 }
