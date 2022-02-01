@@ -77,6 +77,8 @@ export class LoginComponent implements OnInit {
       sessionStorage["token"] =res.token;
       this.loading = false;
       this.router.navigateByUrl('/userdashboard');
+    }, (err:any)=>{
+      console.log(err)
     })
 
   }

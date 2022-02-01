@@ -33,6 +33,14 @@ export class InteractivemapComponent implements OnInit {
       zoom: 12,
     });
 
+    let geolocateControl = new tt.GeolocateControl({
+      positionOptions:{
+        enableHighAccuracy:true
+      }
+    })
+
+    this.map.addControl(geolocateControl, 'bottom-right')
+
     this.map.addControl(new tt.NavigationControl(), 'bottom-right');
 
     this.pickupService.getUserPickups(sessionStorage["userID"]).subscribe((res:any) =>{
@@ -40,8 +48,8 @@ export class InteractivemapComponent implements OnInit {
       this.userHostData.forEach((pickup:any) => {
 
         let latlng = {
-          'lat': pickup.lat,
-          'lng': pickup.lng
+          'lat': pickup.location.coordinates[0],
+          'lng': pickup.location.coordinates[1]
         }
 
         this.createPickupMarker(latlng, pickup)
@@ -50,6 +58,15 @@ export class InteractivemapComponent implements OnInit {
       console.log(res.data);
     })
 
+
+    this.map.on('click', (e) =>{
+      console.log(e.lngLat)
+
+      //resets the center co-ordinates to only show locations in a more precise area.
+      this.map.setCenter(e.lngLat);
+    })
+
+    this.map.getCenter()
 
 
     this.map.on('dblclick', (e) => {
