@@ -19,12 +19,22 @@ export class InteractivemapComponent implements OnInit {
   marker: any;
   currLat: any;
   currLng: any;
+  startLat: any;
+  startLng: any;
   center = [];
 
   constructor(private dialog: MatDialog, public pickupService: PickupService) {}
 
 
   ngOnInit(): void {
+
+
+    let geolocateControl = new tt.GeolocateControl({
+      positionOptions:{
+        enableHighAccuracy:true
+      },
+      trackUserLocation:true
+    })
 
     this.map = tt.map({
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
@@ -33,15 +43,10 @@ export class InteractivemapComponent implements OnInit {
       zoom: 12,
     });
 
-    let geolocateControl = new tt.GeolocateControl({
-      positionOptions:{
-        enableHighAccuracy:true
-      }
-    })
 
     this.map.addControl(geolocateControl, 'bottom-right')
-
     this.map.addControl(new tt.NavigationControl(), 'bottom-right');
+
 
     this.pickupService.getUserPickups(sessionStorage["userID"]).subscribe((res:any) =>{
       this.userHostData = res.data;
@@ -56,29 +61,41 @@ export class InteractivemapComponent implements OnInit {
 
       });
       console.log(res.data);
+
     })
 
-
-    this.map.on('click', (e) =>{
-      console.log(e.lngLat)
-
-      //resets the center co-ordinates to only show locations in a more precise area.
+    this.map.on('click', (e) => {
+      this.getAvailablePickups(e.lngLat)
       this.map.setCenter(e.lngLat);
-    })
+    });
 
-    this.map.getCenter()
-
+    this.map.on('mouseover', (e) => {
+      this.getAvailablePickups(e.lngLat)
+    });
 
     this.map.on('dblclick', (e) => {
       console.log(e.lngLat);
       this.PickupDetailsModal(e);
-
+      this.map.setCenter(e.lngLat);
     });
+  }
+
+  getAvailablePickups(latlng:any){
+
+    this.pickupService.getPickupsInArea(latlng.lat, latlng.lng).subscribe((res)=>{
+      console.log(res);
+    })
+
   }
 
   createPickupMarker(latlng: any, pickup: any) {
     let element = document.createElement('div');
-    element.id = 'pickup-marker';
+    if(pickup.hostId == sessionStorage["userID"]){
+      element.id = 'user-pickup-marker';
+    }else{
+      element.id = 'available-pickup-marker';
+    }
+
     var popupDiv = window.document.createElement('div');
     popupDiv.innerHTML = pickup.address;
     let popup = new tt.Popup().setDOMContent(popupDiv);
