@@ -15,6 +15,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { PickupdetailsComponent } from './components/pickupdetails/pickupdetails.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { JourneydetailComponent } from './components/journeydetail/journeydetail.component';
+import { JourneyoverviewComponent } from './components/journeyoverview/journeyoverview.component';
+import { JourneyjoinComponent } from './components/journeyjoin/journeyjoin.component';
+import { QRCodeModule } from 'angular2-qrcode';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { QrscannerComponent } from './components/qrscanner/qrscanner.component';
+import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.component';
+
 
 
 @NgModule({
@@ -26,7 +34,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     HomeComponent,
     UserdashboardComponent,
     PickupdetailsComponent,
-    SearchbarComponent
+    SearchbarComponent,
+    JourneydetailComponent,
+    JourneyoverviewComponent,
+    JourneyjoinComponent,
+    QrscannerComponent,
+    QrgeneratorComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +47,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     AppRoutingModule,
     FlexLayoutModule,
+    QRCodeModule,
+    ZXingScannerModule,
     FormsModule,
     BrowserAnimationsModule,
     MaterialModule

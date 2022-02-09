@@ -1,8 +1,6 @@
 @import "@tomtom-international/web-sdk-maps";
 
-
-
-.map-container{
+.map-container {
   position: relative;
 }
 
@@ -12,7 +10,7 @@
   position: absolute;
 }
 
-.search-bar{
+.search-bar {
   font-size: 125%;
   position: absolute;
   width: 75%;
@@ -22,7 +20,7 @@
   border-radius: 5px 5px;
 }
 
-.search-bar-form-field{
+.search-bar-form-field {
   width: 100%;
 }
 
@@ -30,19 +28,28 @@
   background-image: url("../../../assets/user-created-pickups-blue.png");
   background-size: cover;
   width: 40px;
-  height: 30px;
+  height: 50px;
 }
 
-#available-pickup-marker{
+#available-pickup-marker {
   background-image: url("../../../assets/available-pickups-green.png");
   background-size: cover;
   width: 40px;
-  height: 30px;
+  height: 60px;
 }
 
-.pickup-modal-container{
-  padding: 0%;
+.popup-container {
+  width: 250px;
+  height: 250px;
+  background-color: aqua;
 }
 
+.popup-title-container {
+  display: flex;
+  text-align: center;
+  align-items: center;
+}
 
-
+.popup-title{
+  text-align: center;
+}

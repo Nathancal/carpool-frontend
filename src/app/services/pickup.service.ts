@@ -13,16 +13,15 @@ export class PickupService {
     };
 
     return this.http.get(
-      'http://127.0.0.1:5000/api/v1/pickup/userhostedpickups',
+      'http://192.168.0.21:5000/api/v1/pickup/userhostedpickups',
       { headers: header }
     );
   }
 
   getPickupsInArea(lat: number, lng: number) {
-    console.log('final coordinate check', lat, lng);
 
     return this.http.post(
-      'http://127.0.0.1:5000/api/v1/pickup/pickupsatlocation',
+      'http://192.168.0.21:5000/api/v1/pickup/pickupsatlocation',
       { lat: lat, lng: lng }
     );
   }
@@ -36,7 +35,7 @@ export class PickupService {
     console.log(pickupData.hostId);
 
     return this.http.post(
-      'http://127.0.0.1:5000/api/v1/pickup/create',
+      'http://192.168.0.21:5000/api/v1/pickup/create',
       {
         hostId: pickupData.hostId,
         lat: pickupData.lat,

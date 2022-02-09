@@ -14,7 +14,7 @@ export class AuthService {
     };
 
     return this.http.post(
-      'http://127.0.0.1:5000/api/v1/user/login',
+      'http://192.168.0.21:5000/api/v1/user/login',
       {
         email: accountData.email,
         password: accountData.password,
@@ -32,7 +32,7 @@ export class AuthService {
     console.log(accountData);
 
     return this.http.post(
-      'http://127.0.0.1:5000/api/v1/user/signup',
+      'http://192.168.0.21:5000/api/v1/user/signup',
       {
         email: accountData.email,
         password: accountData.password,
