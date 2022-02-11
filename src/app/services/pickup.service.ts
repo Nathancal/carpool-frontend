@@ -7,13 +7,25 @@ import { HttpClient } from '@angular/common/http';
 export class PickupService {
   constructor(public http: HttpClient) {}
 
+  getHostDetails(hostId:any, pickupId:any){
+
+    return this.http.post(
+      'https://192.168.0.21:5000/api/v1/pickup/gethostdetails',{
+        "pickupId": pickupId,
+        "hostId": hostId
+      }
+
+    );
+
+  }
+
   getUserPickups(userId: any) {
     const header = {
       userId: userId,
     };
 
     return this.http.get(
-      'http://192.168.0.21:5000/api/v1/pickup/userhostedpickups',
+      'https://192.168.0.21:5000/api/v1/pickup/userhostedpickups',
       { headers: header }
     );
   }
@@ -21,7 +33,7 @@ export class PickupService {
   getPickupsInArea(lat: number, lng: number) {
 
     return this.http.post(
-      'http://192.168.0.21:5000/api/v1/pickup/pickupsatlocation',
+      'https://192.168.0.21:5000/api/v1/pickup/pickupsatlocation',
       { lat: lat, lng: lng }
     );
   }
@@ -35,7 +47,7 @@ export class PickupService {
     console.log(pickupData.hostId);
 
     return this.http.post(
-      'http://192.168.0.21:5000/api/v1/pickup/create',
+      'https://192.168.0.21:5000/api/v1/pickup/create',
       {
         hostId: pickupData.hostId,
         lat: pickupData.lat,

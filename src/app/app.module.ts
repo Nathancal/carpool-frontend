@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +22,8 @@ import { QRCodeModule } from 'angular2-qrcode';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { QrscannerComponent } from './components/qrscanner/qrscanner.component';
 import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.component';
-
+import * as Hammer from 'hammerjs';
+import { PickupoverviewComponent } from './components/pickupoverview/pickupoverview.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.compo
     JourneyjoinComponent,
     QrscannerComponent,
     QrgeneratorComponent,
+    PickupoverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +51,7 @@ import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.compo
     FlexLayoutModule,
     QRCodeModule,
     ZXingScannerModule,
+    HammerModule,
     FormsModule,
     BrowserAnimationsModule,
     MaterialModule

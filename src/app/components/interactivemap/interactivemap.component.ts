@@ -12,6 +12,8 @@ import tt, {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PickupdetailsComponent } from '../pickupdetails/pickupdetails.component';
 import { PickupService } from 'src/app/services/pickup.service';
+import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.component';
+import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 
 @Component({
   selector: 'app-interactivemap',
@@ -23,6 +25,7 @@ export class InteractivemapComponent implements OnInit {
   title = 'test-app';
   userData!: User[];
   userHostData: any;
+  private userInfo: any;
   availablePickups: any;
   map!: tt.Map;
   longPress = false;
@@ -33,7 +36,7 @@ export class InteractivemapComponent implements OnInit {
   startLng: any;
   center = [];
 
-  constructor(private dialog: MatDialog, public pickupService: PickupService) {}
+  constructor(private dialog: MatDialog, public pickupService: PickupService, public dycomService: DynamiccomponentService) {}
   @ViewChild('popupJoin') popupJoin!: ElementRef;
 
   ngOnInit(): void {
@@ -72,34 +75,28 @@ export class InteractivemapComponent implements OnInit {
       }
     });
 
+    this.map.on('touchstart', (e) => {
+      const timeStart = new Date();
+      this.map.on('touchend', () => {
+        const timeEnd = new Date();
+        let milliseconds =
+          Math.abs(timeEnd.getMilliseconds() - timeStart.getMilliseconds()) /
+          100;
+          if (milliseconds > 5) {
+            this.PickupDetailsModal(e);
+          }
+        console.log(milliseconds.valueOf());
+      });
+    });
+
     this.map.on('dblclick', (e) => {
       this.PickupDetailsModal(e);
       let centerValue = this.map.getCenter();
-      this.map.setCenter(e.lngLat);
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
       if (centerValue.distanceTo(e.lngLat) > 500) {
         this.getAvailablePickups(e.lngLat);
       }
-    });
-
-    this.map.on('touchstart', (e) => {
-      e.preventDefault();
-      this.longPress = true;
-      setTimeout((e: any) => {
-        this.PickupDetailsModal(e);
-        let centerValue = this.map.getCenter();
-        this.map.setCenter(e.lngLat);
-        //Reduces the amounts of calls to the backend when user clicks on map if available
-        //pickups are already displayed.
-        if (centerValue.distanceTo(e.lngLat) > 500) {
-          this.getAvailablePickups(e.lngLat);
-        }
-      }, 1000);
-    });
-
-    this.map.on('touchend', (e) => {
-      this.longPress = false;
     });
   }
 
@@ -127,50 +124,61 @@ export class InteractivemapComponent implements OnInit {
         console.log(res);
         this.availablePickups = res.data;
 
-        if (!this.availablePickups.hostId == sessionStorage['userID']) {
-          this.availablePickups.forEach((pickup: any) => {
-            let latlng = {
-              lat: pickup.location.coordinates[0],
-              lng: pickup.location.coordinates[1],
-            };
+        this.availablePickups.forEach((pickup: any) => {
+          let latlng = {
+            lat: pickup.location.coordinates[0],
+            lng: pickup.location.coordinates[1],
+          };
 
-            this.createPickupMarker(latlng, pickup);
-          });
-        }
+          this.createPickupMarker(latlng, pickup);
+        });
       });
   }
 
   createPickupMarker(latlng: any, pickup: any) {
     //Prevents the same map marker being added multiple times to the same location
     //This stops images being duplicated in place.
+    let popupContent = this.dycomService.injectComponent(PickupoverviewComponent, (data:any)=>{
+      data.latlng = latlng;
+      data.pickup =  pickup;
+    })
     let element = document.createElement('div');
     if (pickup.hostId == sessionStorage['userID']) {
       element.id = 'user-pickup-marker';
-      let popupElement = document.createElement('div');
-      let popupElementTitleContainer = document.createElement('div');
-      popupElementTitleContainer.className = 'popup-title-container';
-      popupElement.append(popupElementTitleContainer);
-
-      let popupElementTitle = document.createElement('h3');
-      popupElementTitle.innerText = 'Your Pickup';
-      popupElementTitle.className = 'popup-title';
-      popupElementTitleContainer.append(popupElementTitle);
-
       let popup = new tt.Popup({
         offset: 40,
         className: 'popup-container',
-      }).setDOMContent(popupElement);
+      }).setDOMContent(popupContent);
       let marker = new tt.Marker({ element: element })
         .setLngLat(latlng)
         .setPopup(popup)
         .addTo(this.map);
     } else {
       element.id = 'available-pickup-marker';
-      let popup = new tt.Popup().setDOMContent(this.popupJoin.nativeElement);
-      let marker = new tt.Marker({ element: element })
-        .setLngLat(latlng)
-        .setPopup(popup)
-        .addTo(this.map);
+
+      this.pickupService
+        .getHostDetails(pickup.hostId, pickup.pickupId)
+        .subscribe((res) => {
+          this.userInfo = res;
+          console.log(res);
+          console.log(this.userInfo);
+
+          let popup = new tt.Popup({
+            offset: 40,
+          }).setHTML(
+            '<div class="popup-address">' +
+              pickup.address +
+              ' </div><br><div class="popup-firstname">' +
+              this.userInfo.data.firstName +
+              "'" +
+              's Carpool</div><br>'+
+              '<button type="button" (click)="this.PickupOverviewModal()" class="submit-btn">Pickup Overview</button>'
+          );
+          let marker = new tt.Marker({ element: element })
+            .setLngLat(latlng)
+            .setPopup(popup)
+            .addTo(this.map);
+        });
     }
   }
 
@@ -187,7 +195,6 @@ export class InteractivemapComponent implements OnInit {
       createSuccessful: false,
       pickup: {},
     };
-
     const modal = this.dialog.open(PickupdetailsComponent, configDialog);
 
     modal.afterClosed().subscribe((res: any) => {
@@ -195,6 +202,27 @@ export class InteractivemapComponent implements OnInit {
       if (res.createSuccessful == true) {
         this.createPickupMarker(e.lngLat, res.pickup);
       }
+    });
+  }
+
+  PickupOverviewModal(e: any) {
+    const configDialog = new MatDialogConfig();
+
+    configDialog.id = 'pickupoverviewsmodal';
+    configDialog.height = '400px';
+    configDialog.width = '100%';
+    configDialog.panelClass = 'pickup-modal-container';
+    configDialog.data = {
+      lat: e.lngLat.lat,
+      lng: e.lngLat.lng,
+      createSuccessful: false,
+      pickup: {},
+    };
+
+    const modal = this.dialog.open(PickupoverviewComponent, configDialog);
+
+    modal.afterClosed().subscribe((res: any) => {
+
     });
   }
 }
