@@ -7,6 +7,16 @@ import { HttpClient } from '@angular/common/http';
 export class PickupService {
   constructor(public http: HttpClient) {}
 
+  joinPickup(pickupId: any, userId: any){
+
+    return this.http.post(
+      'https://192.168.0.21:5000/api/v1/pickup/joinpickup',{
+        "pickupId": pickupId,
+        "userId": userId
+      }
+
+    );  }
+
   getHostDetails(hostId:any, pickupId:any){
 
     return this.http.post(

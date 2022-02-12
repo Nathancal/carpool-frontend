@@ -38,8 +38,8 @@
         </div>
         <p fxLayoutAlign=" start">{{ this.latlng.lat }}</p>
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-button >Join Journey</button>
+      <mat-card-actions fxLayoutAlign="space-evenly center">
+        <button mat-button (onclick)="joinPickup(this.pickup.pickupId)">Join Journey</button>
         <button mat-button >Join Carpool</button>
       </mat-card-actions>
       <mat-card-footer> </mat-card-footer>

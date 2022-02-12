@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PickupService } from 'src/app/services/pickup.service';
 
 @Component({
   selector: 'app-pickupoverview',
@@ -7,16 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PickupoverviewComponent implements OnInit {
 
-  constructor() { }
+  constructor(public pickupService: PickupService) { }
 
   latlng: any;
   pickup: any;
   userInfo: any;
   userCreated: any;
 
-  
+
 
   ngOnInit(): void {
   }
 
+  joinPickup(pickupId: any ){
+    const userId = sessionStorage["userID"]
+    this.pickupService.joinPickup(pickupId, userId).subscribe((res) =>{
+
+    })
+
+  }
 }
