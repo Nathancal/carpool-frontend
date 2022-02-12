@@ -1,0 +1,30 @@
+
+.container{
+  width:100%;
+}
+
+
+.user-image{
+  width: 30%;
+  height: 30%
+}
+
+.user-data-title{
+font-size: 125%;
+font-weight: 500;
+}
+
+.subheading-container{
+  margin-left: 2%;
+}
+
+.user-data-subtitle{
+  font-size: 100%;
+  font-weight: 500;
+  }
+
+.user-pickup-text{
+  font-size: 85%;
+  font-weight: 400;
+}
+

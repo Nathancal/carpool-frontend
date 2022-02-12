@@ -1,4 +1,69 @@
-<div>
-  <h4>Test this component renderer..</h4>
+<div class="container">
+  <ng-container *ngIf="!userCreated; else userGenerated">
+    <mat-card>
+      <mat-card-title>
+        {{ this.userInfo.data.firstName }}'s Carpool
+      </mat-card-title>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign=" center">
+          <img
+            mat-card-avatar
+            class="user-image"
+            src="https://randomuser.me/api/portraits/women/43.jpg"
+          />
+          <div class="subheading-container">
+            <p class="user-data-title" >User Rating</p>
+            <p></p>
+            <p class="user-data-title" >Miles Travelled</p>
+          </div>
+        </div>
+        <div fxLayout="row">
+          <div fxLayout="column">
+            <p class="user-data-subtitle">Pickup</p>
+            <p class="user-pickup-text">{{this.pickup.address}}</p>
+            <p class="user-pickup-text">{{this.pickup.date | date: "shortDate"}}, {{this.pickup.time}}</p>
+          </div>
+          <div fxLayout="column">
+            <p class="user-data-subtitle">Destination</p>
+            <p class="user-pickup-text">{{this.pickup.address}}</p>
+            <p class="user-pickup-text">{{this.pickup.date | date: "shortDate"}}, {{this.pickup.time}}</p>
+          </div>
+        </div>
+        <div fxLayout="row">
+            <div fxLayout="row">
+              <p class="user-data-title">Passengers</p>
+            </div>
+            <div fxLayout="row">
+            </div>
+        </div>
+        <p fxLayoutAlign=" start">{{ this.latlng.lat }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button >Join Journey</button>
+        <button mat-button >Join Carpool</button>
+      </mat-card-actions>
+      <mat-card-footer> </mat-card-footer>
+    </mat-card>
+  </ng-container>
 
+  <ng-template #userGenerated>
+    <mat-card>
+      <mat-card-title>
+        {{ this.userInfo.data.firstName }}'s Carpool
+      </mat-card-title>
+      <mat-card-content>
+        <div>
+          <img
+            mat-card-avatar
+            src="https://randomuser.me/api/portraits/women/43.jpg"
+          />
+          <h6>User Rating</h6>
+          <p></p>
+        </div>
+        <p>{{ this.latlng.lat }}</p>
+        <h3>{{ this.pickup.address }}</h3>
+      </mat-card-content>
+      <mat-card-footer> </mat-card-footer>
+    </mat-card>
+  </ng-template>
 </div>

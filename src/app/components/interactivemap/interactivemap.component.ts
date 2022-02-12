@@ -138,22 +138,20 @@ export class InteractivemapComponent implements OnInit {
   createPickupMarker(latlng: any, pickup: any) {
     //Prevents the same map marker being added multiple times to the same location
     //This stops images being duplicated in place.
-    let popupContent = this.dycomService.injectComponent(PickupoverviewComponent, (data:any)=>{
-      data.latlng = latlng;
-      data.pickup =  pickup;
-    })
+
     let element = document.createElement('div');
     if (pickup.hostId == sessionStorage['userID']) {
       element.id = 'user-pickup-marker';
       let popup = new tt.Popup({
         offset: 40,
         className: 'popup-container',
-      }).setDOMContent(popupContent);
+      }).setText('Text!');
       let marker = new tt.Marker({ element: element })
         .setLngLat(latlng)
         .setPopup(popup)
         .addTo(this.map);
     } else {
+
       element.id = 'available-pickup-marker';
 
       this.pickupService
@@ -162,18 +160,16 @@ export class InteractivemapComponent implements OnInit {
           this.userInfo = res;
           console.log(res);
           console.log(this.userInfo);
-
+          let popupContent = this.dycomService.injectComponent(PickupoverviewComponent,x => {
+            x.latlng = latlng;
+            x.pickup = pickup;
+            x.userInfo = this.userInfo;
+            x.userCreated = false;
+          })
           let popup = new tt.Popup({
             offset: 40,
-          }).setHTML(
-            '<div class="popup-address">' +
-              pickup.address +
-              ' </div><br><div class="popup-firstname">' +
-              this.userInfo.data.firstName +
-              "'" +
-              's Carpool</div><br>'+
-              '<button type="button" (click)="this.PickupOverviewModal()" class="submit-btn">Pickup Overview</button>'
-          );
+            maxWidth:"750px"
+          }).setDOMContent(popupContent);
           let marker = new tt.Marker({ element: element })
             .setLngLat(latlng)
             .setPopup(popup)
