@@ -9,7 +9,12 @@ export class PickupoverviewComponent implements OnInit {
 
   constructor() { }
 
-  pickupInfo: any;
+  latlng: any;
+  pickup: any;
+  userInfo: any;
+  userCreated: any;
+
+  
 
   ngOnInit(): void {
   }
