@@ -26,9 +26,8 @@ export class PickupService {
 
     );  }
 
-  getPassengerDetails(pickupId: any, passengerId: any){
-    return this.http.post('https://192.168.0.21:5000/api/v1/pickup/getPassengerDetails',{
-      "pickupId": pickupId,
+  getPassengerDetails(passengerId: any){
+    return this.http.post('https://192.168.0.21:5000/api/v1/pickup/getpassengerdetails',{
       "passengerId": passengerId
     })
   }

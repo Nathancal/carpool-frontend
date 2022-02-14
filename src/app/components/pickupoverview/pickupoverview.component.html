@@ -43,7 +43,7 @@
               fxLayout="row"
               *ngFor="let passenger of this.pickup.passengers"
             >
-              {{ passenger.passengerId }}
+              {{ passenger.passengerId }} || {{passenger.passengerDetails.firstName}}
             </div>
           </div>
         </div>

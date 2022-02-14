@@ -14,7 +14,9 @@ export class PickupoverviewComponent implements OnInit {
   userInfo: any;
   userCreated: any;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadPassengerInfo();
+  }
 
   joinPickup(pickupId: any) {
     console.log('button clicked');
@@ -42,12 +44,15 @@ export class PickupoverviewComponent implements OnInit {
     );
   }
 
-  loadPassengerInfo(pickupId: any, passengerId: any) {
+  loadPassengerInfo() {
     const userId = sessionStorage['userID'];
-    return this.pickupService.getPassengerDetails(pickupId, passengerId);
+    this.pickup.passengers.forEach((passenger: any) => {
+      this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
+        passenger.passengerDetails = res.data;
+      });
+    });
+
   }
-
-
 
   capitaliseName(name: string) {
     return name.charAt(0).toUpperCase() + name.slice(1);
