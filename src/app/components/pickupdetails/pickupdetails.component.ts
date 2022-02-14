@@ -56,6 +56,7 @@ export class PickupdetailsComponent implements OnInit {
         'lng': this.data.lng,
         'date': this.pickupForm.value.date,
         'time': this.pickupForm.value.time,
+        'totalNumPassengers': this.pickupForm.value.numPassengers,
         'address': this.locationAddress
     }
 

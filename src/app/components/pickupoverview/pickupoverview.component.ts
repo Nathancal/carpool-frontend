@@ -4,27 +4,47 @@ import { PickupService } from 'src/app/services/pickup.service';
 @Component({
   selector: 'app-pickupoverview',
   templateUrl: './pickupoverview.component.html',
-  styleUrls: ['./pickupoverview.component.css']
+  styleUrls: ['./pickupoverview.component.css'],
 })
 export class PickupoverviewComponent implements OnInit {
-
-  constructor(public pickupService: PickupService) { }
+  constructor(public pickupService: PickupService) {}
 
   latlng: any;
   pickup: any;
   userInfo: any;
   userCreated: any;
 
+  ngOnInit(): void {}
 
+  joinPickup(pickupId: any) {
+    console.log('button clicked');
 
-  ngOnInit(): void {
+    const userId = sessionStorage['userID'];
+    this.pickupService.joinPickup(pickupId, userId).subscribe(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
-  joinPickup(pickupId: any ){
-    const userId = sessionStorage["userID"]
-    this.pickupService.joinPickup(pickupId, userId).subscribe((res) =>{
-
-    })
-
+  exitPickup(pickupId: any) {
+    const userId = sessionStorage['userID'];
+    this.pickupService.exitPickup(pickupId, userId).subscribe(
+      (res) => {
+        console.log(res);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
+
+  capitaliseName(name: string){
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+
 }

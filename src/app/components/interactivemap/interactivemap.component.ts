@@ -37,7 +37,6 @@ export class InteractivemapComponent implements OnInit {
   center = [];
 
   constructor(private dialog: MatDialog, public pickupService: PickupService, public dycomService: DynamiccomponentService) {}
-  @ViewChild('popupJoin') popupJoin!: ElementRef;
 
   ngOnInit(): void {
     let geolocateControl = new tt.GeolocateControl({
@@ -66,10 +65,10 @@ export class InteractivemapComponent implements OnInit {
     this.map.on('click', (e) => {
       console.log(e.lngLat);
       let centerValue = this.map.getCenter();
-      this.map.setCenter(e.lngLat);
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
       if (centerValue.distanceTo(e.lngLat) > 500) {
+        this.map.setCenter(e.lngLat);
         this.getUserPickups();
         this.getAvailablePickups(e.lngLat);
       }

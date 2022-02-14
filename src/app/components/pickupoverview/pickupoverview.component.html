@@ -2,7 +2,7 @@
   <ng-container *ngIf="!userCreated; else userGenerated">
     <mat-card>
       <mat-card-title>
-        {{ this.userInfo.data.firstName }}'s Carpool
+        {{ capitaliseName(this.userInfo.data.firstName) }}'s Carpool
       </mat-card-title>
       <mat-card-content>
         <div fxLayout="row" fxLayoutAlign=" center">
@@ -12,35 +12,47 @@
             src="https://randomuser.me/api/portraits/women/43.jpg"
           />
           <div class="subheading-container">
-            <p class="user-data-title" >User Rating</p>
+            <p class="user-data-title">User Rating</p>
             <p></p>
-            <p class="user-data-title" >Miles Travelled</p>
+            <p class="user-data-title">Miles Travelled</p>
           </div>
         </div>
         <div fxLayout="row">
           <div fxLayout="column">
             <p class="user-data-subtitle">Pickup</p>
-            <p class="user-pickup-text">{{this.pickup.address}}</p>
-            <p class="user-pickup-text">{{this.pickup.date | date: "shortDate"}}, {{this.pickup.time}}</p>
+            <p class="user-pickup-text">{{ this.pickup.address }}</p>
+            <p class="user-pickup-text">
+              {{ this.pickup.date | date: "shortDate" }}, {{ this.pickup.time }}
+            </p>
           </div>
           <div fxLayout="column">
             <p class="user-data-subtitle">Destination</p>
-            <p class="user-pickup-text">{{this.pickup.address}}</p>
-            <p class="user-pickup-text">{{this.pickup.date | date: "shortDate"}}, {{this.pickup.time}}</p>
+            <p class="user-pickup-text">{{ this.pickup.address }}</p>
+            <p class="user-pickup-text">
+              {{ this.pickup.date | date: "shortDate" }}, {{ this.pickup.time }}
+            </p>
           </div>
         </div>
         <div fxLayout="row">
+          <div fxLayout="column">
             <div fxLayout="row">
               <p class="user-data-title">Passengers</p>
             </div>
-            <div fxLayout="row">
+
+            <div
+              fxLayout="row"
+              *ngFor="let passenger of this.pickup.passengers"
+            >
+              {{ passenger.passengerId }}
             </div>
+          </div>
         </div>
-        <p fxLayoutAlign=" start">{{ this.latlng.lat }}</p>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="space-evenly center">
-        <button mat-button (onclick)="joinPickup(this.pickup.pickupId)">Join Journey</button>
-        <button mat-button >Join Carpool</button>
+        <button mat-button (click)="joinPickup(this.pickup.pickupId)">
+          Join Journey
+        </button>
+        <button mat-button>Join Carpool</button>
       </mat-card-actions>
       <mat-card-footer> </mat-card-footer>
     </mat-card>
