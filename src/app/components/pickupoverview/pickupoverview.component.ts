@@ -42,9 +42,14 @@ export class PickupoverviewComponent implements OnInit {
     );
   }
 
-  capitaliseName(name: string){
-    return name.charAt(0).toUpperCase() + name.slice(1);
+  loadPassengerInfo(pickupId: any, passengerId: any) {
+    const userId = sessionStorage['userID'];
+    return this.pickupService.getPassengerDetails(pickupId, passengerId);
   }
 
 
+
+  capitaliseName(name: string) {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
 }

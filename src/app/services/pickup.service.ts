@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { PickupdetailsComponent } from '../components/pickupdetails/pickupdetails.component';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,13 @@ export class PickupService {
       }
 
     );  }
+
+  getPassengerDetails(pickupId: any, passengerId: any){
+    return this.http.post('https://192.168.0.21:5000/api/v1/pickup/getPassengerDetails',{
+      "pickupId": pickupId,
+      "passengerId": passengerId
+    })
+  }
 
   getHostDetails(hostId:any, pickupId:any){
 
