@@ -24,6 +24,7 @@ import { QrscannerComponent } from './components/qrscanner/qrscanner.component';
 import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.component';
 import * as Hammer from 'hammerjs';
 import { PickupoverviewComponent } from './components/pickupoverview/pickupoverview.component';
+import { StarRatingModule } from 'angular-star-rating';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { PickupoverviewComponent } from './components/pickupoverview/pickupoverv
     FlexLayoutModule,
     QRCodeModule,
     ZXingScannerModule,
+    StarRatingModule.forRoot(),
     HammerModule,
     FormsModule,
     BrowserAnimationsModule,
