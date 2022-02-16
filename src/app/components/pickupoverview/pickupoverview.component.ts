@@ -48,7 +48,9 @@ export class PickupoverviewComponent implements OnInit {
     const userId = sessionStorage['userID'];
     this.pickup.passengers.forEach((passenger: any) => {
       this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
-        passenger.passengerDetails = res.data;
+        passenger.passengerDetails = res.data[0];
+        console.log(passenger.passengerDetails);
+
       });
     });
 
