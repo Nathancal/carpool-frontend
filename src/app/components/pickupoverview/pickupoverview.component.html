@@ -6,15 +6,21 @@
       </mat-card-title>
       <mat-card-content>
         <div fxLayout="row" fxLayoutAlign=" center">
-          <img
-            mat-card-avatar
-            class="user-image"
-            src="https://randomuser.me/api/portraits/women/43.jpg"
-          />
-          <div class="subheading-container">
+          <div fxLayout="column">
+            <img
+              mat-card-avatar
+              class="user-image"
+              src="https://randomuser.me/api/portraits/women/43.jpg"
+            />
+          </div>
+          <div fxLayout="column">
             <p class="user-data-title">User Rating</p>
-            <star-rating [starType]="'svg'" [rating]="2.63"></star-rating>
-            <p class="user-data-title">Miles Travelled</p>
+            <star-rating
+              [starType]="'svg'"
+              [readOnly]="true"
+              [rating]="this.userInfo.data.avgScore"
+            ></star-rating>
+            <p class="user-data-title miles-travelled-title">Miles Travelled</p>
           </div>
         </div>
         <div fxLayout="row">
@@ -43,7 +49,9 @@
               fxLayout="row"
               *ngFor="let passenger of this.pickup.passengers"
             >
-              {{ passenger.passengerId }} || {{passenger.passengerDetails.firstName}}
+              <div *ngIf="passenger.passengerDetails">
+                {{ passenger.passengerDetails.firstName }} ||
+              </div>
             </div>
           </div>
         </div>

@@ -1,3 +1,11 @@
-<section class="mainsection">
-  <qr-code class="qrGenerator" [value]="testing" [size]="500"></qr-code>
-</section>
+<div fxLayout="row" fxLayoutAlign="center center">
+  <div fxLayout="column">
+    <div fxLayout="row">
+      <p>Scan code to check-in too pickup.</p>
+    </div>
+
+    <div fxLayout="row">
+      <qr-code class="qrGenerator" [value]="testing" [size]="500"></qr-code>
+    </div>
+  </div>
+</div>

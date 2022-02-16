@@ -1,14 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
-
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.pickup-modal-container .mat-dialog-container{
-  padding: 0%;
-  background: transparent;
-}
-
+@charset "UTF-8";
+/*VARIABLES
+====================================================*/
+/*Range*/
+/*Spacing*/
+/*Colors*/
+/*Sizes*/
+/*Animation*/
+/*Icons*/
+/*Disabled*/
+/*CSS Star Rating Elements
+=================================================================*/
+/*HELPER*/
 .center-all {
     display: -webkit-box;
     display: -webkit-flex;
@@ -917,4 +919,3 @@ Rating Component
     -ms-transform: rotate(360deg);
     transform: rotate(360deg);
 }
-

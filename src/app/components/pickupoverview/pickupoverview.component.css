@@ -5,13 +5,14 @@
 
 
 .user-image{
-  width: 30%;
-  height: 30%
+  width: 85%;
+  height: 85%
 }
 
 .user-data-title{
 font-size: 125%;
 font-weight: 500;
+padding-bottom: 0;
 }
 
 .subheading-container{
@@ -26,5 +27,9 @@ font-weight: 500;
 .user-pickup-text{
   font-size: 85%;
   font-weight: 400;
+}
+
+.miles-travelled-title{
+  margin-top: 1%;
 }
 
