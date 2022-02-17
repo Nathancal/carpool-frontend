@@ -8,9 +8,12 @@ import { PickupdetailsComponent } from '../components/pickupdetails/pickupdetail
 export class PickupService {
   constructor(public http: HttpClient) {}
 
+
+  HTTPS_URL = 'https://192.168.0.21:5000/api/v1/pickup'
+
   exitPickup(pickupId: any, userId: any){
 
-    return this.http.post('https://192.168.0.21:5000/api/v1/pickup/exitpickup', {
+    return this.http.post(this.HTTPS_URL +'/exitpickup', {
       "pickupId": pickupId,
       "userId": userId
     })
@@ -19,15 +22,25 @@ export class PickupService {
   joinPickup(pickupId: any, userId: any){
 
     return this.http.post(
-      'https://192.168.0.21:5000/api/v1/pickup/joinpickup',{
+      this.HTTPS_URL + '/joinpickup',{
         "pickupId": pickupId,
         "userId": userId
       }
 
     );  }
 
+  checkUserIsPassenger(pickupId: any, userId: any){
+
+    return this.http.post(
+      this.HTTPS_URL + '/checkuserpassenger',{
+        "pickupId": pickupId,
+        "userId": userId
+      }
+    )
+  }
+
   getPassengerDetails(passengerId: any){
-    return this.http.post('https://192.168.0.21:5000/api/v1/pickup/getpassengerdetails',{
+    return this.http.post(this.HTTPS_URL + '/getpassengerdetails',{
       "passengerId": passengerId
     })
   }
@@ -35,7 +48,7 @@ export class PickupService {
   getHostDetails(hostId:any, pickupId:any){
 
     return this.http.post(
-      'https://192.168.0.21:5000/api/v1/pickup/gethostdetails',{
+      this.HTTPS_URL + '/gethostdetails',{
         "pickupId": pickupId,
         "hostId": hostId
       }
@@ -50,7 +63,7 @@ export class PickupService {
     };
 
     return this.http.get(
-      'https://192.168.0.21:5000/api/v1/pickup/userhostedpickups',
+      this.HTTPS_URL + '/userhostedpickups',
       { headers: header }
     );
   }
@@ -58,7 +71,7 @@ export class PickupService {
   getPickupsInArea(lat: number, lng: number) {
 
     return this.http.post(
-      'https://192.168.0.21:5000/api/v1/pickup/pickupsatlocation',
+      this.HTTPS_URL + '/pickupsatlocation',
       { lat: lat, lng: lng }
     );
   }
@@ -72,7 +85,7 @@ export class PickupService {
     console.log(pickupData.hostId);
 
     return this.http.post(
-      'https://192.168.0.21:5000/api/v1/pickup/create',
+      this.HTTPS_URL +  '/create',
       {
         hostId: pickupData.hostId,
         lat: pickupData.lat,

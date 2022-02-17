@@ -12,13 +12,15 @@ import {MatInputModule} from '@angular/material/input';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
+
 
 
 
 
 @NgModule({
-  imports: [MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
-  exports: [MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
+  imports: [MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
+  exports: [MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
   ],
 })
 export class MaterialModule {}

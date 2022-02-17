@@ -12,4 +12,8 @@ export class JourneyjoinComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  generateData(){
+
+  }
+
 }

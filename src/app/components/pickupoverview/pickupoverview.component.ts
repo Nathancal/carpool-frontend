@@ -11,10 +11,13 @@ export class PickupoverviewComponent implements OnInit {
 
   latlng: any;
   pickup: any;
+  isPassenger!: boolean;
+  ifPassengerDetails: any;
   userInfo: any;
   userCreated: any;
 
   ngOnInit(): void {
+    this.checkUserIsPassenger();
     this.loadPassengerInfo();
   }
 
@@ -44,13 +47,22 @@ export class PickupoverviewComponent implements OnInit {
     );
   }
 
+  checkUserIsPassenger(){
+    const userId = sessionStorage["userID"]
+    this.pickupService.checkUserIsPassenger(this.pickup.pickupId, userId).subscribe((res: any)=>{
+      this.isPassenger = res.isPassenger;
+      this.ifPassengerDetails = res.data;
+      console.log(this.isPassenger);
+    },(err)=>{
+      console.log(err);
+    })
+  }
+
   loadPassengerInfo() {
-    const userId = sessionStorage['userID'];
     this.pickup.passengers.forEach((passenger: any) => {
       this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
         passenger.passengerDetails = res.data[0];
         console.log(passenger.passengerDetails);
-
       });
     });
 

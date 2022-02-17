@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-qrgenerator',
@@ -7,16 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QrgeneratorComponent implements OnInit {
 
-  testing = "";
-  testingObject = {
-    "userId": "testid",
-    "createdAt": "0000-00-0000",
-    "miles": "15"
-  };
+  @Input() data: any;
+
   constructor() { }
 
   ngOnInit(): void {
-    this.testing = JSON.stringify(this.testingObject);
   }
 
 }
