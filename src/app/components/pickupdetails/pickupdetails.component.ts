@@ -13,7 +13,9 @@ export class PickupdetailsComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public mapService: MapsService, public pickupService: PickupService, private dialogRef: MatDialogRef<PickupdetailsComponent>) { }
 
-  locationAddress: any;
+  embarkAddress: any = undefined;
+  returnAddress: any = undefined;
+
   loading = false;
 
 
@@ -39,14 +41,21 @@ export class PickupdetailsComponent implements OnInit {
 
   reverseGeocode(){
     this.mapService.getAddress(this.data.lat, this.data.lng).subscribe((res:any)=>{
-      this.locationAddress = res.addresses[0].address.freeformAddress;
-      console.log(this.locationAddress);
+      if(this.embarkAddress == undefined){
+        this.embarkAddress = res.addresses[0].address.freeformAddress;
+      }
+
+      this.returnAddress = res.addresses[0].address.freeformAddress;
+      console.log(this.embarkAddress);
     })
+  }
+
+  selectDestination(){
+    this.dialogRef.close({createSuccessful: false, selectDestination: true})
   }
 
   pickupFormSubmit(){
     this.loading = true;
-
 
     console.log(this.pickupForm.value.date)
 
@@ -55,12 +64,15 @@ export class PickupdetailsComponent implements OnInit {
         'lat': this.data.lat,
         'lng': this.data.lng,
         'date': this.pickupForm.value.date,
+        'embarkAddress': this.embarkAddress,
+        'returnAddress': this.returnAddress,
         'time': this.pickupForm.value.time,
         'totalNumPassengers': this.pickupForm.value.numPassengers,
-        'address': this.locationAddress
+
     }
 
     this.pickupService.createPickup(pickupData).subscribe((res)=>{
+
       this.loading = false;
       this.dialogRef.close({createSuccessful: true, pickup: pickupData })
     }, (err)=>{

@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/interfaces/user';
 import tt, {
   TomTomAttributionControl,
@@ -14,6 +8,8 @@ import { PickupdetailsComponent } from '../pickupdetails/pickupdetails.component
 import { PickupService } from 'src/app/services/pickup.service';
 import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.component';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
+import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
+import { SearchbarComponent } from '../searchbar/searchbar.component';
 
 @Component({
   selector: 'app-interactivemap',
@@ -35,8 +31,15 @@ export class InteractivemapComponent implements OnInit {
   startLat: any;
   startLng: any;
   center = [];
+  selectDestination = false;
 
-  constructor(private dialog: MatDialog, public pickupService: PickupService, public dycomService: DynamiccomponentService) {}
+  @ViewChild(SearchbarComponent) searchBar!: SearchbarComponent;
+
+  constructor(
+    private dialog: MatDialog,
+    public pickupService: PickupService,
+    public dycomService: DynamiccomponentService
+  ) {}
 
   ngOnInit(): void {
     let geolocateControl = new tt.GeolocateControl({
@@ -50,7 +53,7 @@ export class InteractivemapComponent implements OnInit {
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
       container: 'map',
       center: [-5.9301, 54.5973],
-      zoom: 12,
+      zoom: 16,
     });
 
     this.map.addControl(geolocateControl, 'bottom-right');
@@ -63,11 +66,18 @@ export class InteractivemapComponent implements OnInit {
     });
 
     this.map.on('click', (e) => {
+
+      console.log("search bar results = "+ this.searchBar.positionOfResult);
+      //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
+      if (this.searchBar.positionOfResult != undefined) {
+        this.map.setCenter(this.searchBar.positionOfResult);
+      }
+
       console.log(e.lngLat);
       let centerValue = this.map.getCenter();
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
-      if (centerValue.distanceTo(e.lngLat) > 500) {
+      if (centerValue.distanceTo(e.lngLat) > 500 && this.searchBar.positionOfResult == undefined) {
         this.map.setCenter(e.lngLat);
         this.getUserPickups();
         this.getAvailablePickups(e.lngLat);
@@ -75,15 +85,19 @@ export class InteractivemapComponent implements OnInit {
     });
 
     this.map.on('touchstart', (e) => {
+      //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
+      if (this.searchBar.positionOfResult != undefined) {
+        this.map.setCenter(this.searchBar.positionOfResult);
+      }
       const timeStart = new Date();
       this.map.on('touchend', () => {
         const timeEnd = new Date();
         let milliseconds =
           Math.abs(timeEnd.getMilliseconds() - timeStart.getMilliseconds()) /
           100;
-          if (milliseconds > 5) {
-            this.PickupDetailsModal(e);
-          }
+        if (milliseconds > 5) {
+          this.PickupDetailsModal(e);
+        }
         console.log(milliseconds.valueOf());
       });
     });
@@ -150,7 +164,6 @@ export class InteractivemapComponent implements OnInit {
         .setPopup(popup)
         .addTo(this.map);
     } else {
-
       element.id = 'available-pickup-marker';
 
       this.pickupService
@@ -159,15 +172,18 @@ export class InteractivemapComponent implements OnInit {
           this.userInfo = res;
           console.log(res);
           console.log(this.userInfo);
-          let popupContent = this.dycomService.injectComponent(PickupoverviewComponent,x => {
-            x.latlng = latlng;
-            x.pickup = pickup;
-            x.userInfo = this.userInfo;
-            x.userCreated = false;
-          })
+          let popupContent = this.dycomService.injectComponent(
+            PickupoverviewComponent,
+            (x) => {
+              x.latlng = latlng;
+              x.pickup = pickup;
+              x.userInfo = this.userInfo;
+              x.userCreated = false;
+            }
+          );
           let popup = new tt.Popup({
             offset: 40,
-            maxWidth:"750px"
+            maxWidth: '750px',
           }).setDOMContent(popupContent);
           let marker = new tt.Marker({ element: element })
             .setLngLat(latlng)
@@ -188,6 +204,7 @@ export class InteractivemapComponent implements OnInit {
       lat: e.lngLat.lat,
       lng: e.lngLat.lng,
       createSuccessful: false,
+      selectDestination: false,
       pickup: {},
     };
     const modal = this.dialog.open(PickupdetailsComponent, configDialog);
@@ -196,6 +213,10 @@ export class InteractivemapComponent implements OnInit {
       console.log(res);
       if (res.createSuccessful == true) {
         this.createPickupMarker(e.lngLat, res.pickup);
+      }
+      if(res.selectDestination == true){
+        this.selectDestination = true;
+
       }
     });
   }
@@ -216,8 +237,6 @@ export class InteractivemapComponent implements OnInit {
 
     const modal = this.dialog.open(PickupoverviewComponent, configDialog);
 
-    modal.afterClosed().subscribe((res: any) => {
-
-    });
+    modal.afterClosed().subscribe((res: any) => {});
   }
 }

@@ -33,3 +33,20 @@ padding-bottom: 0;
   margin-top: 1%;
 }
 
+.passenger-active{
+  background-color: #00c853;
+  font-size: 160%;
+  font-weight: 400;
+}
+
+.is-passenger-container{
+  max-width: 100%;
+  padding: 1%;
+}
+
+.is-passenger-title{
+  text-align: center;
+  font-size: 180%;
+  font-weight: 450;
+}
+

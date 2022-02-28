@@ -62,3 +62,17 @@
   font-weight: 400;
   color: #00c853;
 }
+
+.searchboxclass{
+  background-color: red;
+}
+
+
+.search-destination-header {
+  font-size: 80%;
+  position: absolute;
+  width: 100%;
+  margin: 1%;
+  background: rgba(51, 170, 51, 0.4);
+  border-radius: 5px 5px;
+}

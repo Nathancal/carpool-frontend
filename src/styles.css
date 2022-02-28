@@ -4,6 +4,8 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+@import url("/carpool-frontend/node_modules/@tomtom-international/web-sdk-plugin-searchbox/dist/SearchBox.css");
+
 .pickup-modal-container .mat-dialog-container{
   padding: 0%;
   background: transparent;

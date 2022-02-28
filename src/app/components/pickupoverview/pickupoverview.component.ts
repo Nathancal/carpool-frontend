@@ -12,6 +12,7 @@ export class PickupoverviewComponent implements OnInit {
   latlng: any;
   pickup: any;
   isPassenger!: boolean;
+  isLoading!: boolean;
   ifPassengerDetails: any;
   userInfo: any;
   userCreated: any;
@@ -51,7 +52,7 @@ export class PickupoverviewComponent implements OnInit {
     const userId = sessionStorage["userID"]
     this.pickupService.checkUserIsPassenger(this.pickup.pickupId, userId).subscribe((res: any)=>{
       this.isPassenger = res.isPassenger;
-      this.ifPassengerDetails = res.data;
+      console.log(res);
       console.log(this.isPassenger);
     },(err)=>{
       console.log(err);

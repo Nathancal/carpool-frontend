@@ -1,6 +1,13 @@
 <mat-form-field appearance="fill" class="search-bar-form-field">
   <mat-label>Search for a location</mat-label>
-  <input matInput placeholder="Placeholder">
+  <input matInput placeholder="Placeholder" [ngModel]="searchInput"   [matAutocomplete]="auto" (ngModelChange)="autoCompleteSearch($event)">
   <mat-icon matSuffix>search</mat-icon>
   <mat-hint>Search by address or postcode</mat-hint>
+
+<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-option *ngFor="let result of results" [value]="result.address.freeformAddress">
+    {{result.address.freeformAddress}}
+  </mat-option>
+</mat-autocomplete>
 </mat-form-field>
+

@@ -2,28 +2,11 @@
   <mat-card class="card-container">
     <div fxLayout="row" fxLayoutAlign="space-around center">
       <div fxLayout="column">
-        <h3>Start a new Carpool</h3>
+        <h3>Create Your pickup.</h3>
       </div>
     </div>
     <form [formGroup]="pickupForm" (ngSubmit)="pickupFormSubmit()">
       <div fxLayout="row" fxLayoutAlign="space-around center">
-        <div fxLayout="column" class="pickup-item-col">
-          <label>Journey Direction</label>
-          <mat-form-field
-            appearance="fill"
-            floatLabel="auto"
-            class="form-field-custom"
-          >
-            <mat-select required formControlName="direction">
-              <mat-option value="begin">beginning</mat-option>
-              <mat-option value="return">Return</mat-option>
-            </mat-select>
-            <mat-label
-              ><mat-icon>flight_takeoff</mat-icon> Journey Direction</mat-label
-            >
-          </mat-form-field>
-        </div>
-
         <div fxLayout="column" class="pickup-item-col">
           <label>Max Number of Passengers</label>
           <mat-form-field
@@ -31,14 +14,20 @@
             floatLabel="auto"
             class="form-field-custom"
           >
-            <mat-select class="mat-select-edit" formControlName="numPassengers" required>
+            <mat-select
+              class="mat-select-edit"
+              formControlName="numPassengers"
+              required
+            >
               <mat-option value="2">2</mat-option>
               <mat-option value="3">3</mat-option>
               <mat-option value="4">4</mat-option>
               <mat-option value="5">5</mat-option>
               <mat-option value="6">6</mat-option>
             </mat-select>
-            <mat-label><mat-icon>people</mat-icon>number of passengers</mat-label>
+            <mat-label
+              ><mat-icon>people</mat-icon>number of passengers</mat-label
+            >
           </mat-form-field>
         </div>
       </div>
@@ -60,37 +49,37 @@
           <label>Pickup time</label>
           <mat-form-field appearance="fill">
             <mat-label>pickup time</mat-label>
-            <input matInput type="time" formControlName="time"/>
+            <input matInput type="time" formControlName="time" />
           </mat-form-field>
         </div>
       </div>
       <div fxLayout="row">
-        <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="locationAddress">
-          <p>Selected Address</p>
-          <p>{{locationAddress}}</p>
-
+        <div
+          fxLayout="column"
+          fxLayoutAlign="space-around center"
+          *ngIf="embarkAddress"
+        >
+          <p>Pickup Location</p>
+          <p>{{ embarkAddress }}</p>
         </div>
-
-
       </div>
       <div fxLayout="row">
         <div fxLayout="column" fxLayoutAlign="space-around center">
           <button type="submit" mat-raised-button class="submit-btn">
             <mat-icon>cancel</mat-icon> close
           </button>
-
         </div>
-        <div fxLayout="column" fxLayoutAlign="space-around center">
-          <button type="submit" mat-raised-button class="submit-btn">
-            <mat-icon>done</mat-icon> create pickup
-          </button>
+        <ng-container>
 
+
+        </ng-container>
+        <div fxLayout="column" fxLayoutAlign="space-around center">
+          <button type="button" onclick="selectDestination()" mat-raised-button class="submit-btn">
+            <mat-icon>done</mat-icon> Select Destination
+          </button>
         </div>
       </div>
-
-
     </form>
-
   </mat-card>
   <mat-card-footer *ngIf="loading">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
