@@ -2,12 +2,13 @@
   <div id="map"></div>
   <div class="search-bar">
     <app-searchbar></app-searchbar>
+
   </div>
   <ng-container *ngIf="selectDestination">
-    <div class="select-destination-header">
-      <p>Select Destination to complete Pickup.</p>
+    <div class="destination-header-container" >
+      <mat-card class="select-destination-header ">
+        <p>Select Destination to complete Pickup.</p>
+      </mat-card>
     </div>
   </ng-container>
 </div>
-
-<ng-container></ng-container>

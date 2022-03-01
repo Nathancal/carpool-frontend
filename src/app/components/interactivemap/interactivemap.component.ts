@@ -10,6 +10,7 @@ import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.compon
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
 import { SearchbarComponent } from '../searchbar/searchbar.component';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-interactivemap',
@@ -31,7 +32,8 @@ export class InteractivemapComponent implements OnInit {
   startLat: any;
   startLng: any;
   center = [];
-  selectDestination = false;
+  selectDestination!: boolean;
+  embarkAddress: any;
 
   @ViewChild(SearchbarComponent) searchBar!: SearchbarComponent;
 
@@ -204,7 +206,9 @@ export class InteractivemapComponent implements OnInit {
       lat: e.lngLat.lat,
       lng: e.lngLat.lng,
       createSuccessful: false,
-      selectDestination: false,
+      createCancelled: false,
+      embarkAddress: this.embarkAddress,
+      selectDestination: this.selectDestination,
       pickup: {},
     };
     const modal = this.dialog.open(PickupdetailsComponent, configDialog);
@@ -212,11 +216,17 @@ export class InteractivemapComponent implements OnInit {
     modal.afterClosed().subscribe((res: any) => {
       console.log(res);
       if (res.createSuccessful == true) {
+        this.selectDestination = false;
+        this.embarkAddress = undefined;
         this.createPickupMarker(e.lngLat, res.pickup);
       }
       if(res.selectDestination == true){
         this.selectDestination = true;
-
+        this.embarkAddress = res.embarkAddress;
+      }
+      if(res.createCancelled == true){
+        this.selectDestination = res.selectDestination;
+        this.embarkAddress = false;
       }
     });
   }

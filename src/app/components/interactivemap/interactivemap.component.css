@@ -67,12 +67,17 @@
   background-color: red;
 }
 
+.destination-header-container{
+  padding-top: 20%;
+}
 
-.search-destination-header {
-  font-size: 80%;
-  position: absolute;
+.select-destination-header {
+  font-size: 150%;
+  position: relative;
+  color: #c4001d;
   width: 100%;
-  margin: 1%;
-  background: rgba(51, 170, 51, 0.4);
+ align-content: center;
+ text-align: center;
+  background: rgba(51, 170, 51, 0.9);
   border-radius: 5px 5px;
 }
