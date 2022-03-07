@@ -83,13 +83,20 @@ export class PickupService {
     };
 
     console.log(pickupData.hostId);
+    console.log(pickupData.eLat + ':' + pickupData.eLng)
+    console.log(pickupData.rLat + ':' + pickupData.rLng)
+
 
     return this.http.post(
       this.HTTPS_URL +  '/create',
       {
         hostId: pickupData.hostId,
-        lat: pickupData.lat,
-        lng: pickupData.lng,
+        eLat: pickupData.eLat,
+        eLng: pickupData.eLng,
+        embarkAddress: pickupData.embarkAddress,
+        returnAddress: pickupData.returnAddress,
+        rLat: pickupData.rLat,
+        rLng: pickupData.rLng,
         date: pickupData.date,
         time: pickupData.time,
         totalNumPassengers: pickupData.totalNumPassengers,

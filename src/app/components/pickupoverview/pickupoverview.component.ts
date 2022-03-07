@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { PickupService } from 'src/app/services/pickup.service';
+import { services as ttserv } from '@tomtom-international/web-sdk-services/';
+import tt, { Map, map } from '@tomtom-international/web-sdk-maps';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-pickupoverview',
   templateUrl: './pickupoverview.component.html',
   styleUrls: ['./pickupoverview.component.css'],
 })
-export class PickupoverviewComponent implements OnInit {
+export class PickupoverviewComponent implements OnInit, OnDestroy {
   constructor(public pickupService: PickupService) {}
 
   latlng: any;
@@ -16,10 +19,19 @@ export class PickupoverviewComponent implements OnInit {
   ifPassengerDetails: any;
   userInfo: any;
   userCreated: any;
+  map!: Map;
+  geojson: any;
+  routeShown!: boolean;
 
   ngOnInit(): void {
     this.checkUserIsPassenger();
     this.loadPassengerInfo();
+  }
+
+  ngOnDestroy(): void {
+    if (this.map.getLayer('route')) {
+      this.map.removeLayer('route');
+    }
   }
 
   joinPickup(pickupId: any) {
@@ -48,25 +60,79 @@ export class PickupoverviewComponent implements OnInit {
     );
   }
 
-  checkUserIsPassenger(){
-    const userId = sessionStorage["userID"]
-    this.pickupService.checkUserIsPassenger(this.pickup.pickupId, userId).subscribe((res: any)=>{
-      this.isPassenger = res.isPassenger;
-      console.log(res);
-      console.log(this.isPassenger);
-    },(err)=>{
-      console.log(err);
-    })
+  checkUserIsPassenger() {
+    let userId = sessionStorage['userID'];
+    this.pickupService
+      .checkUserIsPassenger(this.pickup.pickupId, userId)
+      .subscribe(
+        (res: any) => {
+          this.isPassenger = res.isPassenger;
+          console.log(res);
+          console.log('is user passenger' + this.isPassenger);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+
+  showRoute(pickup: any) {
+    this.routeShown = !this.routeShown;
+
+    if (this.routeShown) {
+      if(this.map.getLayer('route')){
+        this.map.removeLayer('route');
+        this.map.removeSource('route');
+      }
+      let route = ttserv
+        .calculateRoute({
+          key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
+          traffic: false,
+          locations:
+            [
+              pickup.embarkLocation.coordinates[1],
+              pickup.embarkLocation.coordinates[0],
+            ] +
+            ':' +
+            [
+              pickup.returnLocation.coordinates[1],
+              pickup.returnLocation.coordinates[0],
+            ],
+        })
+        .then((res) => {
+          console.log('route calculated');
+          let routeGeojson = res.toGeoJson();
+          this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: routeGeojson,
+            },
+            paint: {
+              'line-color': '#ff1744',
+              'line-width': 6,
+            },
+          });
+          console.log(routeGeojson);
+        });
+    } else if (!this.routeShown) {
+      if (this.map.getLayer('route')) {
+        this.map.removeLayer('route');
+        this.map.removeSource('route');
+      }
+    }
   }
 
   loadPassengerInfo() {
     this.pickup.passengers.forEach((passenger: any) => {
-      this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
-        passenger.passengerDetails = res.data[0];
-        console.log(passenger.passengerDetails);
-      });
+      this.pickupService
+        .getPassengerDetails(passenger.passengerId)
+        .subscribe((res: any) => {
+          passenger.passengerDetails = res.data[0];
+          console.log(passenger.passengerDetails);
+        });
     });
-
   }
 
   capitaliseName(name: string) {

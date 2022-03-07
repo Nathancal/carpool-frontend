@@ -15,7 +15,7 @@
   position: absolute;
   width: 75%;
   margin-left: 1%;
-  margin-top: 1%;
+  margin-top: 2.5px;
   background: rgba(51, 170, 51, 0.4);
   border-radius: 5px 5px;
 }
@@ -48,36 +48,37 @@
   align-items: center;
 }
 
-.popup-address{
+.popup-address {
   text-align: center;
   font-size: 150%;
   font-weight: 300;
   color: #00c853;
 }
 
-
-.popup-firstname{
+.popup-firstname {
   text-align: center;
   font-size: 180%;
   font-weight: 400;
   color: #00c853;
 }
 
-.searchboxclass{
+.searchboxclass {
   background-color: red;
 }
 
-.destination-header-container{
-  padding-top: 20%;
+.destination-header-container {
+  margin-top: 100px;
+  width: 100%;
+  position: absolute;
 }
 
 .select-destination-header {
   font-size: 150%;
+  font-weight: 400;
   position: relative;
-  color: #c4001d;
+  color: whitesmoke;
   width: 100%;
- align-content: center;
- text-align: center;
+  align-content: center;
+  text-align: center;
   background: rgba(51, 170, 51, 0.9);
-  border-radius: 5px 5px;
 }

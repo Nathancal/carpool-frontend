@@ -34,7 +34,7 @@
             <div fxLayout="row">
               <div fxLayout="column">
                 <p class="user-data-subtitle">Pickup</p>
-                <p class="user-pickup-text">{{ this.pickup.address }}</p>
+                <p class="user-pickup-text">{{ this.pickup.embarkAnddress }}</p>
                 <p class="user-pickup-text">
                   {{ this.pickup.date | date: "shortDate" }},
                   {{ this.pickup.time }}
@@ -42,7 +42,7 @@
               </div>
               <div fxLayout="column">
                 <p class="user-data-subtitle">Destination</p>
-                <p class="user-pickup-text">{{ this.pickup.address }}</p>
+                <p class="user-pickup-text">{{ this.pickup.returnAddress }}</p>
                 <p class="user-pickup-text">
                   {{ this.pickup.date | date: "shortDate" }},
                   {{ this.pickup.time }}
@@ -126,6 +126,8 @@
         <mat-card-footer> </mat-card-footer>
       </mat-card>
     </ng-template>
+
+    <button (click)="showRoute(this.pickup)">View Route</button>
   </ng-container>
 
   <ng-template #loading> </ng-template>

@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Map } from '@tomtom-international/web-sdk-maps';
 import { MapsService } from 'src/app/services/maps.service';
 import { PickupService } from 'src/app/services/pickup.service';
 
@@ -20,8 +21,13 @@ export class PickupdetailsComponent implements OnInit {
   }
 
   embarkAddress: any;
+  embarkLat: any;
+  embarkLng: any;
+  returnLat: any;
+  returnLng: any;
   returnAddress: any;
   selectDestination!: boolean;
+  map!: Map;
 
   loading = false;
 
@@ -29,9 +35,10 @@ export class PickupdetailsComponent implements OnInit {
     this.reverseGeocode();
     this.selectDestination = this.data.selectDestination;
     //If the data returned already contains an embark address it is added to the dialog and
-    //a return address is anticipated
     if(this.data.embarkAddress != undefined){
       this.embarkAddress = this.data.embarkAddress;
+      this.embarkLat = this.data.embarkLat;
+      this.embarkLng = this.data.embarkLng;
     }
   }
 
@@ -44,10 +51,10 @@ export class PickupdetailsComponent implements OnInit {
 
   closeDialog(){
     this.selectDestination = false;
-    this.embarkAddress = false;
-    this.returnAddress = false;
+    this.embarkAddress = undefined;
+    this.returnAddress = undefined;
     this.dialogRef.close({
-      embarkAddress: undefined,
+      embarkAddress: this.embarkAddress,
       returnAddress: undefined,
       createCancelled: true,
       selectDestination: false
@@ -59,13 +66,17 @@ export class PickupdetailsComponent implements OnInit {
     this.mapService
       .getAddress(this.data.lat, this.data.lng)
       .subscribe((res: any) => {
-
         //Checks to determine which time the dialog box has been opened, the first pickup or second.
-        if (this.embarkAddress == undefined) {
+        if (this.embarkAddress === undefined || false) {
           this.embarkAddress = res.addresses[0].address.freeformAddress;
+          console.log('Embark lat ' + this.data.lat);
+          this.embarkLat = this.data.lat
+          this.embarkLng = this.data.lng
           console.log('Embark address added' + this.embarkAddress);
         } else {
           this.returnAddress = res.addresses[0].address.freeformAddress;
+          this.returnLat = this.data.lat
+          this.returnLng = this.data.lng
           console.log('Return address added' + this.returnAddress);
         }
       });
@@ -76,6 +87,8 @@ export class PickupdetailsComponent implements OnInit {
       createSuccessful: false,
       selectDestination: true,
       embarkAddress: this.embarkAddress,
+      embarkLat: this.embarkLat,
+      embarkLng: this.embarkLng
     });
   }
 
@@ -84,10 +97,15 @@ export class PickupdetailsComponent implements OnInit {
 
     console.log(this.pickupForm.value.date);
 
+    console.log(this.embarkLat + ' ' + this.embarkLng);
+    console.log(this.returnLat + ' ' + this.returnLng);
+
     let pickupData = {
       hostId: sessionStorage['userID'],
-      lat: this.data.lat,
-      lng: this.data.lng,
+      eLat: this.embarkLat,
+      eLng: this.embarkLng,
+      rLat: this.returnLat,
+      rLng: this.returnLng,
       date: this.pickupForm.value.date,
       embarkAddress: this.embarkAddress,
       returnAddress: this.returnAddress,
@@ -97,15 +115,21 @@ export class PickupdetailsComponent implements OnInit {
 
     this.pickupService.createPickup(pickupData).subscribe(
       (res) => {
+        console.log(res);
         this.loading = false;
         this.embarkAddress = undefined;
         this.returnAddress = undefined;
+        this.embarkLat = undefined;
+        this.embarkLng = undefined;
         this.dialogRef.close({ createSuccessful: true, pickup: pickupData });
       },
       (err) => {
+        console.log(err);
         this.loading = false;
         this.embarkAddress = undefined;
         this.returnAddress = undefined;
+        this.embarkLat = undefined;
+        this.embarkLng = undefined;
         this.dialogRef.close({ createSuccessful: false });
       }
     );

@@ -1,9 +1,9 @@
 <div class="card-container" fxFlex>
   <mat-card class="card-container">
     <ng-container *ngIf="returnAddress === undefined; else returnSelected">
-      <mat-card-header>
-        <div fxLayout="row" fxLayoutAlign="space-around center">
-          <div fxLayout="column">
+      <mat-card-header fxLayoutAlign="center ">
+        <div fxLayout="row">
+          <div fxLayout="column" >
             <h3>Create Your pickup.</h3>
           </div>
         </div>
@@ -29,6 +29,11 @@
           </div>
         </div>
         <div fxLayout="row">
+          <div fxLayout="column" fxLayoutAlign="space-around center">
+            <button type="button" (click)="closeDialog()" mat-raised-button class="submit-btn">
+              <mat-icon>cancel</mat-icon> close
+            </button>
+          </div>
           <div fxLayout="column" fxLayoutAlign="space-around center">
             <button
               type="button"
@@ -121,18 +126,16 @@
                 <mat-icon>cancel</mat-icon> close
               </button>
             </div>
-            <ng-container *ngIf="embarkAddress === undefined">
               <div fxLayout="column" fxLayoutAlign="space-around center">
                 <button
                   type="button"
-                  (click)="selectDestinationFunc()"
+                  (click)="pickupFormSubmit()"
                   mat-raised-button
                   class="submit-btn"
                 >
-                  <mat-icon>done</mat-icon> Select Destination
+                  <mat-icon>done</mat-icon> Create Pickup
                 </button>
               </div>
-            </ng-container>
           </div>
         </form>
       </mat-card-content>

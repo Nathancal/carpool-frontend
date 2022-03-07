@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/interfaces/user';
 import tt, {
+  Popup,
   TomTomAttributionControl,
 } from '@tomtom-international/web-sdk-maps';
+import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PickupdetailsComponent } from '../pickupdetails/pickupdetails.component';
 import { PickupService } from 'src/app/services/pickup.service';
 import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.component';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
-import SearchBox from '@tomtom-international/web-sdk-plugin-searchbox';
 import { SearchbarComponent } from '../searchbar/searchbar.component';
-import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-interactivemap',
@@ -26,7 +26,7 @@ export class InteractivemapComponent implements OnInit {
   availablePickups: any;
   map!: tt.Map;
   longPress = false;
-  marker: any;
+  marker!: tt.Popup;
   currLat: any;
   currLng: any;
   startLat: any;
@@ -34,6 +34,9 @@ export class InteractivemapComponent implements OnInit {
   center = [];
   selectDestination!: boolean;
   embarkAddress: any;
+  embarkLat: any;
+  embarkLng: any;
+  routeGeojson: any;
 
   @ViewChild(SearchbarComponent) searchBar!: SearchbarComponent;
 
@@ -49,6 +52,10 @@ export class InteractivemapComponent implements OnInit {
         enableHighAccuracy: true,
       },
       trackUserLocation: true,
+    });
+
+    ttserv.copyrights({
+      key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
     });
 
     this.map = tt.map({
@@ -68,8 +75,7 @@ export class InteractivemapComponent implements OnInit {
     });
 
     this.map.on('click', (e) => {
-
-      console.log("search bar results = "+ this.searchBar.positionOfResult);
+      console.log('search bar results = ' + this.searchBar.positionOfResult);
       //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
       if (this.searchBar.positionOfResult != undefined) {
         this.map.setCenter(this.searchBar.positionOfResult);
@@ -79,7 +85,10 @@ export class InteractivemapComponent implements OnInit {
       let centerValue = this.map.getCenter();
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
-      if (centerValue.distanceTo(e.lngLat) > 500 && this.searchBar.positionOfResult == undefined) {
+      if (
+        centerValue.distanceTo(e.lngLat) > 500 &&
+        this.searchBar.positionOfResult == undefined
+      ) {
         this.map.setCenter(e.lngLat);
         this.getUserPickups();
         this.getAvailablePickups(e.lngLat);
@@ -122,8 +131,8 @@ export class InteractivemapComponent implements OnInit {
         this.userHostData = res.data;
         this.userHostData.forEach((pickup: any) => {
           let latlng = {
-            lat: pickup.location.coordinates[0],
-            lng: pickup.location.coordinates[1],
+            lat: pickup.embarkLocation.coordinates[0],
+            lng: pickup.embarkLocation.coordinates[1],
           };
 
           this.createPickupMarker(latlng, pickup);
@@ -141,8 +150,8 @@ export class InteractivemapComponent implements OnInit {
 
         this.availablePickups.forEach((pickup: any) => {
           let latlng = {
-            lat: pickup.location.coordinates[0],
-            lng: pickup.location.coordinates[1],
+            lat: pickup.embarkLocation.coordinates[0],
+            lng: pickup.embarkLocation.coordinates[1],
           };
 
           this.createPickupMarker(latlng, pickup);
@@ -181,8 +190,10 @@ export class InteractivemapComponent implements OnInit {
               x.pickup = pickup;
               x.userInfo = this.userInfo;
               x.userCreated = false;
+              x.map = this.map;
             }
           );
+
           let popup = new tt.Popup({
             offset: 40,
             maxWidth: '750px',
@@ -208,6 +219,8 @@ export class InteractivemapComponent implements OnInit {
       createSuccessful: false,
       createCancelled: false,
       embarkAddress: this.embarkAddress,
+      embarkLat: this.embarkLat,
+      embarkLng: this.embarkLng,
       selectDestination: this.selectDestination,
       pickup: {},
     };
@@ -215,18 +228,31 @@ export class InteractivemapComponent implements OnInit {
 
     modal.afterClosed().subscribe((res: any) => {
       console.log(res);
+
+      //Each if determines the state of the app after the dialog is closed
       if (res.createSuccessful == true) {
         this.selectDestination = false;
+        let lngLat = {
+          lat: this.embarkLat,
+          lng: this.embarkLng,
+        };
+        this.createPickupMarker(lngLat, res.pickup);
+
         this.embarkAddress = undefined;
-        this.createPickupMarker(e.lngLat, res.pickup);
+        this.embarkLat = undefined;
+        this.embarkLng = undefined;
       }
-      if(res.selectDestination == true){
+      if (res.selectDestination == true) {
         this.selectDestination = true;
         this.embarkAddress = res.embarkAddress;
+        this.embarkLat = res.embarkLat;
+        this.embarkLng = res.embarkLng;
       }
-      if(res.createCancelled == true){
+      if (res.createCancelled == true) {
         this.selectDestination = res.selectDestination;
-        this.embarkAddress = false;
+        this.embarkAddress = undefined;
+        this.embarkLat = undefined;
+        this.embarkLng = undefined;
       }
     });
   }
