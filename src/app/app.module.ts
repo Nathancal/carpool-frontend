@@ -25,7 +25,14 @@ import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.compo
 import * as Hammer from 'hammerjs';
 import { PickupoverviewComponent } from './components/pickupoverview/pickupoverview.component';
 import { StarRatingModule } from 'angular-star-rating';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
+const config: SocketIoConfig = {
+  url: 'https://192.168.0.21:5000',
+  options:{
+    transports: ['websocket']
+  }
+}
 
 @NgModule({
   declarations: [
@@ -46,6 +53,7 @@ import { StarRatingModule } from 'angular-star-rating';
   ],
   imports: [
     BrowserModule,
+    SocketIoModule.forRoot(config),
     HttpClientModule,
     ReactiveFormsModule,
     AppRoutingModule,
