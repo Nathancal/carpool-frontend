@@ -1,1 +1,43 @@
-<p>journeydetail works!</p>
+<div *ngIf="isHost">
+  <mat-card>
+    <mat-card-content>
+      <div>
+        <h4>
+          Passengers Joined: <span>{{ this.numPassengersJoined }}</span>
+        </h4>
+        <mat-action-list>
+          <div *ngFor="let item of this.response">
+            <button mat-list-item (click)="goToUser()">
+              {{ this.item.forename }}
+            </button>
+          </div>
+
+        </mat-action-list>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button (click)="scanPassengerModal()">Scan Passenger</button>
+      <button (click)="joinJourney()">Begin Journey</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div *ngIf="!isHost">
+  <mat-card>
+    <mat-card-content>
+      <h4>Waiting for host to start journey..</h4>
+      <p>
+        Passengers: <span>{{ this.numPassengersJoined }}</span>
+      </p>
+      <mat-action-list  *ngFor="let item of this.passengersJoined">
+        <button mat-list-item (click)="goToUser()">
+          {{ this.item.forename }}
+        </button>
+      </mat-action-list>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="joinJourney()">Join Journey</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

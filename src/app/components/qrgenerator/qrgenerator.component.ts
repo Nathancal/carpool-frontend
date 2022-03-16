@@ -9,6 +9,8 @@ export class QrgeneratorComponent implements OnInit {
 
   @Input() data: any;
 
+  test: any;
+
   constructor() { }
 
   ngOnInit(): void {

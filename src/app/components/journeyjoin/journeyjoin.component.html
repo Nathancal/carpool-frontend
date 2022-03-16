@@ -1,6 +1,18 @@
-<mat-card class="card-container">
-<app-qrgenerator [data]="generateData()">
+<div *ngIf="isHost">
 
-</app-qrgenerator>
+  <mat-card class="card-container">
+    <app-qrscanner>
 
-</mat-card>
+    </app-qrscanner>
+    </mat-card>
+</div>
+
+<div *ngIf="!isHost">
+  <mat-card class="card-container">
+    <app-qrgenerator [data]="userInfo">
+
+    </app-qrgenerator>
+
+    </mat-card>
+</div>
+

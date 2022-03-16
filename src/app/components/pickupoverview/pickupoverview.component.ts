@@ -2,7 +2,9 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { PickupService } from 'src/app/services/pickup.service';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import tt, { Map, map } from '@tomtom-international/web-sdk-maps';
-import { ThrowStmt } from '@angular/compiler';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { JourneydetailComponent } from '../journeydetail/journeydetail.component';
+
 
 @Component({
   selector: 'app-pickupoverview',
@@ -10,7 +12,7 @@ import { ThrowStmt } from '@angular/compiler';
   styleUrls: ['./pickupoverview.component.css'],
 })
 export class PickupoverviewComponent implements OnInit, OnDestroy {
-  constructor(public pickupService: PickupService) {}
+  constructor(public pickupService: PickupService,private dialog: MatDialog) {}
 
   latlng: any;
   pickup: any;
@@ -26,6 +28,7 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.checkUserIsPassenger();
     this.loadPassengerInfo();
+    console.log(this.pickup);
   }
 
   ngOnDestroy(): void {
@@ -137,5 +140,27 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
 
   capitaliseName(name: string) {
     return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+
+  journeyDetailsModal(){
+
+    console.log(this.pickup);
+
+    console.log(this.pickup.pickupId);
+
+    const configDialog = new MatDialogConfig();
+
+    configDialog.id = 'journeydetailsmodal';
+    configDialog.height = '600px';
+    configDialog.width = '100%';
+    configDialog.panelClass = 'journey-details-modal-container';
+    configDialog.data = {
+      pickup: this.pickup,
+      userInfo: this.userInfo
+    };
+    const modal = this.dialog.open(JourneydetailComponent, configDialog);
+
+
   }
 }

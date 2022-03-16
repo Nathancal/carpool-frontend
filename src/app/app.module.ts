@@ -26,13 +26,12 @@ import * as Hammer from 'hammerjs';
 import { PickupoverviewComponent } from './components/pickupoverview/pickupoverview.component';
 import { StarRatingModule } from 'angular-star-rating';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { JourneyService } from './services/journey.service';
 
 const config: SocketIoConfig = {
-  url: 'https://192.168.0.21:5000',
-  options:{
-    transports: ['websocket']
-  }
-}
+  url: 'https://192.168.0.21:5000/',
+  options: { transports: ['websocket'] },
+};
 
 @NgModule({
   declarations: [
@@ -64,9 +63,9 @@ const config: SocketIoConfig = {
     HammerModule,
     FormsModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [JourneyService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

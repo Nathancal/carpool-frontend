@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
       console.log(res);
       console.log(res.userId);
       sessionStorage["userID"] = res.userId;
+      sessionStorage["userForename"] = res.firstName;
 
       console.log(sessionStorage["userID"])
       sessionStorage["token"] =res.token;
