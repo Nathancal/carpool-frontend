@@ -53,4 +53,14 @@ export class JourneyService {
     })
   }
 
+  hasUserJoined(){
+
+    return this.socket.fromEvent('hasJoined').pipe(map((data)=> data));
+  }
+
+  joinUser(message:any){
+    this.socket.emit('hasJoined', message);
+
+  }
+
 }
