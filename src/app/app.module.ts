@@ -20,8 +20,6 @@ import { JourneyoverviewComponent } from './components/journeyoverview/journeyov
 import { JourneyjoinComponent } from './components/journeyjoin/journeyjoin.component';
 import { QRCodeModule } from 'angular2-qrcode';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { QrscannerComponent } from './components/qrscanner/qrscanner.component';
-import { QrgeneratorComponent } from './components/qrgenerator/qrgenerator.component';
 import * as Hammer from 'hammerjs';
 import { PickupoverviewComponent } from './components/pickupoverview/pickupoverview.component';
 import { StarRatingModule } from 'angular-star-rating';
@@ -46,8 +44,6 @@ const config: SocketIoConfig = {
     JourneydetailComponent,
     JourneyoverviewComponent,
     JourneyjoinComponent,
-    QrscannerComponent,
-    QrgeneratorComponent,
     PickupoverviewComponent,
   ],
   imports: [

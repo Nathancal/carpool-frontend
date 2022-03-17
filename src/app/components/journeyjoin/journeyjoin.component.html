@@ -1,18 +1,12 @@
 <div *ngIf="isHost">
-
   <mat-card class="card-container">
-    <app-qrscanner>
-
-    </app-qrscanner>
+    <zxing-scanner #scanner (scanSuccess)="scanSuccessHandler($event)"></zxing-scanner>
     </mat-card>
 </div>
 
 <div *ngIf="!isHost">
   <mat-card class="card-container">
-    <app-qrgenerator [data]="userInfo">
-
-    </app-qrgenerator>
-
+    <qr-code class="qrGenerator" [value]="QRcodeData" [size]="500"></qr-code>
     </mat-card>
 </div>
 

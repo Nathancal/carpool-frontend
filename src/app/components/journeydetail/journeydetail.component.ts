@@ -54,6 +54,8 @@ export class JourneydetailComponent implements OnInit {
 
     })
 
+
+
   }
 
   joinJourney(){
@@ -73,8 +75,14 @@ export class JourneydetailComponent implements OnInit {
     };
     const modal = this.dialog.open(JourneyjoinComponent, configDialog);
 
-    this.journeyService.joinJourneyHttp(userId,this.userForename,this.data.pickup.pickupId).subscribe((res:any)=>{
-       this.journeyService.joinJourneySocket(userId, this.userForename, this.data.pickup.pickupId)
+    modal.afterClosed().subscribe((res) =>{
+      if(res.userJoined == true){
+        this.journeyService.joinJourneySocket(
+          this.userId,
+          this.userForename,
+          this.data.pickup.pickupId
+        );
+      }
     })
   }
 

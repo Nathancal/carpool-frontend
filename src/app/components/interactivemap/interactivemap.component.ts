@@ -106,7 +106,7 @@ export class InteractivemapComponent implements OnInit {
         let milliseconds =
           Math.abs(timeEnd.getMilliseconds() - timeStart.getMilliseconds()) /
           100;
-        if (milliseconds > 5) {
+        if (milliseconds > 10) {
           this.PickupDetailsModal(e);
         }
         console.log(milliseconds.valueOf());
@@ -166,14 +166,32 @@ export class InteractivemapComponent implements OnInit {
     let element = document.createElement('div');
     if (pickup.hostId == sessionStorage['userID']) {
       element.id = 'user-pickup-marker';
-      let popup = new tt.Popup({
-        offset: 40,
-        className: 'popup-container',
-      }).setText('Text!');
-      let marker = new tt.Marker({ element: element })
-        .setLngLat(latlng)
-        .setPopup(popup)
-        .addTo(this.map);
+      this.pickupService
+        .getHostDetails(pickup.hostId, pickup.pickupId)
+        .subscribe((res) => {
+          this.userInfo = res;
+          console.log(res);
+          console.log(this.userInfo);
+          let popupContent = this.dycomService.injectComponent(
+            PickupoverviewComponent,
+            (x) => {
+              x.latlng = latlng;
+              x.pickup = pickup;
+              x.userInfo = this.userInfo;
+              x.userCreated = false;
+              x.map = this.map;
+            }
+          );
+
+          let popup = new tt.Popup({
+            offset: 40,
+            maxWidth: '750px',
+          }).setDOMContent(popupContent);
+          let marker = new tt.Marker({ element: element })
+            .setLngLat(latlng)
+            .setPopup(popup)
+            .addTo(this.map);
+        });
     } else {
       element.id = 'available-pickup-marker';
 
