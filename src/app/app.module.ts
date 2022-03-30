@@ -25,6 +25,8 @@ import { PickupoverviewComponent } from './components/pickupoverview/pickupoverv
 import { StarRatingModule } from 'angular-star-rating';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { JourneyService } from './services/journey.service';
+import { UserprofileComponent } from './components/userprofile/userprofile.component';
+
 
 const config: SocketIoConfig = {
   url: 'https://192.168.0.21:5000/',
@@ -45,6 +47,7 @@ const config: SocketIoConfig = {
     JourneyoverviewComponent,
     JourneyjoinComponent,
     PickupoverviewComponent,
+    UserprofileComponent,
   ],
   imports: [
     BrowserModule,

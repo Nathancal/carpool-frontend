@@ -4,20 +4,19 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class JourneyService {
   constructor(private socket: Socket, public http: HttpClient) {
-    this.socket.on('connect_failed', (data:any) =>{console.log(data)})
+    this.socket.on('connect_failed', (data: any) => {
+      console.log(data);
+    });
   }
 
   HTTPS_URL = 'https://192.168.0.21:5000/api/v1/journey';
 
   public message$: BehaviorSubject<any> = new BehaviorSubject({});
-
-
 
   joinJourneyHttp(userId: any, userForename: any, pickupId: any) {
     console.log(userId);
@@ -30,37 +29,45 @@ export class JourneyService {
     });
   }
 
-  joinJourneySocket(userId: any,forename: any, pickupId: any) {
+  joinJourneySocket(userId: any, forename: any, pickupId: any) {
     let message = {
-      'forename': forename,
-      'pickupId': pickupId,
-      'userId': userId
-    }
-
-
-    return this.socket.emit('joined', message);
-
+      forename: forename,
+      pickupId: pickupId,
+      userId: userId,
+    };
+    this.socket.emit('joined', message);
   }
 
-  getJourneyMessages(){
-
-   return this.socket.fromEvent('joined').pipe(map((data) => data));
+  getJourneyMessages() {
+    return this.socket.fromEvent('joined').pipe(map((data) => data));
   }
 
-  journeyStart(){
-    this.socket.on('start', (message:any)=>{
-
-    })
+  journeyStart(message: any) {
+    this.socket.on('start', message);
   }
 
-  hasUserJoined(){
-
-    return this.socket.fromEvent('hasJoined').pipe(map((data)=> data));
+  journeyStartCheck() {
+    return this.socket.fromEvent('start').pipe(map((data) => data));
   }
 
-  joinUser(message:any){
-    this.socket.emit('hasJoined', message);
-
+  checkJourneyComplete() {
+    return this.socket.fromEvent('autocomplete').pipe(map((data) => data));
   }
 
+  autocompleteJourney(pickupId: any) {
+    let message = {
+      pickupId: pickupId,
+      completed: true
+    };
+    this.socket.emit('autocomplete', message);
+  }
+
+  hasUserJoined(userId: any, pickupId: any) {
+    let message = {
+      pickupId: pickupId,
+      userId: userId,
+    };
+    this.socket.emit('checkedin', message);
+    return this.socket.fromEvent('checkedin').pipe(map((data) => data));
+  }
 }

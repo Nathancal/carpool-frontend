@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { PickupService } from 'src/app/services/pickup.service';
-import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import tt, { Map, map } from '@tomtom-international/web-sdk-maps';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { JourneydetailComponent } from '../journeydetail/journeydetail.component';
+import { services as ttserv } from '@tomtom-international/web-sdk-services/';
+
 
 
 @Component({
@@ -24,6 +25,7 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   map!: Map;
   geojson: any;
   routeShown!: boolean;
+  distanceMiles: any;
 
   ngOnInit(): void {
     this.checkUserIsPassenger();
@@ -105,6 +107,7 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
         .then((res) => {
           console.log('route calculated');
           let routeGeojson = res.toGeoJson();
+          console.log(routeGeojson.features[0].properties.summary.lengthInMeters * 0.00062137)
           this.map.addLayer({
             id: 'route',
             type: 'line',
@@ -118,6 +121,7 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
             },
           });
           console.log(routeGeojson);
+
         });
     } else if (!this.routeShown) {
       if (this.map.getLayer('route')) {
@@ -150,6 +154,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     console.log(this.pickup.pickupId);
 
     const configDialog = new MatDialogConfig();
+
+
 
     configDialog.id = 'journeydetailsmodal';
     configDialog.height = '600px';

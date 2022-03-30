@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import tt, { Map, map } from '@tomtom-international/web-sdk-maps';
+import { services as ttserv } from '@tomtom-international/web-sdk-services/';
+
 
 @Component({
   selector: 'app-journeyoverview',

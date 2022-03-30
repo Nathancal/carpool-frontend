@@ -33,15 +33,6 @@ export class JourneyjoinComponent implements OnInit {
   ngOnInit(): void {
     let userId = sessionStorage['userID'];
 
-
-    this.journeyService.hasUserJoined().subscribe((data:any)=>{
-      if(data.userId == userId){
-        this.dialogRef.close({
-          userJoined: true
-        });
-      }
-    })
-
     this.isHost = this.data.isHost;
 
     if (!this.isHost) {
@@ -78,9 +69,7 @@ export class JourneyjoinComponent implements OnInit {
                 this.scansParsed.pickupId
               )
               .subscribe((res: any) => {
-                this.journeyService.joinUser(this.scansParsed);
-                console.log(this.scansParsed.userId);
-                console.log(this.scansParsed.forename);
+
                 this.dialogRef.close({
                   userAdded: this.scansParsed.forename,
                   addSuccessful: true
@@ -93,5 +82,8 @@ export class JourneyjoinComponent implements OnInit {
     }
   }
 
-  closeDialog() {}
+  closeQR(){
+    this.dialogRef.close()
+  }
+
 }

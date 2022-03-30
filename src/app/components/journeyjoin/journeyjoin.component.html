@@ -6,7 +6,8 @@
 
 <div *ngIf="!isHost">
   <mat-card class="card-container">
-    <qr-code class="qrGenerator" [value]="QRcodeData" [size]="500"></qr-code>
+    <qr-code class="qrGenerator" [value]="QRcodeData" [size]="300"></qr-code>
+    <button (click)="closeQR()">Close Qr Code</button>
     </mat-card>
 </div>
 

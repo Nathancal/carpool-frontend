@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { InteractivemapComponent } from './components/interactivemap/interactivemap.component';
+import { UserprofileComponent } from './components/userprofile/userprofile.component';
 import { HomeComponent } from './pages/home/home.component';
-import { UserdashboardComponent } from './pages/userdashboard/userdashboard.component';
 
 const routes: Routes = [
   {
@@ -12,6 +12,9 @@ const routes: Routes = [
     path: 'userdashboard',
     component: InteractivemapComponent
 
+  },{
+    path: 'userprofile',
+    component: UserprofileComponent
   }];
 
 @NgModule({
