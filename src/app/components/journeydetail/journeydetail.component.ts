@@ -9,7 +9,6 @@ import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.servi
 import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
 import tt, { Map } from '@tomtom-international/web-sdk-maps';
 
-
 @Component({
   selector: 'app-journeydetail',
   templateUrl: './journeydetail.component.html',
@@ -37,12 +36,15 @@ export class JourneydetailComponent implements OnInit {
   distanceMiles!: number;
   milesDecimalLimit: any;
   travelDuration: any;
+  map!: Map;
 
   isHost!: boolean;
 
   ngOnInit(): void {
     this.userId = sessionStorage['userID'];
     this.userForename = sessionStorage['userForename'];
+
+    this.map = this.data.map;
 
     if (this.userId == this.data.pickup.hostId) {
       this.isHost = true;
@@ -80,14 +82,14 @@ export class JourneydetailComponent implements OnInit {
     });
 
     interval(1000).subscribe((time) => {
-      this.journeyService.checkJourneyComplete().subscribe((data: any) =>{
+      this.journeyService.checkJourneyComplete().subscribe((data: any) => {
         console.log(data);
 
-        if(data.completed == true){
+        if (data.completed === true) {
 
         }
-      })
-    })
+      });
+    });
   }
 
   joinJourney() {
@@ -145,32 +147,47 @@ export class JourneydetailComponent implements OnInit {
         let routeGeojson = res.toGeoJson();
         //Converts the meters to miles
         this.distanceMiles =
-          routeGeojson.features[0].properties.summary.lengthInMeters * 0.00062137;
+          routeGeojson.features[0].properties.summary.lengthInMeters *
+          0.00062137;
 
         this.milesDecimalLimit = this.distanceMiles.toFixed(3);
         this.distanceMiles = parseFloat(this.milesDecimalLimit);
 
-        this.travelDuration = routeGeojson.features[0].properties.summary.travelTimeInSeconds;
+        this.travelDuration =
+          routeGeojson.features[0].properties.summary.travelTimeInSeconds;
 
-        let popupContent = this.dycomService.injectComponent(
-          JourneyoverviewComponent,
-          (x) => {
-            x.latlng = latlng;
-            x.pickup = pickup;
-            x.userInfo = this.userInfo;
-            x.userCreated = false;
-            x.map = this.map;
-          }
-        );
+        // let popupContent = this.dycomService.injectComponent(
+        //   JourneyoverviewComponent,
+        //   (x) => {
+        //     x.routeGeojson = routeGeojson;
+        //     x.pickup = this.data.pickup;
+        //     x.distanceMiles = this.distanceMiles;
+        //     x.travelDuration = this.travelDuration;
+        //     x.map = this.data.map;
+        //   }
+        // );
 
-        let popup = new tt.Popup({
-          offset: 40,
-          maxWidth: '750px',
-        }).setDOMContent(popupContent);
-        let marker = new tt.Marker({ element: element })
-          .setLngLat(latlng)
-          .setPopup(popup)
-          .addTo(this.map);
+        let latlng = {
+          lat: this.data.pickup.returnLocation.coordinates[0],
+          lng: this.data.pickup.returnLocation.coordinates[1],
+        };
+        console.log(latlng);
+
+
+
+        // let element = document.createElement('div');
+        // element.id = 'journey-complete-marker';
+        // let popup = new tt.Popup({
+        //   offset: 40,
+        //   maxWidth: '750px',
+        // }).setDOMContent(popupContent);
+        // let marker = new tt.Marker({ element: element })
+        //   .setLngLat(latlng)
+        //   .setPopup(popup);
+
+        //   marker.addTo(this.map);
+          this.map.setCenter(latlng);
+
 
         this.dialogRef.close();
       });

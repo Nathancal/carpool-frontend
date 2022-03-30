@@ -163,7 +163,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     configDialog.panelClass = 'journey-details-modal-container';
     configDialog.data = {
       pickup: this.pickup,
-      userInfo: this.userInfo
+      userInfo: this.userInfo,
+      map: this.map
     };
     const modal = this.dialog.open(JourneydetailComponent, configDialog);
 

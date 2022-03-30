@@ -10,9 +10,29 @@ import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 })
 export class JourneyoverviewComponent implements OnInit {
 
+
+  distanceMiles: any;
+  travelDuration: any;
+  pickup: any;
+  routeGeojson: any;
+  map!: Map;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.map.addLayer({
+      id: 'completed-route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: this.routeGeojson,
+      },
+      paint: {
+        'line-color': '#5efc82',
+        'line-width': 6,
+      },
+    });
   }
+
 
 }
