@@ -70,4 +70,6 @@ export class JourneyService {
     this.socket.emit('checkedin', message);
     return this.socket.fromEvent('checkedin').pipe(map((data) => data));
   }
+
+
 }
