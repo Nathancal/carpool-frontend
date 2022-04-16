@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { User } from 'src/app/interfaces/user';
+import { interval } from 'rxjs';
+
 import tt, {
   Popup,
   TomTomAttributionControl,
@@ -11,6 +13,7 @@ import { PickupService } from 'src/app/services/pickup.service';
 import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.component';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 import { SearchbarComponent } from '../searchbar/searchbar.component';
+import { MapsService } from 'src/app/services/maps.service';
 
 @Component({
   selector: 'app-interactivemap',
@@ -37,13 +40,15 @@ export class InteractivemapComponent implements OnInit {
   embarkLat: any;
   embarkLng: any;
   routeGeojson: any;
+  markersList: tt.Marker[] = [];
 
   @ViewChild(SearchbarComponent) searchBar!: SearchbarComponent;
 
   constructor(
     private dialog: MatDialog,
     public pickupService: PickupService,
-    public dycomService: DynamiccomponentService
+    public dycomService: DynamiccomponentService,
+    public mapService: MapsService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +57,15 @@ export class InteractivemapComponent implements OnInit {
         enableHighAccuracy: true,
       },
       trackUserLocation: true,
+    });
+
+    interval(2000).subscribe((time) => {
+      console.log(this.mapService.getMarkersList());
+      if (this.markersList !== this.mapService.getMarkersList()) {
+        this.mapService.getMarkersList().forEach((marker: tt.Marker) => {
+          marker.addTo(this.map);
+        });
+      }
     });
 
     ttserv.copyrights({
@@ -73,6 +87,8 @@ export class InteractivemapComponent implements OnInit {
       this.getAvailablePickups(e.lngLat);
       this.getUserPickups();
     });
+
+    this.mapService.setMap(this.map);
 
     this.map.on('click', (e) => {
       console.log('search bar results = ' + this.searchBar.positionOfResult);
@@ -116,6 +132,8 @@ export class InteractivemapComponent implements OnInit {
     this.map.on('dblclick', (e) => {
       this.PickupDetailsModal(e);
       let centerValue = this.map.getCenter();
+      this.map.removeLayer('route');
+      this.map.removeControl('route');
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
       if (centerValue.distanceTo(e.lngLat) > 500) {
@@ -191,6 +209,10 @@ export class InteractivemapComponent implements OnInit {
             .setLngLat(latlng)
             .setPopup(popup)
             .addTo(this.map);
+
+          this.markersList.push(marker);
+
+          this.mapService.setMarkersList(this.markersList);
         });
     } else {
       element.id = 'available-pickup-marker';
@@ -220,6 +242,10 @@ export class InteractivemapComponent implements OnInit {
             .setLngLat(latlng)
             .setPopup(popup)
             .addTo(this.map);
+
+          this.markersList.push(marker);
+
+          this.mapService.setMarkersList(this.markersList);
         });
     }
   }
@@ -287,6 +313,7 @@ export class InteractivemapComponent implements OnInit {
       lng: e.lngLat.lng,
       createSuccessful: false,
       pickup: {},
+      markersList: this.markersList,
     };
 
     const modal = this.dialog.open(PickupoverviewComponent, configDialog);

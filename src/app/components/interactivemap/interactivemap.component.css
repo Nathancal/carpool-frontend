@@ -20,6 +20,35 @@
   border-radius: 5px 5px;
 }
 
+.miles-link{
+  text-decoration: none;
+}
+
+.miles-tokens{
+  color: rgba(51, 170, 51, 0.9);
+  position: absolute;
+  font-size: 75px;
+  margin-left: 80%;
+  margin-top: 30px;
+}
+
+.miles-tokens a{
+  text-decoration: none;
+}
+
+.miles-text{
+  padding-left: 18px;
+  position: absolute;
+  font-size: medium;
+}
+
+.search-bar-container{
+  position: absolute;
+  width: 100%;
+}
+
+
+
 .search-bar-form-field {
   width: 100%;
 }

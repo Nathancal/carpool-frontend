@@ -1,12 +1,16 @@
 <div class="map-container">
   <div id="map"></div>
+
   <div class="search-bar">
     <app-searchbar></app-searchbar>
-
   </div>
+  <div class="miles-tokens">
+      <mat-icon (click)="getUserPickups()" [inline]="true" [matBadge]="15" matBadgeSize="medium" matBadgeColor="warn">directions_car</mat-icon><br><span class="miles-text">Miles</span>
+  </div>
+
   <ng-container *ngIf="selectDestination">
-    <div class="destination-header-container" >
-      <mat-card class="select-destination-header ">
+    <div class="destination-header-container">
+      <mat-card class="select-destination-header">
         <p>Select Destination to complete Pickup.</p>
       </mat-card>
     </div>

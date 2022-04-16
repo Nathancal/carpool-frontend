@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { PickupService } from 'src/app/services/pickup.service';
 import tt, { Map, map } from '@tomtom-international/web-sdk-maps';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { JourneydetailComponent } from '../journeydetail/journeydetail.component';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
-
-
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-pickupoverview',
@@ -13,7 +12,10 @@ import { services as ttserv } from '@tomtom-international/web-sdk-services/';
   styleUrls: ['./pickupoverview.component.css'],
 })
 export class PickupoverviewComponent implements OnInit, OnDestroy {
-  constructor(public pickupService: PickupService,private dialog: MatDialog) {}
+  constructor(
+    public pickupService: PickupService,
+    private dialog: MatDialog
+  ) {}
 
   latlng: any;
   pickup: any;
@@ -85,7 +87,7 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     this.routeShown = !this.routeShown;
 
     if (this.routeShown) {
-      if(this.map.getLayer('route')){
+      if (this.map.getLayer('route')) {
         this.map.removeLayer('route');
         this.map.removeSource('route');
       }
@@ -107,7 +109,10 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
         .then((res) => {
           console.log('route calculated');
           let routeGeojson = res.toGeoJson();
-          console.log(routeGeojson.features[0].properties.summary.lengthInMeters * 0.00062137)
+          console.log(
+            routeGeojson.features[0].properties.summary.lengthInMeters *
+              0.00062137
+          );
           this.map.addLayer({
             id: 'route',
             type: 'line',
@@ -121,7 +126,6 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
             },
           });
           console.log(routeGeojson);
-
         });
     } else if (!this.routeShown) {
       if (this.map.getLayer('route')) {
@@ -146,16 +150,12 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
-
-  journeyDetailsModal(){
-
+  journeyDetailsModal() {
     console.log(this.pickup);
 
     console.log(this.pickup.pickupId);
 
     const configDialog = new MatDialogConfig();
-
-
 
     configDialog.id = 'journeydetailsmodal';
     configDialog.height = '600px';
@@ -164,10 +164,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     configDialog.data = {
       pickup: this.pickup,
       userInfo: this.userInfo,
-      map: this.map
+      map: this.map,
     };
     const modal = this.dialog.open(JourneydetailComponent, configDialog);
-
-
   }
 }

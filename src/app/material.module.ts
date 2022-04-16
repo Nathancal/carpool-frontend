@@ -16,12 +16,13 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatExpansionModule } from '@angular/material/expansion';
+import {MatBadgeModule} from '@angular/material/badge';
 
 
 
 @NgModule({
-  imports: [MatExpansionModule, MatAutocompleteModule, MatListModule, MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
-  exports: [MatExpansionModule, MatAutocompleteModule, MatListModule, MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
+  imports: [MatBadgeModule, MatExpansionModule, MatAutocompleteModule, MatListModule, MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule],
+  exports: [MatBadgeModule, MatExpansionModule, MatAutocompleteModule, MatListModule, MatDividerModule, MatButtonModule, MatTabsModule, MatProgressBarModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, MatSelectModule, MatDialogModule,MatToolbarModule, MatIconModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule
   ],
 })
 export class MaterialModule {}

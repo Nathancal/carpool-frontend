@@ -6,8 +6,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { JourneyjoinComponent } from '../journeyjoin/journeyjoin.component';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
-import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
 import tt, { Map } from '@tomtom-international/web-sdk-maps';
+import { MapsService } from 'src/app/services/maps.service';
+import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
 
 @Component({
   selector: 'app-journeydetail',
@@ -19,6 +20,7 @@ export class JourneydetailComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public journeyService: JourneyService,
+    public mapService: MapsService,
     public dycomService: DynamiccomponentService,
     private dialogRef: MatDialogRef<JourneydetailComponent>
   ) {
@@ -36,7 +38,8 @@ export class JourneydetailComponent implements OnInit {
   distanceMiles!: number;
   milesDecimalLimit: any;
   travelDuration: any;
-  map!: Map;
+  map!: tt.Map;
+  markersList!: tt.Marker[];
 
   isHost!: boolean;
 
@@ -44,7 +47,9 @@ export class JourneydetailComponent implements OnInit {
     this.userId = sessionStorage['userID'];
     this.userForename = sessionStorage['userForename'];
 
-    this.map = this.data.map;
+    this.markersList = this.mapService.getMarkersList();
+
+    this.map = this.mapService.getMap();
 
     if (this.userId == this.data.pickup.hostId) {
       this.isHost = true;
@@ -84,8 +89,8 @@ export class JourneydetailComponent implements OnInit {
     interval(1000).subscribe((time) => {
       this.journeyService.checkJourneyComplete().subscribe((data: any) => {
         console.log(data);
-
         if (data.completed === true) {
+
 
         }
       });
@@ -156,41 +161,72 @@ export class JourneydetailComponent implements OnInit {
         this.travelDuration =
           routeGeojson.features[0].properties.summary.travelTimeInSeconds;
 
-        // let popupContent = this.dycomService.injectComponent(
-        //   JourneyoverviewComponent,
-        //   (x) => {
-        //     x.routeGeojson = routeGeojson;
-        //     x.pickup = this.data.pickup;
-        //     x.distanceMiles = this.distanceMiles;
-        //     x.travelDuration = this.travelDuration;
-        //     x.map = this.data.map;
-        //   }
-        // );
-
-        let latlng = {
+        let returnlatlng = {
           lat: this.data.pickup.returnLocation.coordinates[0],
           lng: this.data.pickup.returnLocation.coordinates[1],
         };
-        console.log(latlng);
+        console.log(returnlatlng);
+        console.log(this.distanceMiles);
 
+        let embarklatlng = {
+          lng: this.data.pickup.embarkLocation.coordinates[1],
+          lat: this.data.pickup.embarkLocation.coordinates[0],
+        };
 
+        console.log(this.markersList);
+        for (let i = this.markersList.length -1; i >= 0; i--) {
+          let marker = new tt.Marker;
+          marker = this.markersList[i];
 
-        // let element = document.createElement('div');
-        // element.id = 'journey-complete-marker';
-        // let popup = new tt.Popup({
-        //   offset: 40,
-        //   maxWidth: '750px',
-        // }).setDOMContent(popupContent);
-        // let marker = new tt.Marker({ element: element })
-        //   .setLngLat(latlng)
-        //   .setPopup(popup);
+          console.log(marker.getLngLat());
+          let markerLatLng = {
+            lng: marker.getLngLat().lng,
+            lat: marker.getLngLat().lat,
+          };
+          if (JSON.stringify(markerLatLng) === JSON.stringify(embarklatlng)) {
+            console.log('true');
+            marker.remove();
+            this.markersList.splice(i, 1);
+          }
+        }
 
-        //   marker.addTo(this.map);
-          this.map.setCenter(latlng);
+        this.mapService.setMarkersList(this.markersList);
 
+        this.map.setCenter(returnlatlng);
+        console.log("GOT HERE!")
+        let element = document.createElement('div');
+        element.className = 'journey-complete-marker';
 
-        this.dialogRef.close();
+        let popupContent = this.dycomService.injectComponent(
+          JourneyoverviewComponent,
+          (x) => {
+            x.routeGeojson = routeGeojson;
+            x.pickup = this.data.pickup;
+            x.distanceMiles = this.distanceMiles;
+            x.travelDuration = this.travelDuration;
+            x.map = this.data.map;
+          }
+        );
+
+        let popup = new tt.Popup({
+          offset: 40,
+          maxWidth: '750px',
+        }).setDOMContent(popupContent);
+        let marker = new tt.Marker({ element: element })
+        .setLngLat(returnlatlng)
+        .setPopup(popup)
+        .addTo(this.map);
+
+        this.markersList.push(marker);
+        this.mapService.setMarkersList(this.markersList);
+        console.log("GOT HERE 2");
+
+        console.log(marker)
+
       });
+
+      this.dialogRef.close();
+
   }
 
   goToUser() {
