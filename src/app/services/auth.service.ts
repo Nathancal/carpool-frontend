@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
   constructor(public http: HttpClient) {}
 
+  HTTPS_URL = 'https://192.168.0.21:5000/api/v1/user';
+
   loginAccount(accountData: any) {
     const header = {
       'content-type': 'application/json',
@@ -14,7 +16,7 @@ export class AuthService {
     };
 
     return this.http.post(
-      'https://192.168.0.21:5000/api/v1/user/login',
+      this.HTTPS_URL + '/login',
       {
         email: accountData.email,
         password: accountData.password,
@@ -22,6 +24,23 @@ export class AuthService {
       { headers: header }
     );
   }
+
+
+  getUserMiles(userId: any){
+
+    return this.http.post(this.HTTPS_URL + '/getmiles', {
+      userID: userId
+    });
+  }
+
+  updateUserMiles(userId: any, userTotalMiles: any){
+
+    return this.http.post(this.HTTPS_URL + "/updatemiles", {
+      updateTotalMiles: userTotalMiles,
+      userID: userId
+    })
+  }
+
 
   registerAccount(accountData: any) {
     const header = {

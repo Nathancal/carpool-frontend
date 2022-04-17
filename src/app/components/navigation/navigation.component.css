@@ -3,7 +3,8 @@
   bottom:0px;
   background-color: #00c853;
   height: 15vh;
-  width:100%;}
+  width:100%;
+}
 
 .tabs-div{
 
@@ -13,4 +14,16 @@
 .span-text{
 
   transform: scale(4);
+}
+
+.icon-style{
+  color: firebrick;
+  font-size: 450%;
+  text-align: left;
+}
+
+.vl{
+  border-left: 2px solid white;
+  margin-left: 5%;
+  height: 100%;
 }

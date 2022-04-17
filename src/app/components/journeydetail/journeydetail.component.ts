@@ -8,6 +8,7 @@ import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 import tt, { Map } from '@tomtom-international/web-sdk-maps';
 import { MapsService } from 'src/app/services/maps.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
 
 @Component({
@@ -20,6 +21,7 @@ export class JourneydetailComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public journeyService: JourneyService,
+    public authService: AuthService,
     public mapService: MapsService,
     public dycomService: DynamiccomponentService,
     private dialogRef: MatDialogRef<JourneydetailComponent>
@@ -90,8 +92,6 @@ export class JourneydetailComponent implements OnInit {
       this.journeyService.checkJourneyComplete().subscribe((data: any) => {
         console.log(data);
         if (data.completed === true) {
-
-
         }
       });
     });
@@ -174,8 +174,8 @@ export class JourneydetailComponent implements OnInit {
         };
 
         console.log(this.markersList);
-        for (let i = this.markersList.length -1; i >= 0; i--) {
-          let marker = new tt.Marker;
+        for (let i = this.markersList.length - 1; i >= 0; i--) {
+          let marker = new tt.Marker();
           marker = this.markersList[i];
 
           console.log(marker.getLngLat());
@@ -193,7 +193,7 @@ export class JourneydetailComponent implements OnInit {
         this.mapService.setMarkersList(this.markersList);
 
         this.map.setCenter(returnlatlng);
-        console.log("GOT HERE!")
+        console.log('GOT HERE!');
         let element = document.createElement('div');
         element.className = 'journey-complete-marker';
 
@@ -213,20 +213,51 @@ export class JourneydetailComponent implements OnInit {
           maxWidth: '750px',
         }).setDOMContent(popupContent);
         let marker = new tt.Marker({ element: element })
-        .setLngLat(returnlatlng)
-        .setPopup(popup)
-        .addTo(this.map);
+          .setLngLat(returnlatlng)
+          .setPopup(popup)
+          .addTo(this.map);
 
         this.markersList.push(marker);
         this.mapService.setMarkersList(this.markersList);
-        console.log("GOT HERE 2");
 
-        console.log(marker)
 
+
+        this.updateUserMiles(this.userId, this.distanceMiles);
+
+        console.log(marker);
       });
 
-      this.dialogRef.close();
+    this.dialogRef.close();
 
+  }
+
+  updateUserMiles(userId: any, totalMiles: any) {
+    this.authService.getUserMiles(userId).subscribe((data: any) => {
+      let currentMiles = data.miles;
+
+      if (this.isHost == true) {
+        let milesMultiplier = totalMiles * this.numPassengersJoined;
+
+        let milesToUpdate = currentMiles + milesMultiplier;
+
+        console.log("check miles: " + milesToUpdate);
+
+        this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
+          (data: any) => {},
+          (err: any) => {}
+        );
+      } else {
+        let milesToUpdate = currentMiles - totalMiles;
+
+        console.log("check miles: " + milesToUpdate);
+
+
+        this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
+          (data: any) => {},
+          (err: any) => {}
+        );
+      }
+    });
   }
 
   goToUser() {
