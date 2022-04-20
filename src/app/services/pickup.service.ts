@@ -19,6 +19,19 @@ export class PickupService {
     })
   }
 
+  completePickup(userID: any, duration:any, milesTravelled: any, pickupId: any){
+
+
+    return this.http.post(this.HTTPS_URL + "/completepickup", {
+      "userID": userID,
+      "duration": duration,
+      "milesTravelled": milesTravelled,
+      "pickupId":pickupId
+    })
+
+
+  }
+
   joinPickup(pickupId: any, userId: any){
 
     return this.http.post(

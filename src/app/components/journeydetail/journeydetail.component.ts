@@ -10,6 +10,7 @@ import tt, { Map } from '@tomtom-international/web-sdk-maps';
 import { MapsService } from 'src/app/services/maps.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
+import { PickupService } from 'src/app/services/pickup.service';
 
 @Component({
   selector: 'app-journeydetail',
@@ -21,6 +22,7 @@ export class JourneydetailComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public journeyService: JourneyService,
+    public pickupService: PickupService,
     public authService: AuthService,
     public mapService: MapsService,
     public dycomService: DynamiccomponentService,
@@ -88,10 +90,12 @@ export class JourneydetailComponent implements OnInit {
       });
     });
 
-    interval(1000).subscribe((time) => {
+    interval(2000).subscribe((time) => {
       this.journeyService.checkJourneyComplete().subscribe((data: any) => {
         console.log(data);
         if (data.completed === true) {
+          this.updateUserMiles(this.userId, this.distanceMiles);
+
         }
       });
     });
@@ -220,9 +224,10 @@ export class JourneydetailComponent implements OnInit {
         this.markersList.push(marker);
         this.mapService.setMarkersList(this.markersList);
 
+        this.pickupService.completePickup(this.userId, this.travelDuration, this.distanceMiles, this.data.pickup.pickupId).subscribe((res: any) =>{
+          console.log(res);
+        })
 
-
-        this.updateUserMiles(this.userId, this.distanceMiles);
 
         console.log(marker);
       });
@@ -243,7 +248,9 @@ export class JourneydetailComponent implements OnInit {
         console.log("check miles: " + milesToUpdate);
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
-          (data: any) => {},
+          (data: any) => {
+            console.log("user miles update " + data)
+          },
           (err: any) => {}
         );
       } else {
@@ -253,7 +260,9 @@ export class JourneydetailComponent implements OnInit {
 
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
-          (data: any) => {},
+          (data: any) => {
+            console.log("user miles update " + data)
+          },
           (err: any) => {}
         );
       }

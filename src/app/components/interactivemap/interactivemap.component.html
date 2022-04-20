@@ -5,7 +5,7 @@
     <app-searchbar></app-searchbar>
   </div>
   <div class="miles-tokens">
-      <mat-icon (click)="getUserPickups()" [inline]="true" [matBadge]="15" matBadgeSize="medium" matBadgeColor="warn">ev_station</mat-icon><br><span class="miles-text">Miles</span>
+      <mat-icon (click)="getUserPickups()" [inline]="true" [matBadge]="milesCounter" matBadgeSize="medium" matBadgeColor="warn">ev_station</mat-icon><br><span class="miles-text">Miles</span>
   </div>
 
   <ng-container *ngIf="selectDestination">

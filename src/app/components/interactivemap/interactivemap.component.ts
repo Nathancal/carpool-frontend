@@ -14,6 +14,7 @@ import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.compon
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 import { SearchbarComponent } from '../searchbar/searchbar.component';
 import { MapsService } from 'src/app/services/maps.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-interactivemap',
@@ -41,17 +42,23 @@ export class InteractivemapComponent implements OnInit {
   embarkLng: any;
   routeGeojson: any;
   markersList: tt.Marker[] = [];
+  milesCounter: any;
+
+  userID: any = sessionStorage['userID'];
 
   @ViewChild(SearchbarComponent) searchBar!: SearchbarComponent;
 
   constructor(
     private dialog: MatDialog,
     public pickupService: PickupService,
+    public authService: AuthService,
     public dycomService: DynamiccomponentService,
     public mapService: MapsService
   ) {}
 
   ngOnInit(): void {
+    this.getUserMiles();
+
     let geolocateControl = new tt.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
@@ -59,13 +66,17 @@ export class InteractivemapComponent implements OnInit {
       trackUserLocation: true,
     });
 
-    interval(2000).subscribe((time) => {
+    interval(1000).subscribe((time) => {
       console.log(this.mapService.getMarkersList());
       if (this.markersList !== this.mapService.getMarkersList()) {
         this.mapService.getMarkersList().forEach((marker: tt.Marker) => {
           marker.addTo(this.map);
         });
       }
+    });
+
+    interval(5000).subscribe((time) => {
+      this.getUserMiles();
     });
 
     ttserv.copyrights({
@@ -111,23 +122,23 @@ export class InteractivemapComponent implements OnInit {
       }
     });
 
-    this.map.on('touchstart', (e) => {
-      //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
-      if (this.searchBar.positionOfResult != undefined) {
-        this.map.setCenter(this.searchBar.positionOfResult);
-      }
-      const timeStart = new Date();
-      this.map.on('touchend', () => {
-        const timeEnd = new Date();
-        let milliseconds =
-          Math.abs(timeEnd.getMilliseconds() - timeStart.getMilliseconds()) /
-          100;
-        if (milliseconds > 10) {
-          this.PickupDetailsModal(e);
-        }
-        console.log(milliseconds.valueOf());
-      });
-    });
+    // this.map.on('touchstart', (e) => {
+    //   //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
+    //   if (this.searchBar.positionOfResult != undefined) {
+    //     this.map.setCenter(this.searchBar.positionOfResult);
+    //   }
+    //   const timeStart = new Date();
+    //   this.map.on('touchend', () => {
+    //     const timeEnd = new Date();
+    //     let milliseconds =
+    //       Math.abs(timeEnd.getMilliseconds() - timeStart.getMilliseconds()) /
+    //       100;
+    //     if (milliseconds > 10) {
+    //       this.PickupDetailsModal(e);
+    //     }
+    //     console.log(milliseconds.valueOf());
+    //   });
+    // });
 
     this.map.on('dblclick', (e) => {
       this.PickupDetailsModal(e);
@@ -152,8 +163,9 @@ export class InteractivemapComponent implements OnInit {
             lat: pickup.embarkLocation.coordinates[0],
             lng: pickup.embarkLocation.coordinates[1],
           };
-
-          this.createPickupMarker(latlng, pickup);
+          if (pickup.pickupStatus === 'pending') {
+            this.createPickupMarker(latlng, pickup);
+          }
         });
         console.log(res.data);
       });
@@ -172,7 +184,9 @@ export class InteractivemapComponent implements OnInit {
             lng: pickup.embarkLocation.coordinates[1],
           };
 
-          this.createPickupMarker(latlng, pickup);
+          if (pickup.pickupStatus === 'pending') {
+            this.createPickupMarker(latlng, pickup);
+          }
         });
       });
   }
@@ -184,12 +198,14 @@ export class InteractivemapComponent implements OnInit {
     let element = document.createElement('div');
     if (pickup.hostId == sessionStorage['userID']) {
       element.id = 'user-pickup-marker';
+
       this.pickupService
         .getHostDetails(pickup.hostId, pickup.pickupId)
         .subscribe((res) => {
           this.userInfo = res;
           console.log(res);
           console.log(this.userInfo);
+
           let popupContent = this.dycomService.injectComponent(
             PickupoverviewComponent,
             (x) => {
@@ -216,7 +232,6 @@ export class InteractivemapComponent implements OnInit {
         });
     } else {
       element.id = 'available-pickup-marker';
-
       this.pickupService
         .getHostDetails(pickup.hostId, pickup.pickupId)
         .subscribe((res) => {
@@ -319,5 +334,12 @@ export class InteractivemapComponent implements OnInit {
     const modal = this.dialog.open(PickupoverviewComponent, configDialog);
 
     modal.afterClosed().subscribe((res: any) => {});
+  }
+
+  getUserMiles() {
+    this.authService.getUserMiles(this.userID).subscribe((res: any) => {
+      this.milesCounter = res.miles;
+      console.log(res.miles);
+    });
   }
 }
