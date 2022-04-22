@@ -6,7 +6,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { JourneyjoinComponent } from '../journeyjoin/journeyjoin.component';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
-import tt, { Map } from '@tomtom-international/web-sdk-maps';
+import tt, { AnySourceData, Map } from '@tomtom-international/web-sdk-maps';
 import { MapsService } from 'src/app/services/maps.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
@@ -45,6 +45,7 @@ export class JourneydetailComponent implements OnInit {
   map!: tt.Map;
   markersList!: tt.Marker[];
   completedMarker!: tt.Marker;
+  userJoined: boolean = false;
 
   isHost!: boolean;
 
@@ -56,10 +57,29 @@ export class JourneydetailComponent implements OnInit {
 
     this.map = this.mapService.getMap();
 
+    console.log(this.data.pickup.hostId);
+    console.log(this.userId);
+
     if (this.userId == this.data.pickup.hostId) {
       this.isHost = true;
+      this.journeyService.joinJourneyHttp(
+        this.userId,
+        this.userForename,
+        this.pickupId
+      );
     } else if (this.userId != this.data.pickup.hostId) {
       this.isHost = false;
+
+      interval(5000).subscribe((time) => {
+        this.journeyService.checkJourneyComplete().subscribe((data: any) => {
+          console.log(data);
+          console.log('check journey completed.');
+          if (data.completed === true) {
+            console.log('data completed true, update miles?');
+            this.updateUserMiles(this.userId, this.distanceMiles);
+          }
+        });
+      });
     }
 
     console.log('isHost? ' + this.isHost);
@@ -69,36 +89,28 @@ export class JourneydetailComponent implements OnInit {
       this.data.pickup.pickupId
     );
 
-    this.journeyService.checkJourneyComplete().subscribe((data: any) => {
-      console.log(data);
-      console.log('check journey completed.');
-      if (data.completed === true) {
-        this.updateUserMiles(this.userId, this.distanceMiles);
-      }
-    });
-
     this.journeyService.getJourneyMessages().subscribe((data: any) => {
+      console.log(data);
       if (!this.response.includes(data.userId)) {
         console.log(data.users);
         this.passengersJoined = data.users;
         console.log(this.passengersJoined);
         this.response.push({ userId: data.userId, forename: data.forename });
         this.numPassengersJoined = this.passengersJoined.length;
+        console.log(this.response);
       }
     });
 
     interval(5000).subscribe((time) => {
-      this.journeyService
-        .hasUserJoined(this.userId, this.data.pickup.pickupId)
-        .subscribe((data: any) => {
-          console.log(data.users[0]);
-
-          this.userChecked = data.users[0].joined;
-        });
-
-      this.journeyService.journeyStartCheck().subscribe((data: any) => {
-        console.log(data);
-      });
+      if (this.userJoined === false) {
+        this.journeyService
+          .hasUserJoined(this.userId, this.data.pickup.pickupId)
+          .subscribe((data: any) => {
+            console.log(data.users[0]);
+            this.userJoined === true;
+            this.userChecked = data.users[0].joined;
+          });
+      }
     });
   }
 
@@ -211,6 +223,8 @@ export class JourneydetailComponent implements OnInit {
           )
           .subscribe((res: any) => {
             console.log(res);
+
+            console.log('GETS to just before miles update.');
 
             this.journeyService.autocompleteJourney(this.data.pickup.pickupId);
             this.updateUserMiles(this.userId, this.distanceMiles);

@@ -7,7 +7,7 @@
         </h4>
         <mat-action-list>
           <div *ngFor="let item of this.response">
-            <button mat-list-item (click)="goToUser()">
+            <button mat-list-item (click)="goToUser()" >
               {{ this.item.forename }}
               <ng-container *ngIf="userChecked"
                 ><span
@@ -34,10 +34,10 @@
       <p>
         Passengers: <span>{{ this.numPassengersJoined }}</span>
       </p>
-      <mat-action-list *ngFor="let item of this.passengersJoined">
+      <mat-action-list *ngFor="let item of this.response">
         <button mat-list-item (click)="goToUser()">
           <div fxLayout="row" fxLayoutAlign="space-between center">
-            <span> {{ this.item.userId }} </span>
+            <span> {{ this.item.forename }} </span>
             <ng-container *ngIf="userChecked"
               ><span
                 ><mat-icon>check_circle_outline</mat-icon>

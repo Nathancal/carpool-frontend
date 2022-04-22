@@ -66,15 +66,6 @@ export class InteractivemapComponent implements OnInit {
       trackUserLocation: true,
     });
 
-    interval(1000).subscribe((time) => {
-      console.log(this.mapService.getMarkersList());
-      if (this.markersList !== this.mapService.getMarkersList()) {
-        this.mapService.getMarkersList().forEach((marker: tt.Marker) => {
-          marker.addTo(this.map);
-        });
-      }
-    });
-
     interval(5000).subscribe((time) => {
       this.getUserMiles();
     });
