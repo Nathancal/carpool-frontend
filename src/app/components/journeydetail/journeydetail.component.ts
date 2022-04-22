@@ -44,6 +44,7 @@ export class JourneydetailComponent implements OnInit {
   travelDuration: any;
   map!: tt.Map;
   markersList!: tt.Marker[];
+  completedMarker!: tt.Marker;
 
   isHost!: boolean;
 
@@ -60,11 +61,21 @@ export class JourneydetailComponent implements OnInit {
     } else if (this.userId != this.data.pickup.hostId) {
       this.isHost = false;
     }
+
+    console.log('isHost? ' + this.isHost);
     this.journeyService.joinJourneySocket(
       this.userId,
       this.userForename,
       this.data.pickup.pickupId
     );
+
+    this.journeyService.checkJourneyComplete().subscribe((data: any) => {
+      console.log(data);
+      console.log('check journey completed.');
+      if (data.completed === true) {
+        this.updateUserMiles(this.userId, this.distanceMiles);
+      }
+    });
 
     this.journeyService.getJourneyMessages().subscribe((data: any) => {
       if (!this.response.includes(data.userId)) {
@@ -87,16 +98,6 @@ export class JourneydetailComponent implements OnInit {
 
       this.journeyService.journeyStartCheck().subscribe((data: any) => {
         console.log(data);
-      });
-    });
-
-    interval(2000).subscribe((time) => {
-      this.journeyService.checkJourneyComplete().subscribe((data: any) => {
-        console.log(data);
-        if (data.completed === true) {
-          this.updateUserMiles(this.userId, this.distanceMiles);
-
-        }
       });
     });
   }
@@ -201,67 +202,66 @@ export class JourneydetailComponent implements OnInit {
         let element = document.createElement('div');
         element.className = 'journey-complete-marker';
 
-        let popupContent = this.dycomService.injectComponent(
-          JourneyoverviewComponent,
-          (x) => {
-            x.routeGeojson = routeGeojson;
-            x.pickup = this.data.pickup;
-            x.distanceMiles = this.distanceMiles;
-            x.travelDuration = this.travelDuration;
-            x.map = this.data.map;
-          }
-        );
+        this.pickupService
+          .completePickup(
+            this.userId,
+            this.travelDuration,
+            this.distanceMiles,
+            this.data.pickup.pickupId
+          )
+          .subscribe((res: any) => {
+            console.log(res);
 
-        let popup = new tt.Popup({
-          offset: 40,
-          maxWidth: '750px',
-        }).setDOMContent(popupContent);
-        let marker = new tt.Marker({ element: element })
-          .setLngLat(returnlatlng)
-          .setPopup(popup)
-          .addTo(this.map);
+            this.journeyService.autocompleteJourney(this.data.pickup.pickupId);
+            this.updateUserMiles(this.userId, this.distanceMiles);
 
-        this.markersList.push(marker);
-        this.mapService.setMarkersList(this.markersList);
+            const configDialog = new MatDialogConfig();
 
-        this.pickupService.completePickup(this.userId, this.travelDuration, this.distanceMiles, this.data.pickup.pickupId).subscribe((res: any) =>{
-          console.log(res);
-        })
-
-
-        console.log(marker);
+            configDialog.id = 'journeyoverviewcontainer';
+            configDialog.height = '600px';
+            configDialog.width = '100%';
+            configDialog.panelClass = 'journeyoverviewcontainer';
+            configDialog.data = {
+              pickup: this.data.pickup,
+              userId: this.userId,
+              forename: this.userForename,
+              isHost: this.isHost,
+            };
+            const modal = this.dialog.open(
+              JourneyoverviewComponent,
+              configDialog
+            );
+          });
       });
-
-    this.dialogRef.close();
-
   }
 
   updateUserMiles(userId: any, totalMiles: any) {
     this.authService.getUserMiles(userId).subscribe((data: any) => {
       let currentMiles = data.miles;
 
+      console.log('ishost?' + this.isHost);
+
       if (this.isHost == true) {
         let milesMultiplier = totalMiles * this.numPassengersJoined;
 
         let milesToUpdate = currentMiles + milesMultiplier;
 
-        console.log("check miles: " + milesToUpdate);
+        console.log('check miles: ' + milesToUpdate);
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
           (data: any) => {
-            console.log("user miles update " + data)
+            console.log('user miles update ' + data);
           },
           (err: any) => {}
         );
       } else {
         let milesToUpdate = currentMiles - totalMiles;
 
-        console.log("check miles: " + milesToUpdate);
-
+        console.log('check miles: ' + milesToUpdate);
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
           (data: any) => {
-            console.log("user miles update " + data)
+            console.log('user miles update ' + data);
           },
           (err: any) => {}
         );

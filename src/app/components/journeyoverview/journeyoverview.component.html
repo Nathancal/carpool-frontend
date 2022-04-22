@@ -1,5 +1,26 @@
 <div>
   <mat-card>
-    <h3>TEST JOURNEY OVERVIEW APPEARS</h3>
+    <mat-card-header>
+      <mat-card-title> Journey Summary </mat-card-title>
+      <mat-card-subtitle>
+        {{ capitaliseName(this.hostName) }}'s Carpool
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div id="summaryMap" class="summary-map-container"></div>
+      <div fxLayout="column">
+        <div fxLayout="row">
+          <p>Travel information:</p>
+          <div fxLayout="column"></div>
+          <div fxLayout="column"></div>
+        </div>
+        <div fxLayout="row">
+          <p>Passenger information:</p>
+          <div fxLayout="column"></div>
+          <div fxLayout="column"></div>
+          <div fxLayout="column"></div>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

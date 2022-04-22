@@ -105,7 +105,7 @@ export class InteractivemapComponent implements OnInit {
       console.log('search bar results = ' + this.searchBar.positionOfResult);
       //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
       if (this.searchBar.positionOfResult != undefined) {
-        this.map.setCenter(this.searchBar.positionOfResult);
+        this.map.flyTo(this.searchBar.positionOfResult);
       }
 
       console.log(e.lngLat);
