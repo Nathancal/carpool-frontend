@@ -1,0 +1,36 @@
+<mat-card>
+  <mat-card-title> Leave review for user  </mat-card-title>
+
+  <mat-card-content>
+    <form class="form-container">
+      <p class="note-title-label">Score:</p>
+      <textarea
+        class="note-title-text"
+        cdkTextareaAutosize="true"
+        matInput
+        type="text"
+        formControlName="title"
+        required
+      ></textarea>
+
+      <p class="note-title-label">Comment:</p>
+      <textarea
+        class="note-title-text"
+        cdkTextareaAutosize="true"
+        matInput
+        type="text"
+        formControlName="body"
+        required
+      ></textarea>
+
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <button type="submit" class="done-btn" mat-mini-fab>
+          <mat-icon>done</mat-icon>
+        </button>
+        <button type="button" class="close-btn" mat-mini-fab>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

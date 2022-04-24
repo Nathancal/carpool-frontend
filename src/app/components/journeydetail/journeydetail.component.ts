@@ -99,6 +99,23 @@ export class JourneydetailComponent implements OnInit {
         this.numPassengersJoined = this.passengersJoined.length;
         console.log(this.response);
       }
+      if (data.isComplete === true && this.isHost === false) {
+        const configDialog = new MatDialogConfig();
+
+        configDialog.id = 'journeyoverviewcontainer';
+        configDialog.height = '600px';
+        configDialog.width = '100%';
+        configDialog.panelClass = 'journeyoverviewcontainer';
+        configDialog.data = {
+          pickup: this.data.pickup,
+          userId: this.userId,
+          forename: this.userForename,
+          isHost: this.isHost,
+          distanceMiles: this.distanceMiles,
+          travelDuration: this.travelDuration,
+        };
+        const modal = this.dialog.open(JourneyoverviewComponent, configDialog);
+      }
     });
 
     interval(5000).subscribe((time) => {
@@ -240,6 +257,8 @@ export class JourneydetailComponent implements OnInit {
               userId: this.userId,
               forename: this.userForename,
               isHost: this.isHost,
+              distanceMiles: this.distanceMiles,
+              travelDuration: this.travelDuration,
             };
             const modal = this.dialog.open(
               JourneyoverviewComponent,

@@ -27,6 +27,8 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { JourneyService } from './services/journey.service';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
 
+import { ReviewuserComponent } from './components/reviewuser/reviewuser.component';
+
 
 const config: SocketIoConfig = {
   url: 'https://192.168.0.21:5000/',
@@ -48,6 +50,7 @@ const config: SocketIoConfig = {
     JourneyjoinComponent,
     PickupoverviewComponent,
     UserprofileComponent,
+    ReviewuserComponent,
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,7 @@ import { PickupoverviewComponent } from '../pickupoverview/pickupoverview.compon
 import { DynamiccomponentService } from 'src/app/services/dynamiccomponent.service';
 import { SearchbarComponent } from '../searchbar/searchbar.component';
 import { MapsService } from 'src/app/services/maps.service';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -43,6 +44,7 @@ export class InteractivemapComponent implements OnInit {
   routeGeojson: any;
   markersList: tt.Marker[] = [];
   milesCounter: any;
+  isAuthenticated!: string;
 
   userID: any = sessionStorage['userID'];
 
@@ -53,7 +55,8 @@ export class InteractivemapComponent implements OnInit {
     public pickupService: PickupService,
     public authService: AuthService,
     public dycomService: DynamiccomponentService,
-    public mapService: MapsService
+    public mapService: MapsService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +72,12 @@ export class InteractivemapComponent implements OnInit {
     interval(5000).subscribe((time) => {
       this.getUserMiles();
     });
+
+    if(this.authService.isAuth() != true){
+      this.router.navigateByUrl('/');
+
+    }
+
 
     ttserv.copyrights({
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',

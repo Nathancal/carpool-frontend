@@ -9,6 +9,22 @@ export class AuthService {
 
   HTTPS_URL = 'https://192.168.0.21:5000/api/v1/user';
 
+  authToken!: string;
+
+  setAuth(token: string){
+    this.authToken = token;
+
+  }
+
+  isAuth(){
+    if(this.authToken != undefined){
+      return true
+    }else{
+      return false
+    }
+
+  }
+
   loginAccount(accountData: any) {
     const header = {
       'content-type': 'application/json',

@@ -2,13 +2,15 @@
   border-radius: 0%;
   border: 0;
   box-shadow: 0;
-  background-image: linear-gradient(#009624,0%, #00c853, 60%,#5efc82);
+  background-image: linear-gradient(#009624,20%, #00c853, 60%,#5efc82);
 }
 
 .logo-img-card{
-border-radius: 0%;
-border: 0;
-box-shadow: 0;
+  background-image: linear-gradient(#5efc82,10%, #5efc82, 90%,#00c853);
+
+  border-radius: 0%;
+  border: 0;
+  box-shadow: 0;
 }
 
 .pickup-modal-container{
