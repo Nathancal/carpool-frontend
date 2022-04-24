@@ -31,6 +31,7 @@ export class JourneyoverviewComponent implements OnInit {
     this.pickupId = this.pickup.pickupId
 
     this.pickupService.getHostDetails(this.hostId, this.pickupId).subscribe((data:any)=>{
+      console.log("supposed to be user details: " + data);
       this.hostName = data.data.firstName;
     })
 
