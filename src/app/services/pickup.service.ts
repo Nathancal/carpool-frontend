@@ -23,7 +23,7 @@ export class PickupService {
 
 
     return this.http.post(this.HTTPS_URL + "/completepickup", {
-      "userID": userID,
+      "userId": userID,
       "duration": duration,
       "milesTravelled": milesTravelled,
       "pickupId":pickupId

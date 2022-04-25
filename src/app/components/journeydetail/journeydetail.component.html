@@ -7,7 +7,8 @@
         </h4>
         <mat-action-list>
           <div *ngFor="let item of this.response">
-            <button mat-list-item (click)="goToUser()" >
+            <button mat-list-item (click)="goToUser()" [ngClass]="userChecked === true ? 'checkedinuserbutton' : 'usernotcheckedin'"
+            >
               {{ this.item.forename }}
               <ng-container *ngIf="userChecked"
                 ><span

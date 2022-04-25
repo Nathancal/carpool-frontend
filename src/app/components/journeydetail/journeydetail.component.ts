@@ -46,6 +46,8 @@ export class JourneydetailComponent implements OnInit {
   markersList!: tt.Marker[];
   completedMarker!: tt.Marker;
   userJoined: boolean = false;
+  isComplete: boolean = false;
+  modalOpen: boolean = false;
 
   isHost!: boolean;
 
@@ -100,35 +102,47 @@ export class JourneydetailComponent implements OnInit {
         this.numPassengersJoined = this.passengersJoined.length;
         console.log(this.response);
       }
-      if (data.isComplete === true && this.isHost === false) {
-        const configDialog = new MatDialogConfig();
-
-        configDialog.id = 'journeyoverviewcontainer';
-        configDialog.height = '600px';
-        configDialog.width = '100%';
-        configDialog.panelClass = 'journeyoverviewcontainer';
-        configDialog.data = {
-          pickup: this.data.pickup,
-          userId: this.userId,
-          forename: this.userForename,
-          isHost: this.isHost,
-          distanceMiles: this.distanceMiles,
-          travelDuration: this.travelDuration,
-        };
-        const modal = this.dialog.open(JourneyoverviewComponent, configDialog);
-      }
     });
 
-    interval(5000).subscribe((time) => {
-      if (this.userJoined === false) {
+    if (this.userJoined === false) {
+      interval(5000).subscribe((time) => {
+        console.log('userJoined' + this.userJoined);
         this.journeyService
           .hasUserJoined(this.userId, this.data.pickup.pickupId)
           .subscribe((data: any) => {
-            this.userJoined === true;
-            this.userChecked = data.user.joined;
+            console.log(data.isComplete);
+            this.isComplete = data.isComplete;
+            if (!this.isComplete) {
+              this.userJoined = true;
+              this.userChecked = data.user.joined;
+            }
+
+            do {
+              if (this.isComplete) {
+                this.modalOpen = true;
+                const configDialog = new MatDialogConfig();
+
+                configDialog.id = 'journeyoverviewcontainer';
+                configDialog.height = '600px';
+                configDialog.width = '100%';
+                configDialog.panelClass = 'journeyoverviewcontainer';
+                configDialog.data = {
+                  pickup: this.data.pickup,
+                  userId: this.userId,
+                  forename: this.userForename,
+                  isHost: this.isHost,
+                  distanceMiles: this.distanceMiles,
+                  travelDuration: this.travelDuration,
+                };
+                const modal = this.dialog.open(
+                  JourneyoverviewComponent,
+                  configDialog
+                );
+              }
+            } while (!this.modalOpen);
           });
-      }
-    });
+      });
+    }
   }
 
   joinJourney() {
@@ -242,14 +256,6 @@ export class JourneydetailComponent implements OnInit {
             console.log(res);
 
             console.log('GETS to just before miles update.');
-
-
-            let messageCompleted = {
-              isComplete: true
-            }
-
-            this.journeyService.joinJourneySocket(messageCompleted);
-
 
             this.updateUserMiles(this.userId, this.distanceMiles);
 

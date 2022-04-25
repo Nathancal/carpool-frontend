@@ -5,3 +5,13 @@
   height: 50px;
 
 }
+
+.checkedinuserbutton{
+  color: green;
+}
+
+.usernotcheckedin{
+
+  color: grey;
+
+}
