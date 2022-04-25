@@ -37,13 +37,15 @@ export class SearchbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.tomSearch.on('tomtom.searchbox.resultselected', (res: any)=>{
+      console.log(res)
       this.positionOfResult = res.data.result.position;
     });
 
     this.tomSearch.on('tomtom.searchbox.resultscleared', (res: any)=>{
-      this.results = undefined;
+
       this.positionOfResult = undefined;
-    })
+
+    });
 
     this.tomSearch.on('tomtom.searchbox.resultsfound', (res: any)=>{
 
@@ -55,11 +57,6 @@ export class SearchbarComponent implements OnInit {
       }
 
     });
-
-
-    this.tomSearch.on('tomtom.searchbox.resultselected', (res: any)=>{
-      this.positionOfResult = undefined;
-    })
 
   }
 
