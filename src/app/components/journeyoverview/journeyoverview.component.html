@@ -3,13 +3,13 @@
     <mat-card-header>
       <mat-card-title> Journey Summary </mat-card-title>
       <mat-card-subtitle>
-        {{ capitaliseName(this.hostName) }}'s Carpool
+        {{ this.hostName }}'s Carpool
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div id="summaryMap" class="summary-map-container"></div>
+      <div id="summaryMap"></div>
       <div fxLayout="column">
-        <div fxLayout="row">
+        <div fxLayout="row" fx >
           <p>Travel information:</p>
           <div fxLayout="column"></div>
           <div fxLayout="column"></div>
@@ -21,6 +21,10 @@
           <div fxLayout="column"></div>
         </div>
       </div>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>Miles Account Update</mat-expansion-panel-header>
+
+      </mat-expansion-panel>
     </mat-card-content>
   </mat-card>
 </div>

@@ -60,6 +60,10 @@ export class InteractivemapComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if(sessionStorage["token"] != undefined){
+      this.authService.setAuth(sessionStorage["token"])
+    }
+
     this.getUserMiles();
 
     let geolocateControl = new tt.GeolocateControl({
@@ -105,7 +109,9 @@ export class InteractivemapComponent implements OnInit {
       console.log('search bar results = ' + this.searchBar.positionOfResult);
       //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
       if (this.searchBar.positionOfResult != undefined) {
-        this.map.flyTo(this.searchBar.positionOfResult);
+        console.log('search bar results = ' + this.searchBar.positionOfResult[0]);
+
+        this.map.setCenter(this.searchBar.positionOfResult);
       }
 
       console.log(e.lngLat);

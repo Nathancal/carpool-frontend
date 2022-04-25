@@ -5,18 +5,17 @@
         <h4>
           Passengers Joined: <span>{{ this.numPassengersJoined }}</span>
         </h4>
-        <mat-action-list>
-          <div *ngFor="let item of this.response">
-            <button mat-list-item (click)="goToUser()" [ngClass]="userChecked === true ? 'checkedinuserbutton' : 'usernotcheckedin'"
-            >
-              {{ this.item.forename }}
+        <mat-action-list *ngFor="let item of this.response">
+          <button mat-list-item (click)="goToUser()" [ngClass]="userChecked === true ? 'checkedinuserbutton' : 'usernotcheckedin'">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <span> {{ this.item.forename }} </span>
               <ng-container *ngIf="userChecked"
                 ><span
                   ><mat-icon>check_circle_outline</mat-icon>
                 </span></ng-container
               >
-            </button>
-          </div>
+            </div>
+          </button>
         </mat-action-list>
       </div>
     </mat-card-content>
@@ -36,7 +35,7 @@
         Passengers: <span>{{ this.numPassengersJoined }}</span>
       </p>
       <mat-action-list *ngFor="let item of this.response">
-        <button mat-list-item (click)="goToUser()">
+        <button mat-list-item (click)="goToUser()" [ngClass]="userChecked === true ? 'checkedinuserbutton' : 'usernotcheckedin'">
           <div fxLayout="row" fxLayoutAlign="space-between center">
             <span> {{ this.item.forename }} </span>
             <ng-container *ngIf="userChecked"

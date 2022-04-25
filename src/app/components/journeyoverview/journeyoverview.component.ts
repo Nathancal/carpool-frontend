@@ -30,11 +30,6 @@ export class JourneyoverviewComponent implements OnInit {
     this.hostId = this.pickup.hostId
     this.pickupId = this.pickup.pickupId
 
-    this.pickupService.getHostDetails(this.hostId, this.pickupId).subscribe((data:any)=>{
-      console.log("supposed to be user details: " + data);
-      this.hostName = data.data.firstName;
-    })
-
 
     ttserv.copyrights({
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
@@ -57,6 +52,15 @@ export class JourneyoverviewComponent implements OnInit {
         'line-color': '#ff1744',
         'line-width': 4,
       }});
+
+
+
+    this.pickupService.getHostDetails(this.hostId, this.pickupId).subscribe((data:any)=>{
+      console.log("supposed to be user details: " + data);
+      this.hostName = data.data.firstName;
+      this.hostName = this.capitaliseName(this.hostName)
+    })
+
   }
 
 

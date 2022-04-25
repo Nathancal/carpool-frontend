@@ -83,10 +83,6 @@ export class LoginComponent implements OnInit {
       this.authService.setAuth(sessionStorage["token"]);
 
       console.log(sessionStorage["userForename"]);
-
-
-      console.log(sessionStorage["userID"])
-      sessionStorage["token"] =res.token;
       this.loading = false;
       this.router.navigateByUrl('/userdashboard');
     }, (err:any)=>{
