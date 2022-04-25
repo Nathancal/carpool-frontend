@@ -339,7 +339,6 @@ export class InteractivemapComponent implements OnInit {
   getUserMiles() {
     this.authService.getUserMiles(this.userID).subscribe((res: any) => {
       this.milesCounter = res.miles;
-      console.log(res.miles);
     });
   }
 }

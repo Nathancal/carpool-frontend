@@ -1,17 +1,15 @@
 <mat-card>
-  <mat-card-title> Leave review for user  </mat-card-title>
+  <mat-card-title> Leave review for user  +username here+</mat-card-title>
 
   <mat-card-content>
-    <form class="form-container">
+    <form class="form-container" [formGroup]="form" (ngSubmit)="submitReview()">
       <p class="note-title-label">Score:</p>
-      <textarea
-        class="note-title-text"
-        cdkTextareaAutosize="true"
-        matInput
-        type="text"
-        formControlName="title"
-        required
-      ></textarea>
+      <mat-form-field appearance="legacy">
+        <mat-label>Score</mat-label>
+        <input matInput formControlName="score" placeholder="Placeholder">
+        <mat-icon matSuffix>score</mat-icon>
+        <mat-hint>Leave a Score (between 1 and 5)</mat-hint>
+      </mat-form-field>
 
       <p class="note-title-label">Comment:</p>
       <textarea
@@ -19,13 +17,13 @@
         cdkTextareaAutosize="true"
         matInput
         type="text"
-        formControlName="body"
+        formControlName="comment"
         required
       ></textarea>
 
       <div fxLayout="row" fxLayoutAlign="center center">
         <button type="submit" class="done-btn" mat-mini-fab>
-          <mat-icon>done</mat-icon>
+          <mat-icon>submit</mat-icon>
         </button>
         <button type="button" class="close-btn" mat-mini-fab>
           <mat-icon>close</mat-icon>

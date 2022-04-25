@@ -83,11 +83,12 @@ export class JourneydetailComponent implements OnInit {
     }
 
     console.log('isHost? ' + this.isHost);
-    this.journeyService.joinJourneySocket(
-      this.userId,
-      this.userForename,
-      this.data.pickup.pickupId
-    );
+    let messageJoin = {
+      forename: this.userForename,
+      pickupId: this.data.pickup.pickupId,
+      userId: this.userId,
+    };
+    this.journeyService.joinJourneySocket(messageJoin);
 
     this.journeyService.getJourneyMessages().subscribe((data: any) => {
       console.log(data);
@@ -123,9 +124,8 @@ export class JourneydetailComponent implements OnInit {
         this.journeyService
           .hasUserJoined(this.userId, this.data.pickup.pickupId)
           .subscribe((data: any) => {
-            console.log(data.users[0]);
             this.userJoined === true;
-            this.userChecked = data.users[0].joined;
+            this.userChecked = data.user.joined;
           });
       }
     });
@@ -243,7 +243,14 @@ export class JourneydetailComponent implements OnInit {
 
             console.log('GETS to just before miles update.');
 
-            this.journeyService.autocompleteJourney(this.data.pickup.pickupId);
+
+            let messageCompleted = {
+              isComplete: true
+            }
+
+            this.journeyService.joinJourneySocket(messageCompleted);
+
+
             this.updateUserMiles(this.userId, this.distanceMiles);
 
             const configDialog = new MatDialogConfig();

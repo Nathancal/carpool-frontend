@@ -29,12 +29,8 @@ export class JourneyService {
     });
   }
 
-  joinJourneySocket(userId: any, forename: any, pickupId: any) {
-    let message = {
-      forename: forename,
-      pickupId: pickupId,
-      userId: userId,
-    };
+  joinJourneySocket(message: any) {
+
     this.socket.emit('joined', message);
   }
 
