@@ -11,14 +11,24 @@
       <div fxLayout="column">
         <div fxLayout="row" fx >
           <p>Travel information:</p>
-          <div fxLayout="column"></div>
-          <div fxLayout="column"></div>
+          <div fxLayout="column">
+            <div fxLayout="row">
+              <h5>Total Distance: <span>{{this.distanceMiles}} miles</span></h5>
+            </div>
+            <div fxLayout="row">
+              <h5>Travel Duration: <span>{{this.durationTotal / 60}} minutes</span></h5>
+            </div>
+            <div fxLayout="row">
+              <h5>Destination: <span>{{this.destination}}</span></h5>
+            </div>
+          </div>
         </div>
         <div fxLayout="row">
-          <p>Passenger information:</p>
-          <div fxLayout="column"></div>
-          <div fxLayout="column"></div>
-          <div fxLayout="column"></div>
+          <div fxLayout="column">
+            <div fxLayout="row">Passenger Information:</div>
+            <div fxLayout="row"></div>
+
+          </div>
         </div>
       </div>
       <mat-expansion-panel>
@@ -26,5 +36,8 @@
 
       </mat-expansion-panel>
     </mat-card-content>
+    <mat-card-footer>
+
+    </mat-card-footer>
   </mat-card>
 </div>

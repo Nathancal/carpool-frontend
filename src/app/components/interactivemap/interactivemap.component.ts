@@ -16,6 +16,7 @@ import { SearchbarComponent } from '../searchbar/searchbar.component';
 import { MapsService } from 'src/app/services/maps.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { MilestransactionsComponent } from '../milestransactions/milestransactions.component';
 
 @Component({
   selector: 'app-interactivemap',
@@ -344,7 +345,26 @@ export class InteractivemapComponent implements OnInit {
 
   getUserMiles() {
     this.authService.getUserMiles(this.userID).subscribe((res: any) => {
-      this.milesCounter = res.miles;
+      this.milesCounter = res.miles.toFixed(0);
     });
+  }
+
+  viewTransactions(){
+
+    const configDialog = new MatDialogConfig();
+
+
+
+    configDialog.id = 'usertransactionsmodal';
+    configDialog.height = '400px';
+    configDialog.width = '100%';
+    configDialog.panelClass = 'trans-modal-container';
+    configDialog.data = {
+    };
+
+    const modal = this.dialog.open(MilestransactionsComponent, configDialog);
+
+
+
   }
 }

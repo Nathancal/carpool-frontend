@@ -57,6 +57,24 @@ export class AuthService {
     })
   }
 
+  generateTransaction(isHost: boolean, pickupId: any, userId: any, milesTravelled: any, totalNumPassengers: any, embarkAddress: any, returnAddress:any){
+    return this.http.post(this.HTTPS_URL + '/generatetransaction', {
+      isHost: isHost,
+      pickupId: pickupId,
+      userId: userId,
+      milesTravelled: milesTravelled,
+      totalNumPassengers: totalNumPassengers,
+      embarkAddress: embarkAddress,
+      returnAddress: returnAddress
+
+    })
+  }
+
+  getTransactionsForUser(userId:any){
+    return this.http.post(this.HTTPS_URL +'/gettransactions', {
+      userId: userId
+    })
+  }
 
   registerAccount(accountData: any) {
     const header = {

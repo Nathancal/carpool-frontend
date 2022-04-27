@@ -70,6 +70,14 @@ export class PickupService {
 
   }
 
+  getPickupDetails(pickupId: any){
+
+    return this.http.post(this.HTTPS_URL + '/getpickupdetails', {
+      "pickupId": pickupId
+    })
+
+  }
+
   getUserPickups(userId: any) {
     const header = {
       userId: userId,

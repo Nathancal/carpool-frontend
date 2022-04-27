@@ -108,46 +108,47 @@ export class JourneydetailComponent implements OnInit {
     });
 
     if (!this.userJoined) {
-      this.interval = interval(5000).subscribe((time) => {
-        console.log('userJoined' + this.userJoined);
-        this.journeyService
-          .hasUserJoined(this.userId, this.data.pickup.pickupId)
-          .subscribe((data: any) => {
-            console.log(data.isComplete);
-            this.isComplete = data.isComplete;
-            if (!this.isComplete) {
-              this.userJoined = true;
-              this.userChecked = data.user.joined;
-            }
+      if (!this.modalOpen) {
+        let intervalCheck = interval(5000).subscribe((time) => {
+          console.log('userJoined' + this.userJoined);
+          this.journeyService
+            .hasUserJoined(this.userId, this.data.pickup.pickupId)
+            .subscribe((data: any) => {
+              console.log(data.isComplete);
+              this.isComplete = data.isComplete;
+              if (!this.isComplete) {
+                this.userJoined = true;
+                this.userChecked = data.user.joined;
+              }
 
-            if (this.isComplete) {
-              this.modalOpen = true;
-              const configDialog = new MatDialogConfig();
+              if (this.isComplete) {
+                this.modalOpen = true;
+                const configDialog = new MatDialogConfig();
 
-              configDialog.id = 'journeyoverviewcontainer';
-              configDialog.height = '600px';
-              configDialog.width = '100%';
-              configDialog.panelClass = 'journeyoverviewcontainer';
-              configDialog.data = {
-                pickup: this.data.pickup,
-                userId: this.userId,
-                forename: this.userForename,
-                isHost: this.isHost,
-                distanceMiles: this.distanceMiles,
-                travelDuration: this.travelDuration,
-              };
-              const modal = this.dialog.open(
-                JourneyoverviewComponent,
-                configDialog
-              );
-              clearInterval(this.interval)
-              this.interval.unsubscribe();
-              modal.afterOpened().subscribe(result =>{
-                this.dialogRef.close();
-              })
-            }
-          });
-      });
+                configDialog.id = 'journeyoverviewcontainer';
+                configDialog.height = '600px';
+                configDialog.width = '100%';
+                configDialog.panelClass = 'journeyoverviewcontainer';
+                configDialog.data = {
+                  pickup: this.data.pickup,
+                  userId: this.userId,
+                  forename: this.userForename,
+                  isHost: this.isHost,
+                  travelDuration: this.travelDuration,
+                  numPassengers: this.numPassengersJoined,
+                };
+                intervalCheck.unsubscribe();
+                const modal = this.dialog.open(
+                  JourneyoverviewComponent,
+                  configDialog
+                );
+                modal.afterOpened().subscribe((result) => {
+                  this.dialogRef.close();
+                });
+              }
+            });
+        });
+      }
     }
   }
 
@@ -264,6 +265,19 @@ export class JourneydetailComponent implements OnInit {
             console.log('GETS to just before miles update.');
 
             this.updateUserMiles(this.userId, this.distanceMiles);
+            this.authService
+              .generateTransaction(
+                this.isHost,
+                this.data.pickup.pickupId,
+                this.userId,
+                this.distanceMiles,
+                this.numPassengersJoined,
+                this.data.pickup.embarkAddress,
+                this.data.pickup.returnAddress
+              )
+              .subscribe((data: any) => {
+                console.log(data);
+              });
 
             const configDialog = new MatDialogConfig();
 
@@ -291,16 +305,14 @@ export class JourneydetailComponent implements OnInit {
     this.authService.getUserMiles(userId).subscribe((data: any) => {
       let currentMiles = data.miles;
 
-      console.log(data)
+      console.log(data);
       console.log('ishost?' + this.isHost);
 
       if (this.isHost == true) {
-
-        console.log("num passengers" + this.response.length);
+        console.log('num passengers' + this.response.length);
         let milesMultiplier = totalMiles * this.response.length;
 
-        console.log(milesMultiplier)
-
+        console.log(milesMultiplier);
 
         let milesToUpdate = currentMiles + milesMultiplier;
 
@@ -311,7 +323,7 @@ export class JourneydetailComponent implements OnInit {
             console.log('user miles update ' + data);
           },
           (err: any) => {
-            console.log("miles error:" + err)
+            console.log('miles error:' + err);
           }
         );
       } else {
@@ -325,7 +337,7 @@ export class JourneydetailComponent implements OnInit {
           },
           (err: any) => {
             this.error = err;
-            console.log("error" + this.error)
+            console.log('error' + this.error);
           }
         );
       }

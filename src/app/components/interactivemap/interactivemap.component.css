@@ -28,8 +28,8 @@
   color: rgba(51, 170, 51, 0.9);
   position: absolute;
   font-size: 75px;
-  margin-left: 80%;
-  margin-top: 30px;
+  margin-left: 85%;
+  margin-top: 20px;
 }
 
 .miles-tokens a{
@@ -40,6 +40,10 @@
   padding-left: 18px;
   position: absolute;
   font-size: medium;
+}
+
+.miles-icon{
+transform: scale(4);
 }
 
 .search-bar-container{
@@ -111,3 +115,4 @@
   text-align: center;
   background: rgba(51, 170, 51, 0.9);
 }
+

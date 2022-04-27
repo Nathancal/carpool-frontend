@@ -28,6 +28,7 @@ import { JourneyService } from './services/journey.service';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
 
 import { ReviewuserComponent } from './components/reviewuser/reviewuser.component';
+import { MilestransactionsComponent } from './components/milestransactions/milestransactions.component';
 
 
 const config: SocketIoConfig = {
@@ -51,6 +52,7 @@ const config: SocketIoConfig = {
     PickupoverviewComponent,
     UserprofileComponent,
     ReviewuserComponent,
+    MilestransactionsComponent,
   ],
   imports: [
     BrowserModule,
