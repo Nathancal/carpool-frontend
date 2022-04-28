@@ -4,29 +4,27 @@
       <p class="note-title-label">Score:</p>
       <mat-form-field appearance="legacy">
         <mat-label>Score</mat-label>
-        <input matInput formControlName="score" placeholder="Placeholder">
-        <mat-icon matSuffix>score</mat-icon>
+        <input matInput formControlName="score" placeholder="leave a score for passenger" />
         <mat-hint>Leave a Score (between 1 and 5)</mat-hint>
       </mat-form-field>
-
-      <p class="note-title-label">Comment:</p>
-      <textarea
-        class="note-title-text"
-        cdkTextareaAutosize="true"
-        matInput
-        type="text"
-        formControlName="comment"
-        required
-      ></textarea>
+      <div fxLayout="row">
+        <p class="note-title-label">Comment:</p>
+        <textarea
+          class="note-title-text"
+          cdkTextareaAutosize="true"
+          matInput
+          type="text"
+          formControlName="comment"
+          required
+        ></textarea>
+      </div>
 
       <div fxLayout="row" fxLayoutAlign="center center">
-        <button type="submit" class="done-btn" mat-mini-fab>
+        <button type="submit" class="done-btn" mat-icon-button>
           <mat-icon>submit</mat-icon>
         </button>
       </div>
     </form>
   </mat-card-content>
-  <mat-card-footer>
-
-  </mat-card-footer>
+  <mat-card-footer> </mat-card-footer>
 </mat-card>

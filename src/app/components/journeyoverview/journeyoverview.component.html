@@ -12,13 +12,13 @@
           <div fxLayout="column">
             <div fxLayout="row">
               <h5>
-                Total Distance: <span>{{ this.distanceMiles }} miles</span>
+                Total Distance: <span>{{ this.distanceMiles.toFixed(1) }} miles</span>
               </h5>
             </div>
             <div fxLayout="row">
               <h5>
                 Travel Duration:
-                <span>{{ this.durationTotal / 60 }} minutes</span>
+                <span>{{ (this.durationTotal / 60).toFixed(2) }} minutes</span>
               </h5>
             </div>
             <div fxLayout="row">
@@ -32,13 +32,14 @@
           <ng-container *ngIf="!isLoading; else isLoadingSpinner">
             <div fxLayout="column">
               <div fxLayout="row">Passenger Information:</div>
-              <div fxLayout="row" *ngFor="let passenger of this.passengerList">
-                <mat-expansion-panel>
+              <div fxLayout="row" *ngFor="let passenger of this.passengerList" fxLayoutAling="space-around center">
+                <mat-expansion-panel *ngIf="passenger.passengerId !== this.userId; else selfReview">
                   <mat-expansion-panel-header>
                     <h3>Leave review for {{ passenger.firstName }}</h3>
                   </mat-expansion-panel-header>
                   <app-reviewuser [passenger]="passenger" [userId]="userId"></app-reviewuser>
                 </mat-expansion-panel>
+                <ng-template #selfReview></ng-template>
               </div>
             </div>
           </ng-container>

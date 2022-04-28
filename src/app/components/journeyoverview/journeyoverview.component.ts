@@ -42,66 +42,70 @@ export class JourneyoverviewComponent implements OnInit {
     this.hostId = this.data.pickup.hostId;
     this.pickupId = this.data.pickup.pickupId;
 
+    this.isLoading = true;
+    this.pickupService
+      .getPickupDetails(this.pickupId)
+      .subscribe((pickupMiles: any) => {
+        console.log(pickupMiles);
+        this.distanceMiles = pickupMiles.pickupMiles.milesTravelled;
+        this.durationTotal = pickupMiles.pickupMiles.duration;
+        this.destination = pickupMiles.pickupMiles.returnAddress;
+        this.passengerNumbers = pickupMiles.pickupMiles.passengers.length;
 
-    if (!this.data.isHost) {
-      this.isLoading = true
-      this.pickupService
-        .getPickupDetails(this.pickupId)
-        .subscribe((pickupMiles: any) => {
-          console.log(pickupMiles);
-          this.distanceMiles = pickupMiles.pickupMiles.milesTravelled;
-          this.durationTotal = pickupMiles.pickupMiles.duration;
-          this.destination = pickupMiles.pickupMiles.returnAddress;
-          this.passengerNumbers = pickupMiles.pickupMiles.passengers.length;
-
-          pickupMiles.pickupMiles.passengers.forEach((passenger:any) =>{
-
-            this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
+        pickupMiles.pickupMiles.passengers.forEach((passenger: any) => {
+          this.pickupService
+            .getPassengerDetails(passenger.passengerId)
+            .subscribe((res: any) => {
               this.passengerList.push(res.data);
-            })
-
-          })
-
-          this.authService.getUserMiles(this.userId).subscribe((data: any) => {
-            console.log(data);
-            let currentMiles = data.miles;
-            console.log(currentMiles);
-
-            if (currentMiles - this.distanceMiles < 0) {
-              this.notifierService.showNotification("You do not have miles to complete this transaction", "try again.", 4000);
-            } else {
-              let milesToUpdate = currentMiles - this.distanceMiles;
-              console.log(milesToUpdate);
-
-              this.authService
-                .updateUserMiles(this.userId, milesToUpdate)
-                .subscribe(
-                  (data: any) => {
-                    this.authService
-                      .generateTransaction(
-                        this.data.isHost,
-                        this.data.pickup.pickupId,
-                        this.userId,
-                        this.distanceMiles,
-                        this.passengerNumbers,
-                        this.data.pickup.embarkAddress,
-                        this.data.pickup.returnAddress
-                      )
-                      .subscribe((trans: any) => {
-                        console.log(trans)
-                        this.isLoading = false;
-
-                      });
-                  },
-                  (err: any) => {
-                    this.notifierService.showNotification("unable to update miles", "ok", 4000);
-                    this.isLoading = false;
-                  }
-                );
-            }
-          });
+            });
         });
-    }
+
+        this.authService.getUserMiles(this.userId).subscribe((data: any) => {
+          console.log(data);
+          let currentMiles = data.miles;
+          console.log(currentMiles);
+
+          if (currentMiles - this.distanceMiles < 0) {
+            this.notifierService.showNotification(
+              'You do not have miles to complete this transaction',
+              'try again.',
+              4000
+            );
+          } else {
+            let milesToUpdate = currentMiles - this.distanceMiles;
+            console.log(milesToUpdate);
+
+            this.authService
+              .updateUserMiles(this.userId, milesToUpdate)
+              .subscribe(
+                (data: any) => {
+                  this.authService
+                    .generateTransaction(
+                      this.data.isHost,
+                      this.data.pickup.pickupId,
+                      this.userId,
+                      this.distanceMiles,
+                      this.passengerNumbers,
+                      this.data.pickup.embarkAddress,
+                      this.data.pickup.returnAddress
+                    )
+                    .subscribe((trans: any) => {
+                      console.log(trans);
+                      this.isLoading = false;
+                    });
+                },
+                (err: any) => {
+                  this.notifierService.showNotification(
+                    'unable to update miles',
+                    'ok',
+                    4000
+                  );
+                  this.isLoading = false;
+                }
+              );
+          }
+        });
+      });
 
     this.pickupService
       .getHostDetails(this.hostId, this.pickupId)
