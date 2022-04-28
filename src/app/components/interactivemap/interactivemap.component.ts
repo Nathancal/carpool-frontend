@@ -104,7 +104,7 @@ export class InteractivemapComponent implements OnInit {
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
       container: 'map',
       center: [-5.9301, 54.5973],
-      zoom: 16,
+      zoom: 11,
     });
 
     this.map.addControl(geolocateControl, 'bottom-right');
@@ -181,7 +181,8 @@ export class InteractivemapComponent implements OnInit {
                   );
                   popup = new tt.Popup({
                     offset: 40,
-                    maxWidth: '750px',
+                    className:'popup-class',
+                    maxWidth: '90%',
                     closeOnClick: true,
                   }).setDOMContent(popupContent);
                   popup.setLngLat(ttlatLng).addTo(this.map);

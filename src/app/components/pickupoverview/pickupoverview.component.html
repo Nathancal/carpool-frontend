@@ -2,86 +2,13 @@
   <!-- determines if the component is still loading in data from a service -->
   <ng-container *ngIf="!isLoading; else loading">
     <!-- Checks to see if the pickup was user created or not -->
-    <ng-container *ngIf="!userCreated; else userGenerated">
-      <!-- This checks if the user is already a passenger and displays a different component if so -->
-      <ng-container *ngIf="!isPassenger; else isAlreadyPassenger">
-        <mat-card>
-          <mat-card-title>
-            {{ capitaliseName(this.userInfo.data.firstName) }}'s Carpool
-            Overview
-          </mat-card-title>
-          <mat-card-content>
-            <div fxLayout="row" fxLayoutAlign=" center">
-              <div fxLayout="column">
-                <img
-                  mat-card-avatar
-                  class="user-image"
-                  src="https://randomuser.me/api/portraits/women/43.jpg"
-                />
-              </div>
-              <div fxLayout="column">
-                <p class="user-data-title">User Rating</p>
-                <star-rating
-                  [starType]="'svg'"
-                  [readOnly]="true"
-                  [rating]="this.userInfo.data.avgScore"
-                ></star-rating>
-                <p class="user-data-title miles-travelled-title">
-                  Miles Travelled
-                </p>
-              </div>
-            </div>
-            <div fxLayout="row">
-              <div fxLayout="column">
-                <p class="user-data-subtitle">Pickup</p>
-                <p class="user-pickup-text">{{ this.pickup.embarkAnddress }}</p>
-                <p class="user-pickup-text">
-                  {{ this.pickup.date | date: "shortDate" }},
-                  {{ this.pickup.time }}
-                </p>
-              </div>
-              <div fxLayout="column">
-                <p class="user-data-subtitle">Destination</p>
-                <p class="user-pickup-text">{{ this.pickup.returnAddress }}</p>
-                <p class="user-pickup-text">
-                  {{ this.pickup.date | date: "shortDate" }},
-                  {{ this.pickup.time }}
-                </p>
-              </div>
-            </div>
-            <div fxLayout="row">
-              <div fxLayout="column">
-                <div fxLayout="row">
-                  <p class="user-data-title">Passengers</p>
-                </div>
-
-                <div
-                  fxLayout="row"
-                  *ngFor="let passenger of this.pickup.passengers"
-                >
-                  <div *ngIf="passenger.passengerDetails">
-                    {{ passenger.passengerDetails.firstName }} ||
-                  </div>
-                </div>
-              </div>
-            </div>
-          </mat-card-content>
-          <mat-card-actions fxLayoutAlign="space-evenly center">
-            <button mat-button (click)="joinPickup(this.pickup.pickupId)">
-              Join Journey
-            </button>
-            <button mat-button>Join Carpool</button>
-          </mat-card-actions>
-          <mat-card-footer> </mat-card-footer>
-        </mat-card>
-      </ng-container>
-
-      <ng-template #isAlreadyPassenger>
-        <mat-card fxLayout="column" class="is-passenger-container">
-          <mat-card-title class="is-passenger-title">
-            {{ capitaliseName(this.userInfo.data.firstName) }}'s Carpool
-            Overview
-          </mat-card-title>
+    <!-- This checks if the user is already a passenger and displays a different component if so -->
+    <ng-container *ngIf="!isPassenger; else isAlreadyPassenger">
+      <mat-card>
+        <mat-card-title>
+          {{ capitaliseName(this.userInfo.data.firstName) }}'s Carpool Overview
+        </mat-card-title>
+        <mat-card-content>
           <div fxLayout="row" fxLayoutAlign=" center">
             <div fxLayout="column">
               <img
@@ -90,70 +17,182 @@
                 src="https://randomuser.me/api/portraits/women/43.jpg"
               />
             </div>
-            <div fxLayout="column">
-              <p class="user-data-title">User Rating</p>
-              <star-rating
-                [starType]="'svg'"
-                [readOnly]="true"
-                [rating]="this.userInfo.data.avgScore"
-              ></star-rating>
+            <div fxLayout="row">
+              <div fxLayout="column">
+                <star-rating
+                  [starType]="'svg'"
+                  [readOnly]="true"
+                  [rating]="this.userInfo.data.avgScore"
+                ></star-rating>
+              </div>
+              <div fxLayout="column">
+                <p>{{ this.userInfo.data.avgScore }} /5</p>
+              </div>
+            </div>
+            <div fxLayout="row">
               <p class="user-data-title miles-travelled-title">
                 Miles Travelled
               </p>
             </div>
           </div>
-          <ng-container *ngIf="isHost">
-            <mat-card-subtitle fxFill="100%" class="host-active"
-              >You are the host of this carpool
-            </mat-card-subtitle>
-          </ng-container>
-          <mat-card-subtitle fxFill="100%" class="passenger-active"
-            >You are a passenger</mat-card-subtitle
-          >
+          <div fxLayout="row">
+            <div fxLayout="column">
+              <p class="user-data-subtitle">Pickup</p>
+              <p class="user-pickup-text">{{ this.pickup.embarkAddress }}</p>
+              <p class="user-pickup-text">
+                {{ this.pickup.date | date: "shortDate" }},
+                {{ this.pickup.time }}
+              </p>
+            </div>
+            <div fxLayout="column">
+              <p class="user-data-subtitle">Destination</p>
+              <p class="user-pickup-text">{{ this.pickup.returnAddress }}</p>
+              <p class="user-pickup-text">
+                {{ this.pickup.date | date: "shortDate" }},
+                {{ this.pickup.time }}
+              </p>
+            </div>
+          </div>
+          <div fxLayout="row">
+            <div fxLayout="column">
+              <div fxLayout="row">
+                <p class="user-data-title">Passengers</p>
+              </div>
 
-          <mat-card-subtitle>This pickup is in 10 days</mat-card-subtitle>
-
-          <mat-card-content>
-            <div
-              fxLayout="row"
-              *ngFor="let passenger of this.pickup.passengers"
-            >
-              <mat-list *ngIf="passenger.passengerDetails">
-                <mat-list-item
-                  >{{ passenger.passengerDetails.firstName }}
+              <mat-list *ngIf="this.pickup">
+                <mat-list-item *ngFor="let passenger of this.passengerDetails">
+                  <div fxLayout="row" fxLayoutAlign="space-around center">
+                    <div>
+                      <h3>{{ passenger.firstName }}</h3>
+                    </div>
+                    <div>
+                      <h3>{{ passenger.avgScore }}</h3>
+                    </div>
+                  </div>
                 </mat-list-item>
               </mat-list>
             </div>
-          </mat-card-content>
-
-          <mat-card-footer> </mat-card-footer>
-        </mat-card>
-      </ng-template>
-    </ng-container>
-
-    <ng-template #userGenerated>
-      <mat-card>
-        <mat-card-title>
-          {{ this.userInfo.data.firstName }}'s Carpool
-        </mat-card-title>
-        <mat-card-content>
-          <div>
-            <img
-              mat-card-avatar
-              src="https://randomuser.me/api/portraits/women/43.jpg"
-            />
-            <h6>User Rating</h6>
-            <p></p>
           </div>
-          <p>{{ this.latlng.lat }}</p>
-          <h3>{{ this.pickup.address }}</h3>
         </mat-card-content>
+        <mat-card-actions fxLayoutAlign="space-evenly center">
+          <button mat-button (click)="joinPickup(this.pickup.pickupId)">
+            Join Journey
+          </button>
+          <button mat-button (click)="showRoute(this.pickup)">
+            View Route
+          </button>
+        </mat-card-actions>
         <mat-card-footer> </mat-card-footer>
       </mat-card>
-    </ng-template>
+    </ng-container>
 
-    <button (click)="showRoute(this.pickup)">View Route</button>
-    <button (click)="journeyDetailsModal()">Join Journey</button>
+    <ng-template #isAlreadyPassenger>
+      <mat-card fxLayout="column" class="is-passenger-container">
+        <mat-card-title class="is-passenger-title">
+          {{ capitaliseName(this.userInfo.data.firstName) }}'s Carpool Overview
+        </mat-card-title>
+        <div fxLayout="row" fxLayoutAlign=" center">
+          <div fxLayout="column">
+            <img
+              mat-card-avatar
+              class="user-image"
+              src="https://randomuser.me/api/portraits/women/43.jpg"
+            />
+          </div>
+          <div fxLayout="column">
+            <div fxLayout="row">
+              <p class="user-data-title">User Rating</p>
+            </div>
+            <div fxLayout="row">
+              <div fxLayout="column">
+                <star-rating
+                  [starType]="'svg'"
+                  [readOnly]="true"
+                  [rating]="this.userInfo.data.avgScore"
+                ></star-rating>
+              </div>
+              <div fxLayout="column">
+                <p>{{ this.userInfo.data.avgScore }} /5</p>
+              </div>
+            </div>
+            <div fxLayout="row">
+              <p class="user-data-title miles-travelled-title">
+                Miles Travelled
+              </p>
+            </div>
+          </div>
+        </div>
+        <mat-card-subtitle>
+          <div fxLayout="column">
+            <div
+              fxLayout="row"
+              *ngIf="this.isHost"
+              fxFill="100%"
+              class="host-active"
+              fxLayoutAlign="center center"
+            >
+              You are the host of this carpool
+            </div>
+            <div
+              fxLayout="row"
+              fxFill="100%"
+              class="passenger-active"
+              fxLayoutAlign="center center"
+            >
+              You are a passenger
+            </div>
+          </div>
+        </mat-card-subtitle>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header
+            >pickup details</mat-expansion-panel-header
+          >
+          <div fxLayout="row">
+            <p class="user-data-subtitle">Pickup</p>
+          </div>
+          <div fxLayout="row">
+            <p class="user-pickup-text">{{ this.pickup.embarkAddress }}</p>
+          </div>
+          <div fxLayout="row">
+            <p class="user-data-subtitle">Destination</p>
+          </div>
+          <div fxLayout="row">
+            <p class="user-pickup-text">{{ this.pickup.returnAddress }}</p>
+          </div>
+        </mat-expansion-panel>
+        <mat-card-content>
+          <div fxLayout="row" fxLayoutAlign="space-around center">
+            <div>
+              <h5>Name</h5>
+            </div>
+            <div>
+              <h5>Rating</h5>
+            </div>
+          </div>
+          <div
+            fxLayout="row"
+            *ngFor="let passenger of this.passengerDetails"
+            fxLayoutAlign="space-around center"
+          >
+            <div>
+              <h3>{{ passenger.firstName }}</h3>
+            </div>
+            <div>
+              <h3>{{ passenger.avgScore }}</h3>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around center">
+            <button mat-flat-button (click)="showRoute(this.pickup)">
+              View Route
+            </button>
+            <button mat-flat-button (click)="journeyDetailsModal()">
+              Arrived at pickup
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </ng-template>
   </ng-container>
 
   <ng-template #loading>

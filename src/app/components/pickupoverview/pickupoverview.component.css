@@ -40,8 +40,10 @@ padding-bottom: 0;
 }
 
 .host-active{
+  padding:1%;
   background-color: #ff1744;
-  font-size: 160%;
+  color: antiquewhite;
+  font-size: 140%;
   font-weight: 400;
 
 }

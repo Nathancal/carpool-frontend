@@ -30,22 +30,26 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   distanceMiles: any;
   userId: any;
   isHost!: boolean;
+  passengerDetails: any[] = [];
 
   ngOnInit(): void {
     this.isLoading = true;
 
-    this.userId = sessionStorage["userId"];
+    this.userId = sessionStorage["userID"];
+    console.log()
 
+
+    console.log(this.pickup.hostId)
+    console.log(this.userId)
+
+    this.checkUserIsPassenger();
+    this.loadPassengerInfo();
+    console.log(this.pickup);
     if(this.userId == this.pickup.hostId){
       this.isHost = true;
     }else{
       this.isHost = false;
     }
-
-
-    this.checkUserIsPassenger();
-    this.loadPassengerInfo();
-    console.log(this.pickup);
     this.isLoading =false;
   }
 
@@ -154,8 +158,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
       this.pickupService
         .getPassengerDetails(passenger.passengerId)
         .subscribe((res: any) => {
-          passenger.passengerDetails = res.data[0];
-          console.log(passenger.passengerDetails);
+          this.passengerDetails.push(res.data);
+          console.log(res.data);
         });
     });
   }
@@ -165,10 +169,6 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   }
 
   journeyDetailsModal() {
-    console.log(this.pickup);
-
-    console.log(this.pickup.pickupId);
-
     const configDialog = new MatDialogConfig();
 
     configDialog.id = 'journeydetailsmodal';
