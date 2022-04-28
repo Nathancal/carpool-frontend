@@ -7,11 +7,12 @@
 }
 
 .checkedinuserbutton{
-  color: green;
+  color: white;
+  background-color: green;
 }
 
 .usernotcheckedin{
-
-  color: grey;
+  background-color: grey;
+  color: white;
 
 }

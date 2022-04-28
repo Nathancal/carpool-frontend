@@ -24,6 +24,6 @@ export class ReviewuserComponent implements OnInit {
   }
 
   submitReview() {
-    this.reviewService.addReview(this.passenger.passengerId,this.form.value.comment,this.userId,this.form.value.score)
+    this.reviewService.addReview(this.passenger.passengerId,this.form.value.comment,this.userId,this.form.value.score);
   }
 }

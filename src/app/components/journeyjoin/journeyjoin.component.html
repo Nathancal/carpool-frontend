@@ -1,13 +1,40 @@
 <div *ngIf="isHost">
   <mat-card class="card-container">
-    <zxing-scanner #scanner (scanSuccess)="scanSuccessHandler($event)"></zxing-scanner>
-    </mat-card>
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxLayout="row">
+          Please align camera with QR code, the device will scan automatically.
+        </div>
+        <div fxLayout="row">
+          <zxing-scanner
+            #scanner
+            (scanSuccess)="scanSuccessHandler($event)"
+          ></zxing-scanner>
+        </div>
+        <div fxLayout="row">
+          <button mat-raised-button (click)="this.dialogRef.close()">
+            Close Camera
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
 
-<div *ngIf="!isHost">
-  <mat-card class="card-container">
-    <qr-code class="qrGenerator" [value]="QRcodeData" [size]="300"></qr-code>
-    <button (click)="closeQR()">Close Qr Code</button>
-    </mat-card>
+<div *ngIf="!isHost" class="card-container">
+  <mat-card class="mat-card-actual">
+    <mat-card-title fxLayout="row" fxLayoutAlign="center center">Show QR code to Journey host</mat-card-title>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <qr-code
+          class="qrGenerator"
+          [value]="QRcodeData"
+          [size]="300"
+        ></qr-code>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <button mat-raised-button (click)="closeQR()">Close Qr Code</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
-

@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { JourneyService } from 'src/app/services/journey.service';
 import { ScannerService } from 'src/app/services/scanner.service';
 import { PickupService } from 'src/app/services/pickup.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-journeyjoin',
@@ -14,8 +15,9 @@ export class JourneyjoinComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public scannerService: ScannerService,
     public journeyService: JourneyService,
-    private dialogRef: MatDialogRef<JourneyjoinComponent>,
-    private pickupService: PickupService
+    public dialogRef: MatDialogRef<JourneyjoinComponent>,
+    private pickupService: PickupService,
+    public notifierService: NotifierService
   ) {}
 
   private scannerEnabled: boolean = true;
@@ -78,7 +80,8 @@ export class JourneyjoinComponent implements OnInit {
           }
         });
     } else {
-      console.log('scan already completed.');
+      this.notifierService.showNotification("You have successfully scanned this QR code", "Great!", 4000);
+      this.dialogRef.close();
     }
   }
 

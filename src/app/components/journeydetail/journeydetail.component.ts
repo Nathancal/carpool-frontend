@@ -101,7 +101,7 @@ export class JourneydetailComponent implements OnInit {
         console.log(data.users);
         this.passengersJoined = data.users;
         console.log(this.passengersJoined);
-        this.response.push({ userId: data.userId, forename: data.forename });
+        this.response = data.users;
         this.numPassengersJoined = this.response.length;
         console.log(this.response);
       }
