@@ -1,6 +1,4 @@
 <mat-card>
-  <mat-card-title> Leave review for user  +username here+</mat-card-title>
-
   <mat-card-content>
     <form class="form-container" [formGroup]="form" (ngSubmit)="submitReview()">
       <p class="note-title-label">Score:</p>
@@ -25,10 +23,10 @@
         <button type="submit" class="done-btn" mat-mini-fab>
           <mat-icon>submit</mat-icon>
         </button>
-        <button type="button" class="close-btn" mat-mini-fab>
-          <mat-icon>close</mat-icon>
-        </button>
       </div>
     </form>
   </mat-card-content>
+  <mat-card-footer>
+
+  </mat-card-footer>
 </mat-card>

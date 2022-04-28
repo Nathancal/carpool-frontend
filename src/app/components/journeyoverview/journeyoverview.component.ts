@@ -4,6 +4,7 @@ import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { PickupService } from 'src/app/services/pickup.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-journeyoverview',
@@ -27,10 +28,12 @@ export class JourneyoverviewComponent implements OnInit {
   passengerNumbers: any;
   passengerList: any[] = [];
   isLoading!: boolean;
+  reviewData: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public pickupService: PickupService,
+    public notifierService: NotifierService,
     public authService: AuthService
   ) {}
 
@@ -38,6 +41,7 @@ export class JourneyoverviewComponent implements OnInit {
     this.userId = sessionStorage['userID'];
     this.hostId = this.data.pickup.hostId;
     this.pickupId = this.data.pickup.pickupId;
+
 
     if (!this.data.isHost) {
       this.isLoading = true
@@ -64,6 +68,7 @@ export class JourneyoverviewComponent implements OnInit {
             console.log(currentMiles);
 
             if (currentMiles - this.distanceMiles < 0) {
+              this.notifierService.showNotification("You do not have miles to complete this transaction", "try again.", 4000);
             } else {
               let milesToUpdate = currentMiles - this.distanceMiles;
               console.log(milesToUpdate);
@@ -89,7 +94,7 @@ export class JourneyoverviewComponent implements OnInit {
                       });
                   },
                   (err: any) => {
-                    console.log('miles error:' + err);
+                    this.notifierService.showNotification("unable to update miles", "ok", 4000);
                     this.isLoading = false;
                   }
                 );

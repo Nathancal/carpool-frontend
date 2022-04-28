@@ -2,24 +2,29 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title> Journey Summary </mat-card-title>
-      <mat-card-subtitle>
-        {{ this.hostName }}'s Carpool
-      </mat-card-subtitle>
+      <mat-card-subtitle> {{ this.hostName }}'s Carpool </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div id="summaryMap"></div>
       <div fxLayout="column">
-        <div fxLayout="row" fx >
+        <div fxLayout="row" fx>
           <p>Travel information:</p>
           <div fxLayout="column">
             <div fxLayout="row">
-              <h5>Total Distance: <span>{{this.distanceMiles}} miles</span></h5>
+              <h5>
+                Total Distance: <span>{{ this.distanceMiles }} miles</span>
+              </h5>
             </div>
             <div fxLayout="row">
-              <h5>Travel Duration: <span>{{this.durationTotal / 60}} minutes</span></h5>
+              <h5>
+                Travel Duration:
+                <span>{{ this.durationTotal / 60 }} minutes</span>
+              </h5>
             </div>
             <div fxLayout="row">
-              <h5>Destination: <span>{{this.destination}}</span></h5>
+              <h5>
+                Destination: <span>{{ this.destination }}</span>
+              </h5>
             </div>
           </div>
         </div>
@@ -28,26 +33,26 @@
             <div fxLayout="column">
               <div fxLayout="row">Passenger Information:</div>
               <div fxLayout="row" *ngFor="let passenger of this.passengerList">
-                <h3>{{passenger.firstName}}</h3>
-
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <h3>Leave review for {{ passenger.firstName }}</h3>
+                  </mat-expansion-panel-header>
+                  <app-reviewuser [passenger]="passenger" [userId]="userId"></app-reviewuser>
+                </mat-expansion-panel>
               </div>
-
             </div>
           </ng-container>
           <ng-template #isLoadingSpinner>
             <mat-spinner></mat-spinner>
-
           </ng-template>
-
         </div>
       </div>
       <mat-expansion-panel>
-        <mat-expansion-panel-header>Miles Account Update</mat-expansion-panel-header>
-
+        <mat-expansion-panel-header
+          >Miles Account Update</mat-expansion-panel-header
+        >
       </mat-expansion-panel>
     </mat-card-content>
-    <mat-card-footer>
-
-    </mat-card-footer>
+    <mat-card-footer> </mat-card-footer>
   </mat-card>
 </div>
