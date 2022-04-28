@@ -1,6 +1,12 @@
 <mat-toolbar class="toolbar" fxFlex="row" fxLayoutAlign="space-around start">
-      <mat-icon class="icon-style">person_outline</mat-icon>
-      <mat-icon class="icon-style">electric_car</mat-icon>
-      <mat-icon class="icon-style">message</mat-icon>
+  <button class="miles-icon" mat-icon-button (click)="viewUserProfile()">
+    <mat-icon class="icon-style">person_outline</mat-icon>
+  </button>
+  <button class="miles-icon" mat-icon-button (click)="viewUserHostedPickups()">
+    <mat-icon class="icon-style">electric_car</mat-icon>
+  </button>
+  <button class="miles-icon" mat-icon-button (click)="viewUserMessages()">
+    <mat-icon class="icon-style">message</mat-icon>
+  </button>
 
 </mat-toolbar>

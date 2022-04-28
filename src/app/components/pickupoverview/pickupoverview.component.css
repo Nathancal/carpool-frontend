@@ -39,6 +39,13 @@ padding-bottom: 0;
   font-weight: 400;
 }
 
+.host-active{
+  background-color: #ff1744;
+  font-size: 160%;
+  font-weight: 400;
+
+}
+
 .is-passenger-container{
   max-width: 100%;
   padding: 1%;

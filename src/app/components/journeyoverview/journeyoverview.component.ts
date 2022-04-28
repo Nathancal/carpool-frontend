@@ -25,6 +25,8 @@ export class JourneyoverviewComponent implements OnInit {
   durationTotal: any;
   destination: any;
   passengerNumbers: any;
+  passengerList: any[] = [];
+  isLoading!: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -37,9 +39,8 @@ export class JourneyoverviewComponent implements OnInit {
     this.hostId = this.data.pickup.hostId;
     this.pickupId = this.data.pickup.pickupId;
 
-    console.log('is host overview: ' + this.data.isHost);
-
     if (!this.data.isHost) {
+      this.isLoading = true
       this.pickupService
         .getPickupDetails(this.pickupId)
         .subscribe((pickupMiles: any) => {
@@ -48,6 +49,14 @@ export class JourneyoverviewComponent implements OnInit {
           this.durationTotal = pickupMiles.pickupMiles.duration;
           this.destination = pickupMiles.pickupMiles.returnAddress;
           this.passengerNumbers = pickupMiles.pickupMiles.passengers.length;
+
+          pickupMiles.pickupMiles.passengers.forEach((passenger:any) =>{
+
+            this.pickupService.getPassengerDetails(passenger.passengerId).subscribe((res: any)=>{
+              this.passengerList.push(res.data);
+            })
+
+          })
 
           this.authService.getUserMiles(this.userId).subscribe((data: any) => {
             console.log(data);
@@ -75,10 +84,13 @@ export class JourneyoverviewComponent implements OnInit {
                       )
                       .subscribe((trans: any) => {
                         console.log(trans)
+                        this.isLoading = false;
+
                       });
                   },
                   (err: any) => {
                     console.log('miles error:' + err);
+                    this.isLoading = false;
                   }
                 );
             }

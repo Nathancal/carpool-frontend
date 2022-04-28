@@ -4,6 +4,51 @@
   </mat-card-title>
 
   <mat-card-content>
+    <mat-selection-list
+            #transactions
+            [multiple]="false"
+            fxFlex
+            fxLayout="column"
+            class="scroll-bar-select-list"
+          >
+            <div
+              fxFlex
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              class="trans-headers"
+            >
+              <div fxLayout="column"># Passengers</div>
+              <div fxLayout="column"># Miles</div>
+              <div fxLayout="column">User Hosted</div>
+              <div fxLayout="column">Destination</div>
+
+            </div>
+            <mat-list-option
+              *ngFor="let trans of transactionList"
+              [value]="transactions"
+              class="list-option-container"
+            >
+              <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column">
+                  {{trans.totalNumPassengers}}
+
+                </div>
+                <div fxLayout="column">
+                  {{trans.totalMilesTravelled}}
+                </div>
+                <div fxLayout="column">
+                  {{trans.isHost}}
+                </div>
+                <div fxLayout="column">
+                  {{trans.returnAddress}}
+                </div>
+
+                <div class="trans-time-text" fxLayout="column">
+                  {{ trans.completedAt.$date | date: "medium" }}
+                </div>
+              </div>
+            </mat-list-option>
+          </mat-selection-list>
 
   </mat-card-content>
 

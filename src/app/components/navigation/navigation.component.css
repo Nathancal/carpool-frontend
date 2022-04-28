@@ -1,7 +1,7 @@
 .toolbar{
   position:fixed;
   bottom:0px;
-  padding-top: 5%;
+  padding-top: 10%;
   background-color: #00c853;
   height: 15vh;
   width:100%;
@@ -19,7 +19,7 @@
 
 .icon-style{
   color: firebrick;
-  font-size: 450%;
+  font-size: 200%;
   text-align: justify;
 }
 

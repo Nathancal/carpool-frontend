@@ -138,13 +138,12 @@ export class JourneydetailComponent implements OnInit {
                   numPassengers: this.numPassengersJoined,
                 };
                 intervalCheck.unsubscribe();
+                this.dialogRef.close();
                 const modal = this.dialog.open(
                   JourneyoverviewComponent,
                   configDialog
                 );
-                modal.afterOpened().subscribe((result) => {
-                  this.dialogRef.close();
-                });
+
               }
             });
         });
@@ -293,6 +292,7 @@ export class JourneydetailComponent implements OnInit {
               distanceMiles: this.distanceMiles,
               travelDuration: this.travelDuration,
             };
+            this.dialogRef.close();
             const modal = this.dialog.open(
               JourneyoverviewComponent,
               configDialog
@@ -305,18 +305,13 @@ export class JourneydetailComponent implements OnInit {
     this.authService.getUserMiles(userId).subscribe((data: any) => {
       let currentMiles = data.miles;
 
-      console.log(data);
-      console.log('ishost?' + this.isHost);
-
       if (this.isHost == true) {
-        console.log('num passengers' + this.response.length);
         let milesMultiplier = totalMiles * this.response.length;
 
         console.log(milesMultiplier);
 
         let milesToUpdate = currentMiles + milesMultiplier;
 
-        console.log('check miles: ' + milesToUpdate);
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
           (data: any) => {
@@ -329,7 +324,6 @@ export class JourneydetailComponent implements OnInit {
       } else {
         let milesToUpdate = currentMiles - totalMiles;
 
-        console.log('check miles: ' + milesToUpdate);
 
         this.authService.updateUserMiles(userId, milesToUpdate).subscribe(
           (data: any) => {

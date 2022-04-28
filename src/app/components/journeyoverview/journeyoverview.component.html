@@ -24,11 +24,18 @@
           </div>
         </div>
         <div fxLayout="row">
-          <div fxLayout="column">
-            <div fxLayout="row">Passenger Information:</div>
-            <div fxLayout="row"></div>
+          <ng-container *ngIf="!isLoading; else isLoadingSpinner">
+            <div fxLayout="column">
+              <div fxLayout="row">Passenger Information:</div>
+              <div fxLayout="row"></div>
 
-          </div>
+            </div>
+          </ng-container>
+          <ng-template #isLoadingSpinner>
+            <mat-spinner></mat-spinner>
+
+          </ng-template>
+
         </div>
       </div>
       <mat-expansion-panel>

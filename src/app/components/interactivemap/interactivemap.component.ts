@@ -5,6 +5,7 @@ import { interval } from 'rxjs';
 import tt, {
   Popup,
   TomTomAttributionControl,
+  TTControl,
 } from '@tomtom-international/web-sdk-maps';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -39,11 +40,13 @@ export class InteractivemapComponent implements OnInit {
   startLng: any;
   center = [];
   selectDestination!: boolean;
+  transactionList: any;
   embarkAddress: any;
   embarkLat: any;
   embarkLng: any;
   routeGeojson: any;
   markersList: tt.Marker[] = [];
+  markersAndPickup: any = [];
   milesCounter: any;
   isAuthenticated!: string;
 
@@ -61,8 +64,8 @@ export class InteractivemapComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if(sessionStorage["token"] != undefined){
-      this.authService.setAuth(sessionStorage["token"])
+    if (sessionStorage['token'] != undefined) {
+      this.authService.setAuth(sessionStorage['token']);
     }
 
     this.getUserMiles();
@@ -73,16 +76,25 @@ export class InteractivemapComponent implements OnInit {
       },
       trackUserLocation: true,
     });
+    this.authService.getTransactionsForUser(sessionStorage['userID']).subscribe(
+      (res: any) => {
+        this.transactionList = res.data;
 
-    interval(5000).subscribe((time) => {
+        console.log(this.transactionList);
+      },
+      (err: any) => {
+        console.log(err);
+        this.transactionList = undefined;
+      }
+    );
+
+    interval(10000).subscribe((time) => {
       this.getUserMiles();
     });
 
-    if(this.authService.isAuth() != true){
+    if (this.authService.isAuth() != true) {
       this.router.navigateByUrl('/');
-
     }
-
 
     ttserv.copyrights({
       key: 'A4rtXA0FZlbxK8wWx8oANU6rAY53zVGA',
@@ -99,35 +111,112 @@ export class InteractivemapComponent implements OnInit {
     this.map.addControl(new tt.NavigationControl(), 'bottom-right');
 
     this.map.once('click', (e) => {
+      let latlng = {
+        lat: e.lngLat.lat,
+        lng: e.lngLat.lng,
+      };
+
+      this.pickupService
+        .getPickupsInArea(latlng.lat, latlng.lng)
+        .subscribe((res: any) => {
+          console.log(res);
+          this.availablePickups = res.data;
+          let latlng = {
+            lat: e.lngLat.lat,
+            lng: e.lngLat.lng,
+          };
+        });
       console.log(e.lngLat);
-      this.getAvailablePickups(e.lngLat);
-      this.getUserPickups();
+
+      this.map.on('click', (mapEvent) => {
+        console.log('GOT TO CLICK!');
+        let centerValue = this.map.getCenter();
+
+        if (centerValue.distanceTo(e.lngLat) > 750) {
+          console.log("center value changed.")
+          this.pickupService
+            .getPickupsInArea(latlng.lat, latlng.lng)
+            .subscribe((res: any) => {
+              console.log(res);
+              this.availablePickups = res.data;
+              let latlng = {
+                lat: e.lngLat.lat,
+                lng: e.lngLat.lng,
+              };
+            });
+        }
+
+        this.availablePickups.forEach((pickup: any) => {
+          let pickupLatLng = {
+            lat: pickup.embarkLocation.coordinates[0],
+            lng: pickup.embarkLocation.coordinates[1],
+          };
+
+          let ttlatLng = new tt.LngLat(pickupLatLng.lng, pickupLatLng.lat);
+          let element = document.createElement('div');
+          let popup: tt.Popup;
+          if (pickup.pickupStatus == 'pending') {
+            if (pickup.hostId == sessionStorage['userID']) {
+              element.id = 'user-pickup-marker';
+            } else {
+              element.id = 'available-pickup-marker';
+            }
+
+            let marker = new tt.Marker(element);
+            element.addEventListener('click', (e) => {
+              console.log('element clicked here!');
+              mapEvent.originalEvent.stopPropagation();
+              this.pickupService
+                .getHostDetails(pickup.hostId, pickup.pickupId)
+                .subscribe((res) => {
+                  let userInfo = res;
+                  let popupContent = this.dycomService.injectComponent(
+                    PickupoverviewComponent,
+                    (x) => {
+                      x.latlng = pickupLatLng;
+                      x.pickup = pickup;
+                      x.userInfo = userInfo;
+                      x.map = this.map;
+                    }
+                  );
+                  popup = new tt.Popup({
+                    offset: 40,
+                    maxWidth: '750px',
+                    closeOnClick: true,
+                  }).setDOMContent(popupContent);
+                  popup.setLngLat(ttlatLng).addTo(this.map);
+                });
+            });
+
+            marker.setLngLat(pickupLatLng).addTo(this.map);
+          }
+
+          // if (pickup.pickupStatus === 'pending') {
+          //   this.createPickupMarker(latlng, pickup);
+          // }
+        });
+        console.log('search bar results = ' + this.searchBar.positionOfResult);
+        //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
+        if (this.searchBar.positionOfResult != undefined) {
+          console.log(
+            'search bar results = ' + this.searchBar.positionOfResult[0]
+          );
+
+          this.map.setCenter(this.searchBar.positionOfResult);
+        }
+
+        console.log(this.markersList);
+
+        console.log(e.lngLat);
+        //Reduces the amounts of calls to the backend when user clicks on map if available
+        //pickups are already displayed.
+      });
+
+      // this.getAvailablePickups(e.lngLat);
+      // this.getUserPickups();
     });
 
     this.mapService.setMap(this.map);
-
-    this.map.on('click', (e) => {
-      console.log('search bar results = ' + this.searchBar.positionOfResult);
-      //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
-      if (this.searchBar.positionOfResult != undefined) {
-        console.log('search bar results = ' + this.searchBar.positionOfResult[0]);
-
-        this.map.setCenter(this.searchBar.positionOfResult);
-      }
-
-      console.log(e.lngLat);
-      let centerValue = this.map.getCenter();
-      //Reduces the amounts of calls to the backend when user clicks on map if available
-      //pickups are already displayed.
-      if (
-        centerValue.distanceTo(e.lngLat) > 500 &&
-        this.searchBar.positionOfResult == undefined
-      ) {
-        this.map.setCenter(e.lngLat);
-        this.getUserPickups();
-        this.getAvailablePickups(e.lngLat);
-      }
-    });
 
     // this.map.on('touchstart', (e) => {
     //   //This ensures that when the search is found it doesnt keep recentering the map on the search criteria every click.
@@ -154,49 +243,49 @@ export class InteractivemapComponent implements OnInit {
       this.map.removeControl('route');
       //Reduces the amounts of calls to the backend when user clicks on map if available
       //pickups are already displayed.
-      if (centerValue.distanceTo(e.lngLat) > 500) {
-        this.getAvailablePickups(e.lngLat);
+      if (centerValue.distanceTo(e.lngLat) > 750) {
+        // this.getAvailablePickups(e.lngLat);
       }
     });
   }
 
-  getUserPickups() {
-    this.pickupService
-      .getUserPickups(sessionStorage['userID'])
-      .subscribe((res: any) => {
-        this.userHostData = res.data;
-        this.userHostData.forEach((pickup: any) => {
-          let latlng = {
-            lat: pickup.embarkLocation.coordinates[0],
-            lng: pickup.embarkLocation.coordinates[1],
-          };
-          if (pickup.pickupStatus === 'pending') {
-            this.createPickupMarker(latlng, pickup);
-          }
-        });
-        console.log(res.data);
-      });
-  }
+  // getUserPickups() {
+  //   this.pickupService
+  //     .getUserPickups(sessionStorage['userID'])
+  //     .subscribe((res: any) => {
+  //       this.userHostData = res.data;
+  //       this.userHostData.forEach((pickup: any) => {
+  //         let latlng = {
+  //           lat: pickup.embarkLocation.coordinates[0],
+  //           lng: pickup.embarkLocation.coordinates[1],
+  //         };
+  //         if (pickup.pickupStatus === 'pending') {
+  //           this.createPickupMarker(latlng, pickup);
+  //         }
+  //       });
+  //       console.log(res.data);
+  //     });
+  // }
 
-  getAvailablePickups(latlng: any) {
-    this.pickupService
-      .getPickupsInArea(latlng.lat, latlng.lng)
-      .subscribe((res: any) => {
-        console.log(res);
-        this.availablePickups = res.data;
+  // getAvailablePickups(latlng: any) {
+  //   this.pickupService
+  //     .getPickupsInArea(latlng.lat, latlng.lng)
+  //     .subscribe((res: any) => {
+  //       console.log(res);
+  //       this.availablePickups = res.data;
 
-        this.availablePickups.forEach((pickup: any) => {
-          let latlng = {
-            lat: pickup.embarkLocation.coordinates[0],
-            lng: pickup.embarkLocation.coordinates[1],
-          };
+  //       this.availablePickups.forEach((pickup: any) => {
+  //         let latlng = {
+  //           lat: pickup.embarkLocation.coordinates[0],
+  //           lng: pickup.embarkLocation.coordinates[1],
+  //         };
 
-          if (pickup.pickupStatus === 'pending') {
-            this.createPickupMarker(latlng, pickup);
-          }
-        });
-      });
-  }
+  //         if (pickup.pickupStatus === 'pending') {
+  //           this.createPickupMarker(latlng, pickup);
+  //         }
+  //       });
+  //     });
+  // }
 
   createPickupMarker(latlng: any, pickup: any) {
     //Prevents the same map marker being added multiple times to the same location
@@ -210,8 +299,6 @@ export class InteractivemapComponent implements OnInit {
         .getHostDetails(pickup.hostId, pickup.pickupId)
         .subscribe((res) => {
           this.userInfo = res;
-          console.log(res);
-          console.log(this.userInfo);
 
           let popupContent = this.dycomService.injectComponent(
             PickupoverviewComponent,
@@ -219,7 +306,6 @@ export class InteractivemapComponent implements OnInit {
               x.latlng = latlng;
               x.pickup = pickup;
               x.userInfo = this.userInfo;
-              x.userCreated = false;
               x.map = this.map;
             }
           );
@@ -227,15 +313,13 @@ export class InteractivemapComponent implements OnInit {
           let popup = new tt.Popup({
             offset: 40,
             maxWidth: '750px',
+            closeOnClick: true,
           }).setDOMContent(popupContent);
-          let marker = new tt.Marker({ element: element })
-            .setLngLat(latlng)
-            .setPopup(popup)
-            .addTo(this.map);
+          let marker = new tt.Marker({ element: element });
 
-          this.markersList.push(marker);
-
-          this.mapService.setMarkersList(this.markersList);
+          marker.setLngLat(latlng);
+          marker.setPopup(popup);
+          marker.addTo(this.map);
         });
     } else {
       element.id = 'available-pickup-marker';
@@ -259,15 +343,13 @@ export class InteractivemapComponent implements OnInit {
           let popup = new tt.Popup({
             offset: 40,
             maxWidth: '750px',
+            closeOnClick: true,
           }).setDOMContent(popupContent);
-          let marker = new tt.Marker({ element: element })
-            .setLngLat(latlng)
-            .setPopup(popup)
-            .addTo(this.map);
+          let marker = new tt.Marker({ element: element });
 
-          this.markersList.push(marker);
-
-          this.mapService.setMarkersList(this.markersList);
+          marker.setLngLat(latlng);
+          marker.setPopup(popup);
+          marker.addTo(this.map);
         });
     }
   }
@@ -349,22 +431,17 @@ export class InteractivemapComponent implements OnInit {
     });
   }
 
-  viewTransactions(){
-
+  viewTransactions() {
     const configDialog = new MatDialogConfig();
-
-
 
     configDialog.id = 'usertransactionsmodal';
     configDialog.height = '400px';
     configDialog.width = '100%';
     configDialog.panelClass = 'trans-modal-container';
     configDialog.data = {
+      transactionList: this.transactionList,
     };
 
     const modal = this.dialog.open(MilestransactionsComponent, configDialog);
-
-
-
   }
 }

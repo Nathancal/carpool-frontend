@@ -28,11 +28,25 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   geojson: any;
   routeShown!: boolean;
   distanceMiles: any;
+  userId: any;
+  isHost!: boolean;
 
   ngOnInit(): void {
+    this.isLoading = true;
+
+    this.userId = sessionStorage["userId"];
+
+    if(this.userId == this.pickup.hostId){
+      this.isHost = true;
+    }else{
+      this.isHost = false;
+    }
+
+
     this.checkUserIsPassenger();
     this.loadPassengerInfo();
     console.log(this.pickup);
+    this.isLoading =false;
   }
 
   ngOnDestroy(): void {
