@@ -29,6 +29,7 @@ import { UserprofileComponent } from './components/userprofile/userprofile.compo
 
 import { ReviewuserComponent } from './components/reviewuser/reviewuser.component';
 import { MilestransactionsComponent } from './components/milestransactions/milestransactions.component';
+import { UserpassengerpickuplistComponent } from './components/userpassengerpickuplist/userpassengerpickuplist.component';
 
 
 const config: SocketIoConfig = {
@@ -53,6 +54,7 @@ const config: SocketIoConfig = {
     UserprofileComponent,
     ReviewuserComponent,
     MilestransactionsComponent,
+    UserpassengerpickuplistComponent,
   ],
   imports: [
     BrowserModule,

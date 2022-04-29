@@ -59,3 +59,16 @@
 .content-container{
   padding-top: 4%;
 }
+
+.title-text-cont{
+  margin-left: 10%;
+}
+
+.user.pickup-header-container{
+  background-image: linear-gradient(white,60%, #00c853, 90%,#00c853);
+
+}
+
+.star-container{
+  margin-left: 10%;
+}

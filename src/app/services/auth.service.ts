@@ -76,6 +76,21 @@ export class AuthService {
     })
   }
 
+  getUserReviews(userId: any){
+
+    return this.http.post(this.HTTPS_URL + '/getuserreviews', {
+      userId: userId
+    })
+
+  }
+
+  getUserInfo(userId:any){
+    console.log(userId)
+    return this.http.post(this.HTTPS_URL +'/getuserinfo', {
+      userId: userId
+    })
+  }
+
   registerAccount(accountData: any) {
     const header = {
       'content-type': 'application/json',

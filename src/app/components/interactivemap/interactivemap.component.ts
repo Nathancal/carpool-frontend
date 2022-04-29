@@ -49,6 +49,7 @@ export class InteractivemapComponent implements OnInit {
   markersAndPickup: any = [];
   milesCounter: any;
   isAuthenticated!: string;
+  userPassenger!: any[];
 
   userID: any = sessionStorage['userID'];
 
@@ -88,6 +89,7 @@ export class InteractivemapComponent implements OnInit {
       }
     );
 
+
     interval(10000).subscribe((time) => {
       this.getUserMiles();
     });
@@ -106,6 +108,8 @@ export class InteractivemapComponent implements OnInit {
       center: [-5.9301, 54.5973],
       zoom: 11,
     });
+
+    this.mapService.setMap(this.map);
 
     this.map.addControl(geolocateControl, 'bottom-right');
     this.map.addControl(new tt.NavigationControl(), 'bottom-right');

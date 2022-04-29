@@ -1,42 +1,134 @@
-<div>
-<mat-card>
-<mat-card-header>
-  <div fxFlex="row">
-    <div fxFlex="column">
-      <div mat-card-avatar ></div>
-    </div>
-    <div fxFlex="column">
-      <div fxFlex="row">
-        <p>username</p>
-      </div>
-      <div fxFlex="row">
-        user rating:
-      </div>
-      <div fxFlex="row">
-        Total Number of Miles:
-      </div>
-    </div>
+<ng-container *ngIf="this.isLoading; else load">
+  <div fxLayout="row">Loading user profile..</div>
+  <div fxLayout="row">
+    <mat-progress-spinner> </mat-progress-spinner>
   </div>
-</mat-card-header>
+</ng-container>
 
-<mat-card-content>
-<mat-expansion-panel>
-  <mat-expansion-panel-header>User Reviews</mat-expansion-panel-header>
+<ng-template #load>
+  <div>
+    <mat-card class="card-container">
+      <mat-card-header class="header-container">
+        <mat-card-title>User Profile</mat-card-title>
+      </mat-card-header>
 
-</mat-expansion-panel>
+      <mat-card-content>
+        <div
+          fxLayout="row"
+          class="content-container"
+          fxFill="100%"
+          fxLayoutAlign="space-around center"
+        >
+          <div fxLayout="column">
+            <div fxLayout="row" class="user-name-container">
+              <p class="user-profile-name">
+                {{ this.capitaliseName(this.userInfo.firstName) }}
+                {{ this.capitaliseName(this.userInfo.lastName) }}
+              </p>
+            </div>
+          </div>
+          <div fxLayout="column">
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+              <div fxLayout="column">
+                <star-rating
+                  [starType]="'svg'"
+                  [readOnly]="true"
+                  [rating]="this.userInfo.avgScore"
+                ></star-rating>
+              </div>
 
-<mat-expansion-panel>
-  <mat-expansion-panel-header>User Pickups</mat-expansion-panel-header>
+              <div fxLayout="column">
+                <p>{{ this.userInfo.avgScore }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="row">Total Number of Miles:</div>
 
-</mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>User Reviews</mat-expansion-panel-header>
 
-<mat-expansion-panel>
-  <mat-expansion-panel-header>Completed Journeys</mat-expansion-panel-header>
+          <div fxLayout="column" *ngIf="this.userReviews">
+            <div
+              fxLayout="row"
+              fxFill="100%"
+              *ngFor="let review of this.userReviews"
+              fxLayoutAlign=" center"
+              class="review-container"
+            >
+              <div fxLayout="column">
+                <div fxLayout="row" class="posted-name-container">
+                  <p class="posted-review-name">{{ review.postedName }}</p>
+                </div>
+                <div fxLayout="row">
+                  <div fxLayout="column" fxFill="50%" class="comment-container">
+                    <p class="comment-text">{{ review.comment }}</p>
+                  </div>
+                  <div fxLayout="column" fxFill="50%" class="comment-container">
+                    <p class="comment-text">{{ review.score }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
 
-</mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>User Pickups</mat-expansion-panel-header>
+          <div fxLayout="column">
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-around center"
+              *ngFor="let pickup of this.userPickupList"
+            >
+              <div fxLayout="column" class="user-pickup-container">
+                <div fxLayout="row">
+                  <p class="date-text">{{ pickup.date | date: "shortDate" }}</p>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                  <div fxLayout="column" fxLayoutAlign=" start">
+                    <p class="title-text">Embark Address</p>
+                    <p></p>
+                  </div>
 
+                  <div fxLayout="column" fxLayoutAlign=" start">
+                    <p class="title-text">Destination Address</p>
+                  </div>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                  <div fxLayout="column">
+                    <div fxLayout="row">
+                      <p class="address-text">{{ pickup.embarkAddress }}</p>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <button mat-raised-button (click)="goToPickup(pickup)">
+                        Cancel Pickup
+                      </button>
+                    </div>
+                  </div>
 
-</mat-card-content>
-</mat-card>
+                  <div fxLayout="column">
+                    <div fxLayout="row">
+                      <p class="address-text">{{ pickup.returnAddress }}</p>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <button mat-raised-button (click)="goToPickup(pickup)">
+                        Go to pickup
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
 
-</div>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header
+            >Completed Journeys</mat-expansion-panel-header
+          >
+        </mat-expansion-panel>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>

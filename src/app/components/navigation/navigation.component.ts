@@ -2,6 +2,9 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UserprofileComponent } from '../userprofile/userprofile.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { PickupService } from 'src/app/services/pickup.service';
+import { UserpassengerpickuplistComponent } from '../userpassengerpickuplist/userpassengerpickuplist.component';
 
 @Component({
   selector: 'app-navigation',
@@ -12,10 +15,35 @@ export class NavigationComponent implements OnInit {
   @Output() sidenavToggle = new EventEmitter<void>();
 
   constructor(
+    public authService: AuthService,
+    public pickupService: PickupService,
     private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  userId: any;
+  userPickupList: any;
+  userInfo: any;
+  userPassengerPickupList!: any[];
+
+  ngOnInit(): void {
+    this.userId = sessionStorage['userID'];
+    this.getUserPickups();
+    this.getUserInfo();
+
+    this.pickupService.getPickupsUserPassenger(this.userId).subscribe((res:any)=>{
+      console.log(res)
+      this.userPassengerPickupList = res.data;
+
+      this.userPassengerPickupList.forEach((pickup:any) => {
+
+        this.pickupService.getHostDetails(pickup.hostId, pickup.pickupId).subscribe((res: any)=>{
+          pickup.hostInfo = res.data;
+        })
+
+
+    });
+    })
+  }
 
   toggleSidenav() {
     this.sidenavToggle.emit();
@@ -24,13 +52,43 @@ export class NavigationComponent implements OnInit {
   viewUserProfile() {
     const configDialog = new MatDialogConfig();
 
-    configDialog.height = '700px';
+    configDialog.height = '80%';
     configDialog.width = '100%';
+    configDialog.data = {
+      userPickupList: this.userPickupList,
+      userInfo: this.userInfo,
+    };
 
     const modal = this.dialog.open(UserprofileComponent, configDialog);
   }
 
-  viewUserHostedPickups() {}
+  viewUserPassengerPickupList() {
+    const configDialog = new MatDialogConfig();
+
+
+
+    configDialog.height = '80%';
+    configDialog.width = '100%';
+    configDialog.data = {
+      userPassengerPickupList: this.userPassengerPickupList,
+    };
+
+    const modal = this.dialog.open(UserpassengerpickuplistComponent, configDialog);
+  }
 
   viewUserMessages() {}
+
+  getUserPickups() {
+    this.pickupService.getUserPickups(this.userId).subscribe((res: any) => {
+      console.log(res);
+      this.userPickupList = res.data;
+    });
+  }
+
+  getUserInfo() {
+    this.authService.getUserInfo(this.userId).subscribe((res: any) => {
+      console.log(res);
+      this.userInfo = res.data;
+    });
+  }
 }
