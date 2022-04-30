@@ -5,6 +5,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { JourneydetailComponent } from '../journeydetail/journeydetail.component';
 import { services as ttserv } from '@tomtom-international/web-sdk-services/';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChatsService } from 'src/app/services/chats.service';
+import { NotifierService } from 'src/app/services/notifier.service';
+import { ThrowStmt } from '@angular/compiler';
+import { User } from 'src/app/models/user.model';
+import { UserchatsComponent } from '../userchats/userchats.component';
 
 @Component({
   selector: 'app-pickupoverview',
@@ -14,7 +19,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class PickupoverviewComponent implements OnInit, OnDestroy {
   constructor(
     public pickupService: PickupService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public chatService: ChatsService,
+    public notifierService: NotifierService
   ) {}
 
   latlng: any;
@@ -35,22 +42,21 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoading = true;
 
-    this.userId = sessionStorage["userID"];
-    console.log()
+    this.userId = sessionStorage['userID'];
+    console.log();
 
-
-    console.log(this.pickup.hostId)
-    console.log(this.userId)
+    console.log(this.pickup.hostId);
+    console.log(this.userId);
 
     this.checkUserIsPassenger();
     this.loadPassengerInfo();
     console.log(this.pickup);
-    if(this.userId == this.pickup.hostId){
+    if (this.userId == this.pickup.hostId) {
       this.isHost = true;
-    }else{
+    } else {
       this.isHost = false;
     }
-    this.isLoading =false;
+    this.isLoading = false;
   }
 
   ngOnDestroy(): void {
@@ -158,10 +164,85 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
       this.pickupService
         .getPassengerDetails(passenger.passengerId)
         .subscribe((res: any) => {
-          this.passengerDetails.push(res.data);
+          let passenger = res.data;
+
+          this.chatService
+            .checkChatExists(this.userId, passenger.userID)
+            .subscribe(
+              (res: any) => {
+                if (res.data.length < 1) {
+                  console.log(res.data);
+                  passenger.hasChat = false;
+                  this.passengerDetails.push(passenger);
+
+                  console.log(passenger);
+                } else {
+                  console.log(res.data);
+                  passenger.hasChat = true;
+                  passenger.chatId = res.data.chatId;
+                  this.passengerDetails.push(passenger);
+
+                  console.log(passenger);
+                }
+              },
+              (err: any) => {
+                passenger.hasChat = false;
+                this.passengerDetails.push(passenger);
+
+                console.log(passenger);
+              }
+            );
+
           console.log(res.data);
         });
     });
+  }
+
+  sendMessage(chatId: any, userId:any){
+    const configDialog = new MatDialogConfig();
+
+    configDialog.id = 'userchatsmodal';
+    configDialog.height = '600px';
+    configDialog.width = '100%';
+    configDialog.panelClass = 'user-chats-modal-container';
+    configDialog.data = {
+      chatId: chatId,
+      userId: userId
+    };
+    const modal = this.dialog.open(UserchatsComponent, configDialog);
+
+  }
+
+  startChat(userId: any, recepUserId: any) {
+    this.chatService.createChat(userId, recepUserId).subscribe(
+      (res: any) => {
+        this.notifierService.showNotification(
+          'Chat successfully created',
+          'Thanks!',
+          4000
+        );
+        const configDialog = new MatDialogConfig();
+
+        let chatId = res.data;
+
+        configDialog.id = 'userchatsmodal';
+        configDialog.height = '600px';
+        configDialog.width = '100%';
+        configDialog.panelClass = 'user-chats-modal-container';
+        configDialog.data = {
+          chatId: chatId,
+          userId: userId
+        };
+        const modal = this.dialog.open(UserchatsComponent, configDialog);
+      },
+      (err: any) => {
+        this.notifierService.showNotification(
+          'error occoured creating chat, try again.',
+          'OK',
+          4000
+        );
+      }
+    );
   }
 
   capitaliseName(name: string) {

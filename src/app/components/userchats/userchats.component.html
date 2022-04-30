@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title> Chats with users </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div fxLayout="column">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-around center"
+        *ngFor="let chat of this.userChats"
+      >
+
+    </div>
+    </div>
+  </mat-card-content>
+</mat-card>

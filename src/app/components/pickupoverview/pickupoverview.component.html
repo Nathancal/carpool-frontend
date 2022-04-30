@@ -169,19 +169,43 @@
             <div>
               <h5>Rating</h5>
             </div>
+            <div>
+              <h5>Chat</h5>
+            </div>
           </div>
           <div
             fxLayout="row"
             *ngFor="let passenger of this.passengerDetails"
             fxLayoutAlign="space-around center"
           >
-            <div>
+            <div fxLayout="column">
               <h3>{{ passenger.firstName }}</h3>
             </div>
-            <div>
+            <div fxLayout="column">
               <h3>{{ passenger.avgScore }}</h3>
             </div>
+            <div fxLayout="column">
+              <ng-container *ngIf="!passenger.hasChat; else noChat">
+                <button
+                  type="button"
+                  (click)="startChat(this.userId, passenger.userId)"
+                  mat-raised-button
+                >
+                  Start Chat
+                </button>
+              </ng-container>
+              <ng-template #noChat>
+                <button
+                  type="button"
+                  (click)="sendMessage(passenger.chatId, this.userId)"
+                  mat-raised-button
+                >
+                  send message
+                </button>
+              </ng-template>
+            </div>
           </div>
+
           <div fxLayout="row" fxLayoutAlign="space-around center">
             <button mat-flat-button (click)="showRoute(this.pickup)">
               View Route

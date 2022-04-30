@@ -11,11 +11,19 @@
       >
         <div fxLayout="column" class="user-pickup-container">
           <div fxLayout="row">
-            <div fxLayout="column"  class="user-pickup-header-container" fxLayoutAlign=" start">
+            <div
+              fxLayout="column"
+              class="user-pickup-header-container"
+              fxLayoutAlign=" start"
+            >
               <p class="date-text">{{ pickup.date | date: "shortDate" }}</p>
               <p></p>
             </div>
-            <div fxLayout="column" fxLayoutAlign=" center" class="title-text-cont">
+            <div
+              fxLayout="column"
+              fxLayoutAlign=" center"
+              class="title-text-cont"
+            >
               <p class="title-text">{{ pickup.hostInfo.firstName }}'s Pickup</p>
             </div>
             <div fxLayout="column" fxLayoutAlign=" end" class="star-container">
@@ -40,7 +48,11 @@
           <div fxLayout="row" fxLayoutAlign="space-around center">
             <div>
               <p class="address-text">{{ pickup.embarkAddress }}</p>
-              <p></p>
+              <div fxLayout="column">
+                <button mat-raised-button (click)="goToPickup(pickup)">
+                  Leave pickup
+                </button>
+              </div>
             </div>
 
             <div fxLayout="column">
@@ -50,15 +62,9 @@
               <div fxLayout="row" fxLayoutAlign="center center">
                 <div fxLayout="column">
                   <button mat-raised-button (click)="goToPickup(pickup)">
-                    Leave pickup
-                  </button>
-                </div>
-                <div fxLayout="column">
-                  <button mat-raised-button (click)="goToPickup(pickup)">
                     Go to pickup
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
