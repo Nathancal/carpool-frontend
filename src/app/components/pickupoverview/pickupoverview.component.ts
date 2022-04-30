@@ -207,7 +207,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     configDialog.panelClass = 'user-chats-modal-container';
     configDialog.data = {
       chatId: chatId,
-      userId: userId
+      userId: userId,
+      openChat: true
     };
     const modal = this.dialog.open(UserchatsComponent, configDialog);
 
@@ -231,7 +232,8 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
         configDialog.panelClass = 'user-chats-modal-container';
         configDialog.data = {
           chatId: chatId,
-          userId: userId
+          userId: userId,
+          openChat: true
         };
         const modal = this.dialog.open(UserchatsComponent, configDialog);
       },

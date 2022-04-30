@@ -1,17 +1,88 @@
 <mat-card>
-  <mat-card-header>
-    <mat-card-title> Chats with users </mat-card-title>
-  </mat-card-header>
-
   <mat-card-content>
-    <div fxLayout="column">
-      <div
-        fxLayout="row"
-        fxLayoutAlign="space-around center"
-        *ngFor="let chat of this.userChats"
-      >
+      <div fxLayout="column">
+        <div fxLayout="row">
+          <h3>Active Chats</h3>
+        </div>
+        <div fxLayout="row">
+          <div fxLayout="column">
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-around center"
+              *ngFor="let chat of this.userChats"
+              fxFill="100%"
+            >
+              <div fxLayout="column" class="chat-container">
+                <div fxLayout="row">
+                  <div fxLayout="column">
+                    <p class="chat-user-name">
+                      {{ chat.userInfo.firstName }}
+                      {{ chat.userInfo.lastName }}
+                    </p>
+                  </div>
+                </div>
 
-    </div>
-    </div>
+                <div fxLayout="row">
+                  <mat-expansion-panel fxFill="100%">
+                    <mat-expansion-panel-header
+                      >Messages</mat-expansion-panel-header
+                    >
+                    <div fxLayout="column" fxFill="100%">
+                      <div
+                      fxFill="100%"
+                        fxLayout="row"
+                        *ngFor="let message of chat.messages"
+                        [ngClass]="
+                          message.userSentId === this.userId
+                            ? 'left-align-message'
+                            : 'right-align-message'
+                        "
+                      >
+                        <p>{{ message.text }}</p>
+                      </div>
+                    </div>
+                    <form
+                      class="form-container"
+                      [formGroup]="form"
+                      fxFill="100%"
+                      (ngSubmit)="createMessage(chat.chatId, this.form.value.message, this.userId)"
+                    >
+                      <div fxLayout="row" fxFill="100%">
+                        <div fxLayout="column">
+                          <p class="message-label-title">Message:</p>
+                          <textarea
+                            class="note-title-text"
+                            cdkTextareaAutosize="true"
+                            matInput
+                            type="text"
+                            formControlName="message"
+                            [defaultValue]=""
+                            required
+                          ></textarea>
+                        </div>
+
+                        <div fxLayout="column">
+                          <div fxLayout="row">
+                            <button
+                              type="submit"
+                              class="done-btn"
+                              mat-icon-button
+                            >
+                              <mat-icon>send</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </mat-expansion-panel>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </mat-card-content>
+  <mat-card-footer *ngIf="isLoading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
 </mat-card>

@@ -1,55 +1,48 @@
 <mat-card>
-  <mat-card-title>
-    Journey History
-  </mat-card-title>
+  <mat-card-title> Journey History </mat-card-title>
 
   <mat-card-content>
-    <mat-selection-list
-            #transactions
-            [multiple]="false"
-            fxFlex
-            fxLayout="column"
-            class="scroll-bar-select-list"
-          >
-            <div
-              fxFlex
-              fxLayout="row"
-              fxLayoutAlign="space-between center"
-              class="trans-headers"
-            >
-              <div fxLayout="column"># Passengers</div>
-              <div fxLayout="column"># Miles</div>
-              <div fxLayout="column">User Hosted</div>
-              <div fxLayout="column">Destination</div>
-
-            </div>
-            <mat-list-option
-              *ngFor="let trans of transactionList"
-              [value]="transactions"
-              class="list-option-container"
-            >
-              <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-                <div fxLayout="column">
-                  {{trans.totalNumPassengers}}
-
-                </div>
-                <div fxLayout="column">
-                  {{trans.totalMilesTravelled}}
-                </div>
-                <div fxLayout="column">
-                  {{trans.isHost}}
-                </div>
-                <div fxLayout="column">
-                  {{trans.returnAddress}}
-                </div>
-
-                <div class="trans-time-text" fxLayout="column">
-                  {{ trans.completedAt.$date | date: "medium" }}
-                </div>
-              </div>
-            </mat-list-option>
-          </mat-selection-list>
-
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="column">
+        <p>Host/Passenger</p>
+      </div>
+      <div fxLayout="column">
+        <p>Miles</p>
+      </div>
+      <div fxLayout="column">
+        <p># Passengers</p>
+      </div>
+      <div fxLayout="column">
+        <p>Embark</p>
+      </div>
+      <div fxLayout="column">
+        <p>Return</p>
+      </div>
+    </div>
+    <div
+      *ngFor="let trans of this.transactionList"
+    >
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        [ngClass]="trans.isHost ? 'is-host' : 'not-host'"
+      >
+        <div fxLayout="column">
+          <p>{{ trans.isHost ? "hosted" : "passenger" }}</p>
+        </div>
+        <div fxLayout="column">
+          <p>{{ trans.totalMilesTravelled }}</p>
+        </div>
+        <div fxLayout="column">
+          <p>{{ trans.totalNumPassengers }}</p>
+        </div>
+        <div fxLayout="column">
+          <p>{{ trans.embarkAddress }}</p>
+        </div>
+        <div fxLayout="column">
+          <p>{{ trans.returnAddress }}</p>
+        </div>
+      </div>
+    </div>
   </mat-card-content>
-
 </mat-card>

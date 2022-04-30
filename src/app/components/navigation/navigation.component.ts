@@ -5,6 +5,7 @@ import { UserprofileComponent } from '../userprofile/userprofile.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { PickupService } from 'src/app/services/pickup.service';
 import { UserpassengerpickuplistComponent } from '../userpassengerpickuplist/userpassengerpickuplist.component';
+import { UserchatsComponent } from '../userchats/userchats.component';
 
 @Component({
   selector: 'app-navigation',
@@ -30,19 +31,20 @@ export class NavigationComponent implements OnInit {
     this.getUserPickups();
     this.getUserInfo();
 
-    this.pickupService.getPickupsUserPassenger(this.userId).subscribe((res:any)=>{
-      console.log(res)
-      this.userPassengerPickupList = res.data;
+    this.pickupService
+      .getPickupsUserPassenger(this.userId)
+      .subscribe((res: any) => {
+        console.log(res);
+        this.userPassengerPickupList = res.data;
 
-      this.userPassengerPickupList.forEach((pickup:any) => {
-
-        this.pickupService.getHostDetails(pickup.hostId, pickup.pickupId).subscribe((res: any)=>{
-          pickup.hostInfo = res.data;
-        })
-
-
-    });
-    })
+        this.userPassengerPickupList.forEach((pickup: any) => {
+          this.pickupService
+            .getHostDetails(pickup.hostId, pickup.pickupId)
+            .subscribe((res: any) => {
+              pickup.hostInfo = res.data;
+            });
+        });
+      });
   }
 
   toggleSidenav() {
@@ -65,18 +67,31 @@ export class NavigationComponent implements OnInit {
   viewUserPassengerPickupList() {
     const configDialog = new MatDialogConfig();
 
-
-
     configDialog.height = '80%';
     configDialog.width = '100%';
     configDialog.data = {
       userPassengerPickupList: this.userPassengerPickupList,
     };
 
-    const modal = this.dialog.open(UserpassengerpickuplistComponent, configDialog);
+    const modal = this.dialog.open(
+      UserpassengerpickuplistComponent,
+      configDialog
+    );
   }
 
-  viewUserMessages() {}
+  viewUserMessages() {
+    const configDialog = new MatDialogConfig();
+
+    configDialog.id = 'userchatsmodal';
+    configDialog.height = '600px';
+    configDialog.width = '100%';
+    configDialog.panelClass = 'user-chats-modal-container';
+    configDialog.data = {
+      userId: this.userId,
+      openChat: false,
+    };
+    const modal = this.dialog.open(UserchatsComponent, configDialog);
+  }
 
   getUserPickups() {
     this.pickupService.getUserPickups(this.userId).subscribe((res: any) => {

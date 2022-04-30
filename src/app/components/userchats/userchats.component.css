@@ -1,0 +1,29 @@
+.message-label-title{
+  font-size: 120%;
+  font-weight: 400;
+}
+
+.chat-user-name{
+  font-size: 150%;
+  font-weight: 350;
+}
+
+.chat-container{
+  padding: 4%;
+  border-bottom: 1px solid green;
+  border-top: 1px solid green;
+
+}
+
+
+.left-align-message{
+  display: flex;
+  justify-content: flex-end;
+  color: green;
+}
+
+.right-align-message{
+  display: flex;
+  color: red;
+  justify-content: flex-start;
+}
