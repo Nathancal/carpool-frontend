@@ -11,6 +11,7 @@ import { MapsService } from 'src/app/services/maps.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { JourneyoverviewComponent } from '../journeyoverview/journeyoverview.component';
 import { PickupService } from 'src/app/services/pickup.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-journeydetail',
@@ -23,6 +24,7 @@ export class JourneydetailComponent implements OnInit {
     private dialog: MatDialog,
     public journeyService: JourneyService,
     public pickupService: PickupService,
+    public notifierService: NotifierService,
     public authService: AuthService,
     public mapService: MapsService,
     public dycomService: DynamiccomponentService,
@@ -138,6 +140,7 @@ export class JourneydetailComponent implements OnInit {
                   numPassengers: this.numPassengersJoined,
                 };
                 intervalCheck.unsubscribe();
+                this.notifierService.showNotification("Journey Successfully completed!", "Thanks!", 4000);
                 this.dialogRef.close();
                 const modal = this.dialog.open(
                   JourneyoverviewComponent,
@@ -292,6 +295,8 @@ export class JourneydetailComponent implements OnInit {
               distanceMiles: this.distanceMiles,
               travelDuration: this.travelDuration,
             };
+            this.notifierService.showNotification("Journey Successfully completed!", "Thanks!", 4000);
+
             this.dialogRef.close();
             const modal = this.dialog.open(
               JourneyoverviewComponent,

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Map } from '@tomtom-international/web-sdk-maps';
 import { MapsService } from 'src/app/services/maps.service';
 import { PickupService } from 'src/app/services/pickup.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-pickupdetails',
@@ -15,6 +16,7 @@ export class PickupdetailsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public mapService: MapsService,
     public pickupService: PickupService,
+    public notifierService: NotifierService,
     private dialogRef: MatDialogRef<PickupdetailsComponent>
   ) {
     dialogRef.disableClose = true;
@@ -115,7 +117,7 @@ export class PickupdetailsComponent implements OnInit {
 
     this.pickupService.createPickup(pickupData).subscribe(
       (res) => {
-        console.log(res);
+        this.notifierService.showNotification("Pickup successfully created!", "Great!", 4000);
         this.loading = false;
         this.embarkAddress = undefined;
         this.returnAddress = undefined;
@@ -124,6 +126,7 @@ export class PickupdetailsComponent implements OnInit {
         this.dialogRef.close({ createSuccessful: true, pickup: pickupData });
       },
       (err) => {
+        this.notifierService.showNotification("Error creating pickup, please try again.", "ok", 4000);
         console.log(err);
         this.loading = false;
         this.embarkAddress = undefined;

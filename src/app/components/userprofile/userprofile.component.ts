@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MapsService } from 'src/app/services/maps.service';
 import tt from '@tomtom-international/web-sdk-maps';
+import { NotifierService } from 'src/app/services/notifier.service';
+
 
 @Component({
   selector: 'app-userprofile',
@@ -17,6 +19,7 @@ export class UserprofileComponent implements OnInit {
     public pickupService: PickupService,
     public authService: AuthService,
     private dialogRef: MatDialogRef<UserprofileComponent>,
+    public notifierService: NotifierService,
     public mapService: MapsService
   ) {}
 
@@ -58,5 +61,15 @@ export class UserprofileComponent implements OnInit {
     let lnglat = new tt.LngLat(pickup.embarkLocation.coordinates[1], pickup.embarkLocation.coordinates[0])
     this.mapService.getMap().setCenter(lnglat)
     this.dialogRef.close();
+  }
+
+  cancelPickup(pickupId:any, hostId:any){
+    this.pickupService.hostCancelPickup(pickupId, hostId).subscribe((res:any)=>{
+      this.notifierService.showNotification("pickup successfully cancelled","ok",4000);
+      this.dialogRef.close()
+    }, (err: any)=>{
+      this.notifierService.showNotification("error cancelling pickup","ok",4000);
+
+    })
   }
 }

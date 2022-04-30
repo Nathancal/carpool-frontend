@@ -1,8 +1,19 @@
 .is-host{
 
-  color: green;
+  color: red;
+  background-color: limegreen;
 }
 
 .not-host{
   color: red;
+}
+
+.address-text{
+  font-size: 80%;
+  font-weight: 400;
+}
+
+.item-container{
+  border-bottom: 1px solid green;
+  border-top:  1px solid green;
 }

@@ -3,6 +3,7 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { BarcodeFormat } from '@zxing/library';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 
 
@@ -14,7 +15,7 @@ import { BarcodeFormat } from '@zxing/library';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public authService: AuthService, private router: Router) { }
+  constructor(public authService: AuthService, public notifierService: NotifierService, private router: Router) { }
 
   loading = false;
   Testing = "test";
@@ -62,6 +63,8 @@ export class LoginComponent implements OnInit {
     this.authService.registerAccount(accountData).subscribe((res)=>{
       console.log(res);
       this.loading = false;
+    },(err: any)=>{
+      this.notifierService.showNotification("unable to create account, please try again", "ok", 5000);
     })
   }
 
@@ -86,7 +89,7 @@ export class LoginComponent implements OnInit {
       this.loading = false;
       this.router.navigateByUrl('/userdashboard');
     }, (err:any)=>{
-      console.log(err)
+      this.notifierService.showNotification("unable to login please try again", "ok", 5000);
     })
 
   }

@@ -69,6 +69,13 @@ export class PickupService {
     });
   }
 
+  hostCancelPickup(pickupId:any, hostId: any){
+    return this.http.post(this.HTTPS_URL + '/hostcancelpickup', {
+      pickupId: pickupId,
+      userId: hostId
+    })
+  }
+
   getUserPickups(userId: any) {
     const header = {
       userId: userId,

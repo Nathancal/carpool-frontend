@@ -92,6 +92,7 @@ export class JourneyoverviewComponent implements OnInit {
                     .subscribe((trans: any) => {
                       console.log(trans);
                       this.isLoading = false;
+                      this.notifierService.showNotification("transaction succesfully completed","ok",4000);
                     });
                 },
                 (err: any) => {
@@ -113,6 +114,8 @@ export class JourneyoverviewComponent implements OnInit {
         console.log('supposed to be user details: ' + data);
         this.hostName = data.data.firstName;
         this.hostName = this.capitaliseName(this.hostName);
+      },(err:any)=>{
+        this.notifierService.showNotification("unable to get host details","ok",1000);
       });
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ReviewService } from 'src/app/services/review.service';
+import { NotifierService } from 'src/app/services/notifier.service';
 
 @Component({
   selector: 'app-reviewuser',
@@ -8,7 +9,7 @@ import { ReviewService } from 'src/app/services/review.service';
   styleUrls: ['./reviewuser.component.css'],
 })
 export class ReviewuserComponent implements OnInit {
-  constructor(private fb: FormBuilder, public reviewService: ReviewService) {}
+  constructor(private fb: FormBuilder,public notifierService: NotifierService, public reviewService: ReviewService) {}
   form!: FormGroup;
 
   @Input() passenger: any = [];
@@ -24,6 +25,10 @@ export class ReviewuserComponent implements OnInit {
   }
 
   submitReview() {
-    this.reviewService.addReview(this.passenger.passengerId,this.form.value.comment,this.userId,this.form.value.score);
+    this.reviewService.addReview(this.passenger.passengerId,this.form.value.comment,this.userId,this.form.value.score).subscribe((res:any)=>{
+      this.notifierService.showNotification("review succesfully added", "Thanks!", 4000);
+    },(err:any)=>{
+      this.notifierService.showNotification("a problem occoured adding the review", "ok", 4000);
+    });
   }
 }

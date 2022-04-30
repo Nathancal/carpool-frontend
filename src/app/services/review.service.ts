@@ -10,7 +10,7 @@ export class ReviewService {
   HTTPS_URL = 'https://192.168.0.21:5000/api/v1/userrating/';
 
   addReview(userRecepId: any, comment: any, userPostId: any, score: any) {
-    this.httpClient.post(this.HTTPS_URL + 'rateuser', {
+    return this.httpClient.post(this.HTTPS_URL + 'rateuser', {
       userId: userPostId,
       userUnderReviewId: userRecepId,
       comment: comment,
@@ -19,13 +19,13 @@ export class ReviewService {
   }
 
   updateAvgRating(userRecepId: any) {
-    this.httpClient.post(this.HTTPS_URL + 'setscore', {
+    return this.httpClient.post(this.HTTPS_URL + 'setscore', {
       userId: userRecepId,
     });
   }
 
   getUserRating(userId: any) {
-    this.httpClient.post(this.HTTPS_URL + 'getscore', {
+    return this.httpClient.post(this.HTTPS_URL + 'getscore', {
       userId: userId
     });
   }

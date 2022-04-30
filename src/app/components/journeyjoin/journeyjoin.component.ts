@@ -71,7 +71,7 @@ export class JourneyjoinComponent implements OnInit {
                 this.scansParsed.pickupId
               )
               .subscribe((res: any) => {
-
+                this.notifierService.showNotification("user has joined the pickup", "ok", 5000);
                 this.dialogRef.close({
                   userAdded: this.scansParsed.forename,
                   addSuccessful: true

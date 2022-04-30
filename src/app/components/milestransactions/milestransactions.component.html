@@ -12,16 +12,8 @@
       <div fxLayout="column">
         <p># Passengers</p>
       </div>
-      <div fxLayout="column">
-        <p>Embark</p>
-      </div>
-      <div fxLayout="column">
-        <p>Return</p>
-      </div>
     </div>
-    <div
-      *ngFor="let trans of this.transactionList"
-    >
+    <div *ngFor="let trans of this.transactionList" class="item-container">
       <div
         fxLayout="row"
         fxLayoutAlign="space-between center"
@@ -36,12 +28,18 @@
         <div fxLayout="column">
           <p>{{ trans.totalNumPassengers }}</p>
         </div>
-        <div fxLayout="column">
-          <p>{{ trans.embarkAddress }}</p>
-        </div>
-        <div fxLayout="column">
-          <p>{{ trans.returnAddress }}</p>
-        </div>
+      </div>
+      <div fxLayout="row">
+        <p>Embark Address</p>
+      </div>
+      <div fxLayout="row">
+        <p class="address-text">{{ trans.embarkAddress }}</p>
+      </div>
+      <div fxLayout="row">
+        <p>Destination Address</p>
+      </div>
+      <div fxLayout="row">
+        <p class="address-text">{{ trans.returnAddress }}</p>
       </div>
     </div>
   </mat-card-content>

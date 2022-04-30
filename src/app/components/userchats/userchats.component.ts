@@ -31,6 +31,7 @@ export class UserchatsComponent implements OnInit {
   isLoading!: boolean;
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.form = this.fb.group({
       message: new FormControl(),
       chatId: new FormControl(),
@@ -54,7 +55,6 @@ export class UserchatsComponent implements OnInit {
   }
 
   getUserChats() {
-    this.isLoading = true;
 
     this.chatService.getChats(this.userId).subscribe((res: any) => {
       this.userChats = res.data;
