@@ -135,11 +135,18 @@ export class InteractivemapComponent implements OnInit {
       this.map.on('click', (mapEvent) => {
         console.log('GOT TO CLICK!');
         let centerValue = this.map.getCenter();
+        let latlngRecenter = {
+          lat: mapEvent.lngLat.lat,
+          lng: mapEvent.lngLat.lng,
+        };
 
-        if (centerValue.distanceTo(e.lngLat) > 750) {
+        if (centerValue.distanceTo(mapEvent.lngLat) > 750) {
           console.log("center value changed.")
+
+          let latlng = new tt.LngLat(latlngRecenter.lng, latlngRecenter.lat);
+          this.map.setCenter(latlng);
           this.pickupService
-            .getPickupsInArea(latlng.lat, latlng.lng)
+            .getPickupsInArea(latlngRecenter.lat, latlngRecenter.lng)
             .subscribe((res: any) => {
               console.log(res);
               this.availablePickups = res.data;

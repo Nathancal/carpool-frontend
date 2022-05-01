@@ -1,7 +1,9 @@
 <div>
   <mat-card>
     <mat-card-header>
-      <mat-card-title fxLayout="row" fxLayoutAlign="center center"> Journey Summary </mat-card-title>
+      <mat-card-title fxLayout="row" fxLayoutAlign="center center">
+        Journey Summary
+      </mat-card-title>
       <mat-card-subtitle> {{ this.hostName }}'s Carpool </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
@@ -12,7 +14,8 @@
           <div fxLayout="column">
             <div fxLayout="row">
               <h5>
-                Total Distance: <span>{{ this.distanceMiles.toFixed(1) }} miles</span>
+                Total Distance:
+                <span>{{ this.distanceMiles.toFixed(1) }} miles</span>
               </h5>
             </div>
             <div fxLayout="row">
@@ -32,28 +35,58 @@
           <ng-container *ngIf="!isLoading; else isLoadingSpinner">
             <div fxLayout="column">
               <div fxLayout="row">Passenger Information:</div>
-              <div fxLayout="row" *ngFor="let passenger of this.passengerList" fxLayoutAling="space-around center">
-                <mat-expansion-panel *ngIf="passenger.passengerId !== this.userId; else selfReview">
+              <div
+                fxLayout="row"
+                *ngFor="let passenger of this.passengerList"
+                fxLayoutAling="space-around center"
+              >
+                <mat-expansion-panel
+                  *ngIf="passenger.passengerId !== this.userId; else selfReview"
+                >
                   <mat-expansion-panel-header>
                     <h3>Leave review for {{ passenger.firstName }}</h3>
                   </mat-expansion-panel-header>
-                  <app-reviewuser [passenger]="passenger" [userId]="userId"></app-reviewuser>
+                  <app-reviewuser
+                    [passenger]="passenger"
+                    [userId]="userId"
+                  ></app-reviewuser>
                 </mat-expansion-panel>
                 <ng-template #selfReview></ng-template>
               </div>
             </div>
           </ng-container>
-          <ng-template #isLoadingSpinner>
-            <mat-spinner></mat-spinner>
-          </ng-template>
+
         </div>
       </div>
       <mat-expansion-panel>
         <mat-expansion-panel-header
           >Miles Account Update</mat-expansion-panel-header
         >
+        <div fxLayout="column">
+          <ng-container *ngIf="this.userId === this.hostId; else notHost">
+            <div fxLayout="row">
+              you have earned {{(this.distanceMiles * this.passengerNumbers)}} miles on this journey
+            </div>
+            <div>
+              you now have {{this.currentMiles + (this.distanceMiles * this.passengerNumbers)}} miles in your account.
+            </div>
+          </ng-container>
+          <ng-template #notHost>
+            <div fxLayout="row">
+              <div fxLayout="row">
+                you have spent {{this.distanceMiles}} miles on this journey
+              </div>
+              <div>
+                you now have {{this.currentMiles - this.distanceMiles}} miles in your account.
+              </div>
+            </div>
+          </ng-template>
+        </div>
       </mat-expansion-panel>
     </mat-card-content>
-    <mat-card-footer> </mat-card-footer>
+    <mat-card-footer>
+      <ng-template #isLoadingSpinner>
+        <mat-progress-bar color="warn" mode="indeterminate"></mat-progress-bar>
+      </ng-template> </mat-card-footer>
   </mat-card>
 </div>

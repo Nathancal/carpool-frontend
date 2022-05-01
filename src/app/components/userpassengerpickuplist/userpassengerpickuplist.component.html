@@ -49,7 +49,7 @@
             <div>
               <p class="address-text">{{ pickup.embarkAddress }}</p>
               <div fxLayout="column">
-                <button mat-raised-button (click)="goToPickup(pickup)">
+                <button mat-raised-button (click)="exitPickup(pickup.pickupId, this.userId)">
                   Leave pickup
                 </button>
               </div>

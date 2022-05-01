@@ -29,6 +29,7 @@ export class JourneyoverviewComponent implements OnInit {
   passengerList: any[] = [];
   isLoading!: boolean;
   reviewData: any;
+  currentMiles: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -62,61 +63,72 @@ export class JourneyoverviewComponent implements OnInit {
 
         this.authService.getUserMiles(this.userId).subscribe((data: any) => {
           console.log(data);
-          let currentMiles = data.miles;
-          console.log(currentMiles);
+          this.currentMiles = data.miles;
+          console.log(this.currentMiles);
 
-          if (currentMiles - this.distanceMiles < 0) {
+          if (this.currentMiles - this.distanceMiles < 0) {
             this.notifierService.showNotification(
               'You do not have miles to complete this transaction',
               'try again.',
               4000
             );
           } else {
-            let milesToUpdate = currentMiles - this.distanceMiles;
-            console.log(milesToUpdate);
+            if (!this.data.isHost) {
+              let milesToUpdate = this.currentMiles - this.distanceMiles;
+              console.log(milesToUpdate);
 
-            this.authService
-              .updateUserMiles(this.userId, milesToUpdate)
-              .subscribe(
-                (data: any) => {
-                  this.authService
-                    .generateTransaction(
-                      this.data.isHost,
-                      this.data.pickup.pickupId,
-                      this.userId,
-                      this.distanceMiles,
-                      this.passengerNumbers,
-                      this.data.pickup.embarkAddress,
-                      this.data.pickup.returnAddress
-                    )
-                    .subscribe((trans: any) => {
-                      console.log(trans);
-                      this.isLoading = false;
-                      this.notifierService.showNotification("transaction succesfully completed","ok",4000);
-                    });
-                },
-                (err: any) => {
-                  this.notifierService.showNotification(
-                    'unable to update miles',
-                    'ok',
-                    4000
-                  );
-                  this.isLoading = false;
-                }
-              );
+              this.authService
+                .updateUserMiles(this.userId, milesToUpdate)
+                .subscribe(
+                  (data: any) => {
+                    this.authService
+                      .generateTransaction(
+                        this.data.isHost,
+                        this.data.pickup.pickupId,
+                        this.userId,
+                        this.distanceMiles,
+                        this.passengerNumbers,
+                        this.data.pickup.embarkAddress,
+                        this.data.pickup.returnAddress
+                      )
+                      .subscribe((trans: any) => {
+                        console.log(trans);
+                        this.isLoading = false;
+                        this.notifierService.showNotification(
+                          'transaction succesfully completed',
+                          'ok',
+                          4000
+                        );
+                      });
+                  },
+                  (err: any) => {
+                    this.notifierService.showNotification(
+                      'unable to update miles',
+                      'ok',
+                      4000
+                    );
+                    this.isLoading = false;
+                  }
+                );
+            }
           }
         });
       });
 
-    this.pickupService
-      .getHostDetails(this.hostId, this.pickupId)
-      .subscribe((data: any) => {
+    this.pickupService.getHostDetails(this.hostId, this.pickupId).subscribe(
+      (data: any) => {
         console.log('supposed to be user details: ' + data);
         this.hostName = data.data.firstName;
         this.hostName = this.capitaliseName(this.hostName);
-      },(err:any)=>{
-        this.notifierService.showNotification("unable to get host details","ok",1000);
-      });
+      },
+      (err: any) => {
+        this.notifierService.showNotification(
+          'unable to get host details',
+          'ok',
+          1000
+        );
+      }
+    );
   }
 
   capitaliseName(name: string) {

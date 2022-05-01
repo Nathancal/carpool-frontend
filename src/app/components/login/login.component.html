@@ -9,9 +9,6 @@
   </mat-card>
   <mat-card class="hero-card-mid">
 
-
-    <mat-divider class="hero-card-one-divider" inset="true"></mat-divider>
-
     <mat-divider class="hero-card-one-divider" inset="true"></mat-divider>
   </mat-card>
 </section>
@@ -88,15 +85,15 @@
       </mat-card-footer>
     </mat-card>
   </mat-tab>
-  <mat-tab label="Login">
-    <mat-card class="card-container">
-      <mat-card-title class="signup-modal-title">
+  <mat-tab label="Login" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card class="card-container" >
+      <mat-card-title class="signup-modal-title" fxLayout="row" fxLayoutAlign="center center">
         Login to an existing account
       </mat-card-title>
       <form
         class="form-custom"
         [formGroup]="loginForm"
-        (ngSubmit)="loginAccount()"
+        (ngSubmit)="loginAccount()" fxLayoutAlign="center center"
       >
         <mat-form-field class="form-field-custom" hintLabel="">
           <mat-label>Email address..</mat-label>

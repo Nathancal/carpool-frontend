@@ -62,6 +62,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.registerAccount(accountData).subscribe((res)=>{
       console.log(res);
+      this.notifierService.showNotification("Account Successfully Created, please login", "ok", 5000);
+
       this.loading = false;
     },(err: any)=>{
       this.notifierService.showNotification("unable to create account, please try again", "ok", 5000);
@@ -85,9 +87,12 @@ export class LoginComponent implements OnInit {
 
       this.authService.setAuth(sessionStorage["token"]);
 
+
       console.log(sessionStorage["userForename"]);
       this.loading = false;
       this.router.navigateByUrl('/userdashboard');
+      this.notifierService.showNotification(`logged in, welcome ` + res.firstName, "Thanks!", 5000);
+
     }, (err:any)=>{
       this.notifierService.showNotification("unable to login please try again", "ok", 5000);
     })

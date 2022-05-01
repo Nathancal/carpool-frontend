@@ -25,8 +25,11 @@ export class ReviewuserComponent implements OnInit {
   }
 
   submitReview() {
+
+    console.log(this.passenger.passengerId);
     this.reviewService.addReview(this.passenger.passengerId,this.form.value.comment,this.userId,this.form.value.score).subscribe((res:any)=>{
       this.notifierService.showNotification("review succesfully added", "Thanks!", 4000);
+      this.reviewService.updateAvgRating(this.passenger.passengerId);
     },(err:any)=>{
       this.notifierService.showNotification("a problem occoured adding the review", "ok", 4000);
     });

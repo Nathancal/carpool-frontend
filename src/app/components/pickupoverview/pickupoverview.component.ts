@@ -71,10 +71,11 @@ export class PickupoverviewComponent implements OnInit, OnDestroy {
     const userId = sessionStorage['userID'];
     this.pickupService.joinPickup(pickupId, userId).subscribe(
       (res) => {
-        console.log(res);
+        this.notifierService.showNotification("you have successfully joined this pickup!", "thanks",4000);
       },
       (err) => {
-        console.log(err);
+        this.notifierService.showNotification("Im sorry there was an error joining the pickup please try again.", "ok",4000);
+
       }
     );
   }

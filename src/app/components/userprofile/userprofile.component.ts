@@ -59,8 +59,9 @@ export class UserprofileComponent implements OnInit {
   goToPickup(pickup: any) {
 
     let lnglat = new tt.LngLat(pickup.embarkLocation.coordinates[1], pickup.embarkLocation.coordinates[0])
-    this.mapService.getMap().setCenter(lnglat)
+    this.mapService.getMap().setCenter(lnglat).setZoom(11);
     this.dialogRef.close();
+    this.notifierService.showNotification("arrived at pickup", "thanks!", 2000);
   }
 
   cancelPickup(pickupId:any, hostId:any){
